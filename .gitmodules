@@ -1,0 +1,3 @@
+[submodule "amgl/thirdparty/debugbreak/debugbreak"]
+	path = amgl/thirdparty/debugbreak/debugbreak
+	url = https://github.com/scottt/debugbreak.git

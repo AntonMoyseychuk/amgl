@@ -1,32 +1,10 @@
-# Prerequisites
-*.d
+# VS stuff
+*.sln
+/.vscode
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Build dirs
+/build
+/out
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Test dir
+/test
