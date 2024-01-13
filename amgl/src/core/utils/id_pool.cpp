@@ -17,7 +17,9 @@ namespace amgl
 
     void id_pool::free_id(uint32_t id) noexcept
     {
-        m_freed_ids.insert(id);
+        if (is_busy()) {
+            m_freed_ids.insert(id);
+        }
     }
     
     bool id_pool::is_busy(uint32_t id) const noexcept
