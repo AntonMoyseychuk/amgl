@@ -23,3 +23,15 @@
     #define AM_ASSERT_MSG(expr, ...)
     #define AM_ASSERT(expr)
 #endif
+
+namespace amgl
+{
+    namespace detail
+    {
+        template<typename T0, typename T1, typename... Args>
+        inline constexpr bool is_one_of(const T0& value0, const T1& value1, Args&&... list) noexcept
+        {
+            return value0 == value1 && is_one_of(value0, std::forward<Args>(list)...);
+        }
+    }
+}

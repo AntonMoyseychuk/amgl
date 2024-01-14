@@ -138,7 +138,7 @@
   - [ ] *amglGetFloati_v*
   - [ ] *amglGetDoublei_v*
   - [ ] *amglGetInteger64i_v*
-- [ ] *amglGetError*
+- [x] *amglGetError*
 - [ ] *amglIsEnabled*
 - [ ] *amglLineWidth*
 - [ ] *amglLogicOp*
