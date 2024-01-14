@@ -33,5 +33,11 @@ namespace amgl
         {
             return value0 == value1 && is_one_of(value0, std::forward<Args>(list)...);
         }
+
+        template<typename T>
+        inline constexpr bool is_one_of(const T& value) noexcept
+        {
+            return true;
+        }
     }
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "amgl/amgl.hpp"
 
-#include "core/state_processing/context.hpp"
+#include "core/context_processing/context.hpp"
 #include "core/utils/id_pool.hpp"
 
 #include <vector>
