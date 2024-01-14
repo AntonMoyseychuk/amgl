@@ -17,14 +17,14 @@ namespace amgl
 
     void id_pool::free_id(uint32_t id) noexcept
     {
-        if (is_busy()) {
+        if (is_busy(id) && !is_default_id(id)) {
             m_freed_ids.insert(id);
         }
     }
     
     bool id_pool::is_busy(uint32_t id) const noexcept
     {
-        return id < m_max_provided_id && m_freed_ids.find(id) == m_freed_ids.end();
+        return is_default_id(id) || id < m_max_provided_id && m_freed_ids.find(id) == m_freed_ids.end();
     }
     
     bool id_pool::is_full() const noexcept

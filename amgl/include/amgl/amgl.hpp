@@ -9,3 +9,7 @@ enum AMGLConstant : enum_t
 
 };
 
+//
+//  Buffer Objects
+//
+void amglBindBuffer(enum_t target, uint32_t buffer) noexcept;

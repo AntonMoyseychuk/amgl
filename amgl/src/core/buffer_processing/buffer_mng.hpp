@@ -9,8 +9,8 @@ namespace amgl
     public:
         static buffer_mng& instance() noexcept
         {
-            #if defined(CFG_PREALLOCATION_SIZE)
-                static buffer_mng manager(CFG_PREALLOCATION_SIZE);
+            #ifdef AMGL_CFG_PREALLOCATION_SIZE
+                static buffer_mng manager(AMGL_CFG_PREALLOCATION_SIZE);
             #else
                 static buffer_mng manager;
             #endif

@@ -17,7 +17,7 @@ namespace amgl
         ENSURE_BUFFER_SIZES_SAMENESS();
         const size_t allocated_vao_block_size = m_vbo_ids.size();
         if (internal_id >= allocated_vao_block_size) {
-            resize_buffers(allocated_vao_block_size* 1.5f + 1u);
+            resize_buffers(static_cast<size_t>(allocated_vao_block_size* 1.5f) + 1u);
         }
         return conv_internal_to_user_range(internal_id);
     }
