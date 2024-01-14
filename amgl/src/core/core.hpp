@@ -14,6 +14,11 @@
         }
     #define AM_ASSERT(expr) AM_ASSERT_MSG(expr, "\033[31m" #expr " failed\033[0m")
 
+    #define RETURN_IF(condition, ...)   \
+        if (condition) {                \
+            return __VA_ARGS__;         \
+        }
+
 #else
     #define AM_ASSERT_MSG(expr, ...)
     #define AM_ASSERT(expr)

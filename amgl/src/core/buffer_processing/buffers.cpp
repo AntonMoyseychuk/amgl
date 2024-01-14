@@ -28,6 +28,8 @@ namespace amgl
         const uint32_t internal_id = conv_user_to_inernal_range(id);
         AM_ASSERT(internal_id < m_memory_blocks.size());
 
+        RETURN_IF(m_id_pool.is_default_id(internal_id));
+
         m_memory_blocks[internal_id].resize(size);
     }
 
@@ -36,6 +38,8 @@ namespace amgl
         const uint32_t internal_id = conv_user_to_inernal_range(id);
         AM_ASSERT(internal_id < m_memory_blocks.size());
 
+        RETURN_IF(m_id_pool.is_default_id(internal_id));
+
         m_memory_blocks[internal_id].clear();
         m_memory_blocks[internal_id].shrink_to_fit();
     }
@@ -43,18 +47,24 @@ namespace amgl
     void buffers::invalidate_memory_block(uint32_t id) noexcept
     {
         const uint32_t internal_id = conv_user_to_inernal_range(id);
+        RETURN_IF(m_id_pool.is_default_id(internal_id));
+
         m_memory_blocks[internal_id].clear();
     }
 
     const buffers::memory_block *buffers::get_memory_block(uint32_t id) const noexcept
     {
         const uint32_t internal_id = conv_user_to_inernal_range(id);
+        RETURN_IF(m_id_pool.is_default_id(internal_id), nullptr);
+
         return internal_id < m_memory_blocks.size() ? &m_memory_blocks[internal_id] : nullptr;
     }
 
     buffers::memory_block *buffers::get_memory_block(uint32_t id) noexcept
     {
         const uint32_t internal_id = conv_user_to_inernal_range(id);
+        RETURN_IF(m_id_pool.is_default_id(internal_id), nullptr);
+
         return internal_id < m_memory_blocks.size() ? &m_memory_blocks[internal_id] : nullptr;
     }
 }

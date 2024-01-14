@@ -20,6 +20,9 @@ namespace amgl
         buffer_mng(const buffer_mng&) = delete;
         buffer_mng& operator=(const buffer_mng&) = delete;
 
+        void gen_buffers(uint32_t n, uint32_t* buffers) noexcept;
+        void delete_buffers(uint32_t n, const uint32_t* buffers) noexcept;
+
     private:
         buffer_mng() = default;
         buffer_mng(size_t preallocation_size);

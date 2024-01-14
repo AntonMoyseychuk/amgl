@@ -18,4 +18,5 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src/pch.
 
 target_compile_definitions(${PROJECT_NAME} 
     PRIVATE AMGL_CFG_PREALLOCATION_SIZE=1024
+    PRIVATE AMGL_CFG_KEEP_MEMORY_ALLOCATED
 )

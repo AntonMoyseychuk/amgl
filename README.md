@@ -43,7 +43,7 @@
 - [ ] amglCopyBufferSubData
   - [ ] *amglCopyBufferSubData*
   - [ ] *amglCopyNamedBufferSubData*
-- [ ] *amglDeleteBuffers*
+- [x] *amglDeleteBuffers*
 - [ ] amglEnableVertexAttrib
   - [ ] *amglEnableVertexAttribArray*
   - [ ] *amglEnableVertexArrayAttrib*
@@ -63,12 +63,15 @@
 - [ ] *amglDrawElementsInstancedBaseVertexBaseInstance*
 - [ ] *amglDrawRangeElements*
 - [ ] *amglDrawRangeElementsBaseVertex*
-- [ ] *amglGenBuffers*
+- [x] *amglGenBuffers*
 - [ ] amglGetBufferParameter
   - [ ] *amglGetBufferParameteriv*
   - [ ] *amglGetBufferParameteri64v*
   - [ ] *amglGetNamedBufferParameteriv*
   - [ ] *amglGetNamedBufferParameteri64v*
+- [ ] amglGetBufferSubData
+  - [ ] *amglGetBufferSubData*
+  - [ ] *amglGetNamedBufferSubData*
 - [ ] amglGetVertexAttrib
   - [ ] *amglGetVertexAttribdv*
   - [ ] *amglGetVertexAttribfv*
