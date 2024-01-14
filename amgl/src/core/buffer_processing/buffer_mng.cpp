@@ -22,7 +22,6 @@ namespace amgl
         RETURN_IF(!buffers);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            m_buffers.deallocate_memory_block(buffers[i]);
             m_buffers.free_id(buffers[i]);
         }
     }

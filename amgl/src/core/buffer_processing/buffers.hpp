@@ -27,8 +27,15 @@ namespace amgl
         const memory_block* get_memory_block(uint32_t id) const noexcept;
         memory_block* get_memory_block(uint32_t id) noexcept;
 
+        bool is_buffer_mapped(uint32_t id) const noexcept;
+
+    private:
+        void resize_buffers(uint32_t size) noexcept;
+
     private:
         std::vector<memory_block> m_memory_blocks;
+        std::vector<bool> m_map_states;
+        
         id_pool m_id_pool;
     };
 }

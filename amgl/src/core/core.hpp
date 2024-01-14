@@ -29,15 +29,27 @@ namespace amgl
     namespace detail
     {
         template<typename T0, typename T1, typename... Args>
-        inline constexpr bool is_one_of(const T0& value0, const T1& value1, Args&&... list) noexcept
+        inline constexpr bool is_one_of(const T0& value, const T1& arg0, Args&&... args) noexcept
         {
-            return value0 == value1 && is_one_of(value0, std::forward<Args>(list)...);
+            return value == arg0 || is_one_of(value, std::forward<Args>(args)...);
         }
 
-        template<typename T>
-        inline constexpr bool is_one_of(const T& value) noexcept
+        template<typename T0, typename T1>
+        inline constexpr bool is_one_of(const T0& value, const T1& arg) noexcept
         {
-            return true;
+            return value == arg;
+        }
+
+        template<typename T0, typename T1, typename... Args>
+        inline constexpr bool are_equal(const T0& value, const T1& arg0, Args&&... args) noexcept
+        {
+            return value == arg0 && are_equal(value, std::forward<Args>(args)...);
+        }
+
+        template<typename T0, typename T1>
+        inline constexpr bool are_equal(const T0& value, const T1& arg) noexcept
+        {
+            return value == arg;
         }
     }
 }
