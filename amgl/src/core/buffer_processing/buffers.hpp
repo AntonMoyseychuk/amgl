@@ -10,6 +10,7 @@ namespace amgl
 {
     class buffers
     {
+        friend class buffer_mng;
     public:
         using memory_block = std::vector<byte_t>;
 
@@ -22,7 +23,6 @@ namespace amgl
 
         void allocate_memory_block(uint32_t id, size_t size) noexcept;
         void deallocate_memory_block(uint32_t id) noexcept;
-        void invalidate_memory_block(uint32_t id) noexcept;
 
         const memory_block* get_memory_block(uint32_t id) const noexcept;
         memory_block* get_memory_block(uint32_t id) noexcept;

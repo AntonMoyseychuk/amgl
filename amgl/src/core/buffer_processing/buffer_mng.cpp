@@ -3,12 +3,6 @@
 
 namespace amgl
 {
-    #ifdef AMGL_CFG_KEEP_MEMORY_ALLOCATED
-        #define CLEAR_ASSOCIATED_MEMORY_BUFFER(id) m_buffers.invalidate_memory_block((id))
-    #else
-        #define CLEAR_ASSOCIATED_MEMORY_BUFFER(id) m_buffers.deallocate_memory_block((id))
-    #endif
-
     buffer_mng::buffer_mng(size_t preallocation_size)
         : m_buffers(preallocation_size), m_vertex_arrays(preallocation_size)
     {
@@ -28,7 +22,7 @@ namespace amgl
         RETURN_IF(!buffers);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            CLEAR_ASSOCIATED_MEMORY_BUFFER(buffers[i]);
+            m_buffers.deallocate_memory_block(buffers[i]);
             m_buffers.free_id(buffers[i]);
         }
     }

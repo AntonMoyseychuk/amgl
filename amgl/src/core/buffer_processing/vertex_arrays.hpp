@@ -26,6 +26,7 @@ namespace amgl
 
     class vertex_arrays
     {
+        friend class buffer_mng;
     public:
         vertex_arrays() = default;
         vertex_arrays(uint32_t size);

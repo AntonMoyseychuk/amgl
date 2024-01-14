@@ -11,24 +11,23 @@ namespace amgl
             return id;
         }
 
-        AM_ASSERT_MSG(m_max_provided_id != DEFAULT_ID, "ID overflow");
         return m_max_provided_id++;
     }
 
     void id_pool::free_id(uint32_t id) noexcept
     {
-        if (is_busy(id) && !is_default_id(id)) {
+        if (is_busy(id)) {
             m_freed_ids.insert(id);
         }
     }
     
     bool id_pool::is_busy(uint32_t id) const noexcept
     {
-        return is_default_id(id) || id < m_max_provided_id && m_freed_ids.find(id) == m_freed_ids.end();
+        return id < m_max_provided_id && m_freed_ids.find(id) == m_freed_ids.end();
     }
     
     bool id_pool::is_full() const noexcept
     {
-        return m_max_provided_id == DEFAULT_ID && m_freed_ids.empty();
+        return m_max_provided_id == UINT32_MAX && m_freed_ids.empty();
     }
 }

@@ -15,17 +15,17 @@ namespace amgl
         const uint32_t internal_id = m_id_pool.generate_id();
 
         ENSURE_BUFFER_SIZES_SAMENESS();
-        const size_t allocated_vao_block_size = m_vbo_ids.size();
-        if (internal_id >= allocated_vao_block_size) {
-            resize_buffers(static_cast<size_t>(allocated_vao_block_size* 1.5f) + 1u);
+        const size_t buffer_size = m_vbo_ids.size();
+        if (internal_id >= buffer_size) {
+            resize_buffers(static_cast<size_t>(buffer_size* 1.5f) + 1u);
         }
-        return conv_internal_to_user_range(internal_id);
+        return detail::conv_internal_to_user_range(internal_id);
     }
     
     void vertex_arrays::free_id(uint32_t id) noexcept
     {
-        const uint32_t internal_id = conv_user_to_inernal_range(id);
-        m_id_pool.free_id(conv_user_to_inernal_range(internal_id));
+        const uint32_t internal_id = detail::conv_user_to_inernal_range(id);
+        m_id_pool.free_id(internal_id);
     }
     
     void vertex_arrays::resize_buffers(uint32_t size) noexcept
