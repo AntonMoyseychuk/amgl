@@ -29,8 +29,11 @@ namespace amgl
         }
 
 
+    // Takes 'buffer' in the user range [1, UINT32_MAX]
     #define CHECK_BUFFER_VALIDITY(buffer)                                               \
-        if (!m_buffers.is_buffer_exist(buffer) && !is_default_id_user_range(buffer)) {  \
+        if (!m_buffers.is_buffer_exist(conv_user_to_inernal_range(buffer))              \
+                && !is_default_id_user_range(buffer))                                   \
+        {                                                                               \
             gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);                       \
             return;                                                                     \
         }
@@ -44,21 +47,24 @@ namespace amgl
 
     void buffer_mng::gen_buffers(uint32_t n, uint32_t *buffers) noexcept
     {
-        RETURN_IF(!buffers);
+        AM_RETURN_IF(!buffers);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            buffers[i] = m_buffers.create_id();
+            buffers[i] = conv_internal_to_user_range(m_buffers.create_id());
         }
     }
 
 
     void buffer_mng::delete_buffers(uint32_t n, const uint32_t *buffers) noexcept
     {
-        RETURN_IF(!buffers);
+        AM_RETURN_IF(!buffers);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            
-            m_buffers.free_id(buffers[i]);
+            const int32_t target = gs_context_mng.get_buffer_target(buffers[i]);
+            if (target != AMGL_NONE) {
+                gs_context_mng.bind_target_buffer_unsafe(target, AM_DEFAULT_USER_ID);
+            }
+            m_buffers.free_id(conv_user_to_inernal_range(buffers[i]));
         }
     }
     
@@ -68,6 +74,6 @@ namespace amgl
         CHECK_BUFFER_TARGET_VALIDITY(target);
         CHECK_BUFFER_VALIDITY(buffer);
 
-        gs_context_mng.bind_target_buffer_unsafe(target, conv_user_to_inernal_range(buffer));
+        gs_context_mng.bind_target_buffer_unsafe(target, buffer);
     }
 }

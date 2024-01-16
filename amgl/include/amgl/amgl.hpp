@@ -7,6 +7,8 @@ using enum_t = uint16_t;
 
 enum AMGLConstant : enum_t
 {
+    AMGL_NONE                               = 0,
+
     AMGL_NO_ERROR                           = 0,
     AMGL_INVALID_ENUM                       = 0x0500,
     AMGL_INVALID_VALUE                      = 0x0501,

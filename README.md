@@ -27,7 +27,7 @@
   - [ ] *amglReadnPixels*
   
 #### *Buffer Objects:*
-- [ ] *amglBindBuffer*
+- [x] *amglBindBuffer*
 - [ ] amglBindBufferBase
   - [ ] *amglBindBufferBase*
   - [ ] *amglBindBuffersBase*

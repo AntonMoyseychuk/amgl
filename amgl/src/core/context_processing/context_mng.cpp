@@ -33,50 +33,77 @@ namespace amgl
     
     void context_mng::bind_target_buffer_unsafe(enum_t target, uint32_t buffer) noexcept
     {
+        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
+
         switch (target)
         {
         case AMGL_ARRAY_BUFFER:
-            m_context.bindings.vbo = buffer;
+            m_context.bindings.vbo = internal_id;
             break;
         case AMGL_ATOMIC_COUNTER_BUFFER:
-            m_context.bindings.acbo = buffer;
+            m_context.bindings.acbo = internal_id;
             break;
         case AMGL_COPY_READ_BUFFER:
-            m_context.bindings.crbo = buffer;
+            m_context.bindings.crbo = internal_id;
             break;
         case AMGL_COPY_WRITE_BUFFER:
-            m_context.bindings.cwbo = buffer;
+            m_context.bindings.cwbo = internal_id;
             break;
         case AMGL_DISPATCH_INDIRECT_BUFFER:
-            m_context.bindings.dibo = buffer;
+            m_context.bindings.dibo = internal_id;
             break;
         case AMGL_DRAW_INDIRECT_BUFFER:
-            m_context.bindings.dribo = buffer;
+            m_context.bindings.dribo = internal_id;
             break;
         case AMGL_ELEMENT_ARRAY_BUFFER:
-            m_context.bindings.ebo = buffer;
+            m_context.bindings.ebo = internal_id;
             break;
         case AMGL_PIXEL_PACK_BUFFER:
-            m_context.bindings.ppbo = buffer;
+            m_context.bindings.ppbo = internal_id;
             break;
         case AMGL_PIXEL_UNPACK_BUFFER:
-            m_context.bindings.pubo = buffer;
+            m_context.bindings.pubo = internal_id;
             break;
         case AMGL_QUERY_BUFFER:
-            m_context.bindings.qbo = buffer;
+            m_context.bindings.qbo = internal_id;
             break;
         case AMGL_SHADER_STORAGE_BUFFER:
-            m_context.bindings.ssbo = buffer;
+            m_context.bindings.ssbo = internal_id;
             break;
         case AMGL_TEXTURE_BUFFER:
-            m_context.bindings.tbo = buffer;
+            m_context.bindings.tbo = internal_id;
             break;
         case AMGL_TRANSFORM_FEEDBACK_BUFFER:
-            m_context.bindings.tfbo = buffer;
+            m_context.bindings.tfbo = internal_id;
             break;
         case AMGL_UNIFORM_BUFFER:
-            m_context.bindings.ubo = buffer;
+            m_context.bindings.ubo = internal_id;
             break;
         };
+    }
+    
+    
+    int32_t context_mng::get_buffer_target(uint32_t buffer) const noexcept
+    {
+        AM_RETURN_IF(is_default_id_user_range(buffer), AMGL_NONE);
+
+        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
+
+        AM_RETURN_IF(m_context.bindings.vbo    == internal_id, AMGL_ARRAY_BUFFER);
+        AM_RETURN_IF(m_context.bindings.acbo   == internal_id, AMGL_ATOMIC_COUNTER_BUFFER);
+        AM_RETURN_IF(m_context.bindings.crbo   == internal_id, AMGL_COPY_READ_BUFFER);
+        AM_RETURN_IF(m_context.bindings.cwbo   == internal_id, AMGL_COPY_WRITE_BUFFER);
+        AM_RETURN_IF(m_context.bindings.dibo   == internal_id, AMGL_DISPATCH_INDIRECT_BUFFER);
+        AM_RETURN_IF(m_context.bindings.dribo  == internal_id, AMGL_DRAW_INDIRECT_BUFFER);
+        AM_RETURN_IF(m_context.bindings.ebo    == internal_id, AMGL_ELEMENT_ARRAY_BUFFER);
+        AM_RETURN_IF(m_context.bindings.ppbo   == internal_id, AMGL_PIXEL_PACK_BUFFER);
+        AM_RETURN_IF(m_context.bindings.pubo   == internal_id, AMGL_PIXEL_UNPACK_BUFFER);
+        AM_RETURN_IF(m_context.bindings.qbo    == internal_id, AMGL_QUERY_BUFFER);
+        AM_RETURN_IF(m_context.bindings.ssbo   == internal_id, AMGL_SHADER_STORAGE_BUFFER);
+        AM_RETURN_IF(m_context.bindings.tbo    == internal_id, AMGL_TEXTURE_BUFFER);
+        AM_RETURN_IF(m_context.bindings.tfbo   == internal_id, AMGL_TRANSFORM_FEEDBACK_BUFFER);
+        AM_RETURN_IF(m_context.bindings.ubo    == internal_id, AMGL_UNIFORM_BUFFER);
+
+        return AMGL_NONE;
     }
 }

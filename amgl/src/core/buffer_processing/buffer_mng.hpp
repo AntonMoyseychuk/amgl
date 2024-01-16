@@ -21,8 +21,10 @@ namespace amgl
         buffer_mng& operator=(const buffer_mng&) = delete;
 
         void gen_buffers(uint32_t n, uint32_t* buffers) noexcept;
+        // Takes 'buffers' in the user range [1, UINT32_MAX]
         void delete_buffers(uint32_t n, const uint32_t* buffers) noexcept;
 
+        // Takes 'buffer' in the user range [1, UINT32_MAX]
         void bind_buffer(enum_t target, uint32_t buffer) noexcept;
 
     private:

@@ -17,12 +17,4 @@ namespace amgl
         std::unordered_set<uint32_t> m_freed_ids;
         uint32_t m_max_provided_id = 0u;
     };
-
-    // Converts id from internal [0, UINT32_MAX - 1] to user [1, UINT32_MAX] range
-    inline constexpr uint32_t conv_internal_to_user_range(uint32_t id) noexcept { return id + 1; }
-    // Converts id from user [1, UINT32_MAX] to internal [0, UINT32_MAX - 1] range
-    inline constexpr uint32_t conv_user_to_inernal_range(uint32_t id) noexcept { return id - 1; }
-        
-    inline constexpr bool is_default_id_user_range(uint32_t id) noexcept { return id == DEFAULT_USER_ID; }
-    inline constexpr bool is_default_id_internal_range(uint32_t id) noexcept { return id == DEFAULT_INTERNAL_ID; }
 }

@@ -18,17 +18,25 @@ namespace amgl
         buffers() = default;
         buffers(uint32_t size);
 
+        // Returns 'id' in the internal range [0, UINT32_MAX - 1]
         uint32_t create_id() noexcept;
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         void free_id(uint32_t id) noexcept;
 
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         void allocate_memory_block(uint32_t id, size_t size) noexcept;
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         void deallocate_memory_block(uint32_t id) noexcept;
 
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         const memory_block* get_memory_block(uint32_t id) const noexcept;
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         memory_block* get_memory_block(uint32_t id) noexcept;
 
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         bool is_buffer_mapped(uint32_t id) const noexcept;
 
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         bool is_buffer_exist(uint32_t id) const noexcept;
 
     private:

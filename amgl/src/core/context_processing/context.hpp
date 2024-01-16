@@ -38,22 +38,22 @@ namespace amgl
 
         struct bindings
         {
-            uint32_t vao    = DEFAULT_INTERNAL_ID;   // vertex array object
+            uint32_t vao    = AM_DEFAULT_INTERNAL_ID;   // vertex array object
             
-            uint32_t vbo    = DEFAULT_INTERNAL_ID;   // vertex buffer object
-            uint32_t acbo   = DEFAULT_INTERNAL_ID;   // atomic counter buffer object
-            uint32_t crbo   = DEFAULT_INTERNAL_ID;   // copy read buffer object
-            uint32_t cwbo   = DEFAULT_INTERNAL_ID;   // copy write buffer object
-            uint32_t dibo   = DEFAULT_INTERNAL_ID;   // dispatch indirect buffer object
-            uint32_t dribo  = DEFAULT_INTERNAL_ID;   // draw indirect buffer object
-            uint32_t ebo    = DEFAULT_INTERNAL_ID;   // element buffer object
-            uint32_t ppbo   = DEFAULT_INTERNAL_ID;   // pixel pack buffer object
-            uint32_t pubo   = DEFAULT_INTERNAL_ID;   // pixel unpack buffer object
-            uint32_t qbo    = DEFAULT_INTERNAL_ID;   // query buffer object
-            uint32_t ssbo   = DEFAULT_INTERNAL_ID;   // shader storage buffer object
-            uint32_t tbo    = DEFAULT_INTERNAL_ID;   // texture buffer object
-            uint32_t tfbo   = DEFAULT_INTERNAL_ID;   // transform feedback buffer object
-            uint32_t ubo    = DEFAULT_INTERNAL_ID;   // uniform buffer object
+            uint32_t vbo    = AM_DEFAULT_INTERNAL_ID;   // vertex buffer object
+            uint32_t acbo   = AM_DEFAULT_INTERNAL_ID;   // atomic counter buffer object
+            uint32_t crbo   = AM_DEFAULT_INTERNAL_ID;   // copy read buffer object
+            uint32_t cwbo   = AM_DEFAULT_INTERNAL_ID;   // copy write buffer object
+            uint32_t dibo   = AM_DEFAULT_INTERNAL_ID;   // dispatch indirect buffer object
+            uint32_t dribo  = AM_DEFAULT_INTERNAL_ID;   // draw indirect buffer object
+            uint32_t ebo    = AM_DEFAULT_INTERNAL_ID;   // element buffer object
+            uint32_t ppbo   = AM_DEFAULT_INTERNAL_ID;   // pixel pack buffer object
+            uint32_t pubo   = AM_DEFAULT_INTERNAL_ID;   // pixel unpack buffer object
+            uint32_t qbo    = AM_DEFAULT_INTERNAL_ID;   // query buffer object
+            uint32_t ssbo   = AM_DEFAULT_INTERNAL_ID;   // shader storage buffer object
+            uint32_t tbo    = AM_DEFAULT_INTERNAL_ID;   // texture buffer object
+            uint32_t tfbo   = AM_DEFAULT_INTERNAL_ID;   // transform feedback buffer object
+            uint32_t ubo    = AM_DEFAULT_INTERNAL_ID;   // uniform buffer object
         };
 
     public:
