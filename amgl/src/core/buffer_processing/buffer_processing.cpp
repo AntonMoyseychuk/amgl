@@ -8,7 +8,7 @@ static amgl::buffer_mng& gs_buffer_mng = amgl::buffer_mng::instance();
 
 void amglBindBuffer(enum_t target, uint32_t buffer) noexcept
 {
-
+    gs_buffer_mng.bind_buffer(target, buffer);
 }
 
 

@@ -29,6 +29,8 @@ namespace amgl
 
         bool is_buffer_mapped(uint32_t id) const noexcept;
 
+        bool is_buffer_exist(uint32_t id) const noexcept;
+
     private:
         void resize_buffers(uint32_t size) noexcept;
 

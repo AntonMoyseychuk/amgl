@@ -23,6 +23,6 @@ namespace amgl
     // Converts id from user [1, UINT32_MAX] to internal [0, UINT32_MAX - 1] range
     inline constexpr uint32_t conv_user_to_inernal_range(uint32_t id) noexcept { return id - 1; }
         
-    inline constexpr bool is_default_id_user_range(uint32_t id) noexcept { return id == 0; }
-    inline constexpr bool is_default_id_internal_range(uint32_t id) noexcept { return id == UINT32_MAX; }
+    inline constexpr bool is_default_id_user_range(uint32_t id) noexcept { return id == DEFAULT_USER_ID; }
+    inline constexpr bool is_default_id_internal_range(uint32_t id) noexcept { return id == DEFAULT_INTERNAL_ID; }
 }

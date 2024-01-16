@@ -23,6 +23,9 @@ namespace amgl
         enum_t get_error_flag_and_invalidate_state() noexcept;
         enum_t get_error_flag() const noexcept;
 
+        // Doesn't check 'target' and 'buffer' validity
+        void bind_target_buffer_unsafe(enum_t target, uint32_t buffer) noexcept;
+
     private:
         context_mng() = default;
 

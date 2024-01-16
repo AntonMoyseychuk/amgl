@@ -76,6 +76,12 @@ namespace amgl
         return m_map_states[internal_id];
     }
 
+    bool buffers::is_buffer_exist(uint32_t id) const noexcept
+    {
+        const uint32_t internal_id = conv_user_to_inernal_range(id);
+        return m_id_pool.is_busy(internal_id);
+    }
+
     void buffers::resize_buffers(uint32_t size) noexcept
     {
         m_memory_blocks.resize(size);

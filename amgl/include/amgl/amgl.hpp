@@ -15,6 +15,21 @@ enum AMGLConstant : enum_t
     AMGL_STACK_UNDERFLOW                    = 0x0504,
     AMGL_OUT_OF_MEMORY                      = 0x0505,
     AMGL_INVALID_FRAMEBUFFER_OPERATION      = 0x0506,
+
+    AMGL_ARRAY_BUFFER                       = 0x8892,
+    AMGL_ATOMIC_COUNTER_BUFFER              = 0x92C0,
+    AMGL_COPY_READ_BUFFER                   = 0x8F36,
+    AMGL_COPY_WRITE_BUFFER                  = 0x8F37,
+    AMGL_DISPATCH_INDIRECT_BUFFER           = 0x90EE,
+    AMGL_DRAW_INDIRECT_BUFFER               = 0x8F3F,
+    AMGL_ELEMENT_ARRAY_BUFFER               = 0x8893,
+    AMGL_PIXEL_PACK_BUFFER                  = 0x88EB,
+    AMGL_PIXEL_UNPACK_BUFFER                = 0x88EC,
+    AMGL_QUERY_BUFFER                       = 0x9192,
+    AMGL_SHADER_STORAGE_BUFFER              = 0x90D2,
+    AMGL_TEXTURE_BUFFER                     = 0x8C2A,
+    AMGL_TRANSFORM_FEEDBACK_BUFFER          = 0x8C8E,
+    AMGL_UNIFORM_BUFFER                     = 0x8A11,
 };
 
 

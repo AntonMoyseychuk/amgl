@@ -1,5 +1,8 @@
 #pragma once
 
+#define DEFAULT_USER_ID 0U
+#define DEFAULT_INTERNAL_ID UINT32_MAX
+
 #if defined(_DEBUG) || defined(DEBUG) || !defined(NDEBUG)
     #include "debugbreak/debugbreak.h"
     #include <cstdio>
