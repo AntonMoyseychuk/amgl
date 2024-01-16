@@ -27,6 +27,9 @@ namespace amgl
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         void bind_buffer(enum_t target, uint32_t buffer) noexcept;
 
+        // Takes 'buffer' in the user range [1, UINT32_MAX]
+        bool is_buffer(uint32_t buffer) noexcept;
+
     private:
         buffer_mng() = default;
         buffer_mng(size_t preallocation_size);

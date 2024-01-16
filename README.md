@@ -81,7 +81,7 @@
   - [ ] *amglGetVertexAttribLdv*
 - [ ] *amglInvalidateBufferData*
 - [ ] *amglInvalidateBufferSubData*
-- [ ] *amglIsBuffer*
+- [x] *amglIsBuffer*
 - [ ] amglMapBuffer
   - [ ] *amglMapBuffer*
   - [ ] *amglMapNamedBuffer*

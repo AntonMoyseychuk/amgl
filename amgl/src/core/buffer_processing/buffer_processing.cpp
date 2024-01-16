@@ -110,7 +110,7 @@ void amglInvalidateBufferSubData(uint32_t buffer, size_t offset, size_t length) 
 
 bool amglIsBuffer(uint32_t buffer) noexcept
 {
-    return false;
+    return gs_buffer_mng.is_buffer(buffer);
 }
 
 

@@ -60,6 +60,10 @@ namespace amgl
         AM_RETURN_IF(!buffers);
 
         for (uint32_t i = 0u; i < n; ++i) {
+            if (is_default_id_user_range(buffers[i])) {
+                continue;
+            }
+
             const int32_t target = gs_context_mng.get_buffer_target(buffers[i]);
             if (target != AMGL_NONE) {
                 gs_context_mng.bind_target_buffer_unsafe(target, AM_DEFAULT_USER_ID);
@@ -75,5 +79,15 @@ namespace amgl
         CHECK_BUFFER_VALIDITY(buffer);
 
         gs_context_mng.bind_target_buffer_unsafe(target, buffer);
+
+        // TODO: bind buffer to vao if exists
+    }
+    
+    
+    bool buffer_mng::is_buffer(uint32_t buffer) noexcept
+    {
+        AM_RETURN_IF(is_default_id_user_range(buffer), false);
+
+        return m_buffers.is_buffer_exist(conv_user_to_inernal_range(buffer));
     }
 }
