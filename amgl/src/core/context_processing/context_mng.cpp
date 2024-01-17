@@ -83,27 +83,48 @@ namespace amgl
     }
     
     
-    int32_t context_mng::get_buffer_target(uint32_t buffer) const noexcept
+    enum_t context_mng::get_binding_type(uint32_t binding) const noexcept
     {
-        AM_RETURN_IF(is_default_id_user_range(buffer), AMGL_NONE);
+        AM_RETURN_IF(is_default_id_user_range(binding), AMGL_NONE);
 
-        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
+        const uint32_t internal_id = conv_user_to_inernal_range(binding);
 
         AM_RETURN_IF(m_context.bindings.vbo    == internal_id, AMGL_ARRAY_BUFFER);
-        AM_RETURN_IF(m_context.bindings.acbo   == internal_id, AMGL_ATOMIC_COUNTER_BUFFER);
+        AM_RETURN_IF(m_context.bindings.ebo    == internal_id, AMGL_ELEMENT_ARRAY_BUFFER);
         AM_RETURN_IF(m_context.bindings.crbo   == internal_id, AMGL_COPY_READ_BUFFER);
         AM_RETURN_IF(m_context.bindings.cwbo   == internal_id, AMGL_COPY_WRITE_BUFFER);
-        AM_RETURN_IF(m_context.bindings.dibo   == internal_id, AMGL_DISPATCH_INDIRECT_BUFFER);
+        AM_RETURN_IF(m_context.bindings.ssbo   == internal_id, AMGL_SHADER_STORAGE_BUFFER);
+        AM_RETURN_IF(m_context.bindings.ubo    == internal_id, AMGL_UNIFORM_BUFFER);
+        AM_RETURN_IF(m_context.bindings.tbo    == internal_id, AMGL_TEXTURE_BUFFER);
+        AM_RETURN_IF(m_context.bindings.tfbo   == internal_id, AMGL_TRANSFORM_FEEDBACK_BUFFER);
         AM_RETURN_IF(m_context.bindings.dribo  == internal_id, AMGL_DRAW_INDIRECT_BUFFER);
-        AM_RETURN_IF(m_context.bindings.ebo    == internal_id, AMGL_ELEMENT_ARRAY_BUFFER);
         AM_RETURN_IF(m_context.bindings.ppbo   == internal_id, AMGL_PIXEL_PACK_BUFFER);
         AM_RETURN_IF(m_context.bindings.pubo   == internal_id, AMGL_PIXEL_UNPACK_BUFFER);
         AM_RETURN_IF(m_context.bindings.qbo    == internal_id, AMGL_QUERY_BUFFER);
-        AM_RETURN_IF(m_context.bindings.ssbo   == internal_id, AMGL_SHADER_STORAGE_BUFFER);
-        AM_RETURN_IF(m_context.bindings.tbo    == internal_id, AMGL_TEXTURE_BUFFER);
-        AM_RETURN_IF(m_context.bindings.tfbo   == internal_id, AMGL_TRANSFORM_FEEDBACK_BUFFER);
-        AM_RETURN_IF(m_context.bindings.ubo    == internal_id, AMGL_UNIFORM_BUFFER);
+        AM_RETURN_IF(m_context.bindings.dibo   == internal_id, AMGL_DISPATCH_INDIRECT_BUFFER);
+        AM_RETURN_IF(m_context.bindings.acbo   == internal_id, AMGL_ATOMIC_COUNTER_BUFFER);
 
         return AMGL_NONE;
+    }
+
+    uint32_t context_mng::get_binding(enum_t binding_type) const noexcept
+    {
+        AM_RETURN_IF(binding_type == AMGL_VERTEX_ARRAY_BINDING,      m_context.bindings.vao);
+        AM_RETURN_IF(binding_type == AMGL_ARRAY_BUFFER,              m_context.bindings.vbo);
+        AM_RETURN_IF(binding_type == AMGL_ELEMENT_ARRAY_BUFFER,      m_context.bindings.ebo);
+        AM_RETURN_IF(binding_type == AMGL_COPY_READ_BUFFER,          m_context.bindings.crbo);
+        AM_RETURN_IF(binding_type == AMGL_COPY_WRITE_BUFFER,         m_context.bindings.cwbo);
+        AM_RETURN_IF(binding_type == AMGL_SHADER_STORAGE_BUFFER,     m_context.bindings.ssbo);
+        AM_RETURN_IF(binding_type == AMGL_UNIFORM_BUFFER,            m_context.bindings.ubo);
+        AM_RETURN_IF(binding_type == AMGL_TEXTURE_BUFFER,            m_context.bindings.tbo);
+        AM_RETURN_IF(binding_type == AMGL_TRANSFORM_FEEDBACK_BUFFER, m_context.bindings.tfbo);
+        AM_RETURN_IF(binding_type == AMGL_DRAW_INDIRECT_BUFFER,      m_context.bindings.dribo);
+        AM_RETURN_IF(binding_type == AMGL_PIXEL_PACK_BUFFER,         m_context.bindings.ppbo);
+        AM_RETURN_IF(binding_type == AMGL_PIXEL_UNPACK_BUFFER,       m_context.bindings.pubo);
+        AM_RETURN_IF(binding_type == AMGL_QUERY_BUFFER,              m_context.bindings.qbo);
+        AM_RETURN_IF(binding_type == AMGL_DISPATCH_INDIRECT_BUFFER,  m_context.bindings.dibo);
+        AM_RETURN_IF(binding_type == AMGL_ATOMIC_COUNTER_BUFFER,     m_context.bindings.acbo);
+
+        return AM_DEFAULT_USER_ID;
     }
 }

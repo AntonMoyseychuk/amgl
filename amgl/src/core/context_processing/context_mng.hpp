@@ -27,9 +27,12 @@ namespace amgl
         // Doesn't check 'target' and 'buffer' validity
         void bind_target_buffer_unsafe(enum_t target, uint32_t buffer) noexcept;
 
-        // Takes 'buffer' in the user range [1, UINT32_MAX]
+        // Takes 'binding' in the user range [1, UINT32_MAX]
         // Returns AMGL_NONE if buffer is not binded to any target or it's default buffer
-        int32_t get_buffer_target(uint32_t buffer) const noexcept;
+        enum_t get_binding_type(uint32_t binding) const noexcept;
+
+        // Returns id in user range [1, UINT32_MAX] if there is any binding of binding_type, otherwise AM_DEFAULT_USER_ID
+        uint32_t get_binding(enum_t binding_type) const noexcept;
 
     private:
         context_mng() = default;

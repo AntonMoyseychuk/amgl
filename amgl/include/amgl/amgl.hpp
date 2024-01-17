@@ -32,6 +32,8 @@ enum AMGLConstant : enum_t
     AMGL_TEXTURE_BUFFER                     = 0x8C2A,
     AMGL_TRANSFORM_FEEDBACK_BUFFER          = 0x8C8E,
     AMGL_UNIFORM_BUFFER                     = 0x8A11,
+
+    AMGL_VERTEX_ARRAY_BINDING               = 0x85B5,
 };
 
 

@@ -34,6 +34,10 @@ namespace amgl
         uint32_t create_id() noexcept;
         void free_id(uint32_t id) noexcept;
 
+        // Takes 'buffer' and 'vertex_array' in the internal range [0, UINT32_MAX - 1]
+        // Doesn't check 'target', 'buffer' and 'vertex_array' validity
+        void bind_buffer_unsafe(uint32_t vertex_array, enum_t target, uint32_t buffer) noexcept;
+
     private:
         void resize_buffers(uint32_t size) noexcept;
 

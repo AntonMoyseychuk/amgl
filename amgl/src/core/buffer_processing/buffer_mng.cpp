@@ -29,11 +29,9 @@ namespace amgl
         }
 
 
-    // Takes 'buffer' in the user range [1, UINT32_MAX]
+    // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
     #define CHECK_BUFFER_VALIDITY(buffer)                                               \
-        if (!m_buffers.is_buffer_exist(conv_user_to_inernal_range(buffer))              \
-                && !is_default_id_user_range(buffer))                                   \
-        {                                                                               \
+        if (!m_buffers.is_buffer_exist(buffer) && !is_default_id_user_range(buffer)) {  \
             gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);                       \
             return;                                                                     \
         }
@@ -64,7 +62,7 @@ namespace amgl
                 continue;
             }
 
-            const int32_t target = gs_context_mng.get_buffer_target(buffers[i]);
+            const int32_t target = gs_context_mng.get_binding_type(buffers[i]);
             if (target != AMGL_NONE) {
                 gs_context_mng.bind_target_buffer_unsafe(target, AM_DEFAULT_USER_ID);
             }
@@ -76,11 +74,16 @@ namespace amgl
     void buffer_mng::bind_buffer(enum_t target, uint32_t buffer) noexcept
     {
         CHECK_BUFFER_TARGET_VALIDITY(target);
-        CHECK_BUFFER_VALIDITY(buffer);
+        
+        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
+        CHECK_BUFFER_VALIDITY(internal_id);
 
         gs_context_mng.bind_target_buffer_unsafe(target, buffer);
 
-        // TODO: bind buffer to vao if exists
+        const uint32_t vao = conv_user_to_inernal_range(gs_context_mng.get_binding(AMGL_VERTEX_ARRAY_BINDING));
+        if (vao != AM_DEFAULT_INTERNAL_ID) {
+            m_vertex_arrays.bind_buffer_unsafe(vao, target, internal_id);
+        }
     }
     
     
