@@ -29,10 +29,10 @@ namespace amgl
 
         // Takes 'binding' in the user range [1, UINT32_MAX]
         // Returns AMGL_NONE if buffer is not binded to any target or it's default buffer
-        enum_t get_binding_type(uint32_t binding) const noexcept;
+        enum_t get_binding_target(uint32_t binding) const noexcept;
 
-        // Returns id in user range [1, UINT32_MAX] if there is any binding of binding_type, otherwise AM_DEFAULT_USER_ID
-        uint32_t get_binding(enum_t binding_type) const noexcept;
+        // Returns id in user range [1, UINT32_MAX] if there is any binding of target, otherwise AM_DEFAULT_USER_ID
+        uint32_t get_binding(enum_t target) const noexcept;
 
     private:
         context_mng() = default;

@@ -14,13 +14,13 @@ void amglBindBuffer(enum_t target, uint32_t buffer) noexcept
 
 void amglBufferData(enum_t target, size_t size, const void *data, enum_t usage) noexcept
 {
-
+    gs_buffer_mng.buffer_data(target, size, data, usage);
 }
 
 
 void amglNamedBufferData(uint32_t buffer, size_t size, const void* data, enum_t usage) noexcept
 {
-
+    gs_buffer_mng.named_buffer_data(buffer, size, data, usage);
 }
 
 

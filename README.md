@@ -34,9 +34,9 @@
 - [ ] amglBindBufferRange
   - [ ] *amglBindBufferRange*
   - [ ] *amglBindBuffersRange*
-- [ ] amglBufferData
-  - [ ] *amglBufferData*
-  - [ ] *amglNamedBufferData*
+- [x] amglBufferData
+  - [x] *amglBufferData*
+  - [x] *amglNamedBufferData*
 - [ ] amglBufferSubData
   - [ ] *amglBufferSubData*
   - [ ] *amglNamedBufferSubData*

@@ -33,6 +33,16 @@ enum AMGLConstant : enum_t
     AMGL_TRANSFORM_FEEDBACK_BUFFER          = 0x8C8E,
     AMGL_UNIFORM_BUFFER                     = 0x8A11,
 
+    AMGL_STREAM_DRAW                        = 0x88E0,
+    AMGL_STREAM_READ                        = 0x88E1,
+    AMGL_STREAM_COPY                        = 0x88E2,
+    AMGL_STATIC_DRAW                        = 0x88E4,
+    AMGL_STATIC_READ                        = 0x88E5,
+    AMGL_STATIC_COPY                        = 0x88E6,
+    AMGL_DYNAMIC_DRAW                       = 0x88E8,
+    AMGL_DYNAMIC_READ                       = 0x88E9,
+    AMGL_DYNAMIC_COPY                       = 0x88EA,
+
     AMGL_VERTEX_ARRAY_BINDING               = 0x85B5,
 };
 

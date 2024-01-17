@@ -23,11 +23,9 @@ namespace amgl
         m_id_pool.free_id(id);
     }
 
-    void buffers::allocate_memory_block(uint32_t id, size_t size) noexcept
+    void buffers::reallocate_memory_block(uint32_t id, size_t size) noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
-
-        AM_RETURN_IF(is_default_id_internal_range(id));
 
         m_memory_blocks[id].resize(size);
     }
@@ -35,8 +33,6 @@ namespace amgl
     void buffers::deallocate_memory_block(uint32_t id) noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
-
-        AM_RETURN_IF(is_default_id_internal_range(id));
 
         m_memory_blocks[id].clear();
         m_memory_blocks[id].shrink_to_fit();
@@ -46,8 +42,6 @@ namespace amgl
     {
         AM_ASSERT(id < m_memory_blocks.size());
 
-        AM_RETURN_IF(is_default_id_internal_range(id), nullptr);
-
         return &m_memory_blocks[id];
     }
 
@@ -55,16 +49,12 @@ namespace amgl
     {
         AM_ASSERT(id < m_memory_blocks.size());
 
-        AM_RETURN_IF(is_default_id_internal_range(id), nullptr);
-
         return &m_memory_blocks[id];
     }
 
     bool buffers::is_buffer_mapped(uint32_t id) const noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
-
-        AM_RETURN_IF(is_default_id_internal_range(id), false);
 
         return m_map_states[id];
     }
