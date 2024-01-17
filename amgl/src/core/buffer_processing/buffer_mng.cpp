@@ -56,7 +56,7 @@ namespace amgl
 
     // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
     #define CHECK_BUFFER_NOT_DEFAULT(buffer)                            \
-        if (!is_default_id_internal_range(buffer)) {                    \
+        if (is_default_id_internal_range(buffer)) {                     \
             gs_context_mng.update_error_flag(AMGL_INVALID_OPERATION);   \
             return;                                                     \
         }

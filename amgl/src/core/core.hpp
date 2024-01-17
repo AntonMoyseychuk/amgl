@@ -22,9 +22,9 @@
     #define AM_ASSERT(expr)
 #endif
 
-#define AM_RETURN_IF(condition, ...)   \
-    if (condition) {                \
-        return __VA_ARGS__;         \
+#define AM_RETURN_IF(condition, ...)    \
+    if (condition) {                    \
+        return __VA_ARGS__;             \
     }
 
 namespace amgl
