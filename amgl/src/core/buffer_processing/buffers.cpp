@@ -4,9 +4,10 @@
 namespace amgl
 {
     buffers::buffers(uint32_t size)
-        : m_memory_blocks(size)
     {
+        resize_buffers(size);
     }
+
 
     uint32_t buffers::create_id() noexcept
     {
@@ -17,11 +18,13 @@ namespace amgl
         return id;
     }
 
+
     void buffers::free_id(uint32_t id) noexcept
     {
         deallocate_memory_block(id);
         m_id_pool.free_id(id);
     }
+
 
     void buffers::reallocate_memory_block(uint32_t id, size_t size) noexcept
     {
@@ -29,6 +32,7 @@ namespace amgl
 
         m_memory_blocks[id].resize(size);
     }
+
 
     void buffers::deallocate_memory_block(uint32_t id) noexcept
     {
@@ -38,12 +42,14 @@ namespace amgl
         m_memory_blocks[id].shrink_to_fit();
     }
 
+
     const buffers::memory_block *buffers::get_memory_block(uint32_t id) const noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
 
         return &m_memory_blocks[id];
     }
+
 
     buffers::memory_block *buffers::get_memory_block(uint32_t id) noexcept
     {
@@ -52,6 +58,7 @@ namespace amgl
         return &m_memory_blocks[id];
     }
 
+
     bool buffers::is_buffer_mapped(uint32_t id) const noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
@@ -59,10 +66,12 @@ namespace amgl
         return m_map_states[id];
     }
 
+
     bool buffers::is_buffer_exist(uint32_t id) const noexcept
     {
-        return m_id_pool.is_busy(id);
+        return id == AM_DEFAULT_INTERNAL_ID || m_id_pool.is_busy(id);
     }
+    
 
     void buffers::resize_buffers(uint32_t size) noexcept
     {

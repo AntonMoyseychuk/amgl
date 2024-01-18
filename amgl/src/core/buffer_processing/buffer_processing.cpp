@@ -26,13 +26,13 @@ void amglNamedBufferData(uint32_t buffer, size_t size, const void* data, enum_t 
 
 void amglBufferSubData(enum_t target, size_t offset, size_t size, const void* data) noexcept
 {
-
+    gs_buffer_mng.buffer_sub_data(target, offset, size, data);
 }
 
 
 void amglNamedBufferSubData(uint32_t buffer, size_t offset, size_t size, const void* data) noexcept
 {
-
+    gs_buffer_mng.named_buffer_sub_data(buffer, offset, offset, data);
 }
 
 

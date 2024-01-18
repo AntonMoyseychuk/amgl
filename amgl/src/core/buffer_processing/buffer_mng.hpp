@@ -31,6 +31,10 @@ namespace amgl
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         void named_buffer_data(uint32_t buffer, size_t size, const void *data, enum_t usage /* unused */) noexcept;
 
+        void buffer_sub_data(enum_t target, size_t offset, size_t size, const void *data) noexcept;
+        // Takes 'buffer' in the user range [1, UINT32_MAX]
+        void named_buffer_sub_data(uint32_t buffer, size_t offset, size_t size, const void *data) noexcept;
+
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         bool is_buffer(uint32_t buffer) noexcept;
 

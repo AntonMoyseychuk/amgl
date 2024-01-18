@@ -7,7 +7,7 @@ namespace amgl
 {
     static context_mng& gs_context_mng = context_mng::instance();
 
-    #define CHECK_BUFFER_TARGET_VALIDITY(target)                    \
+    #define CHECK_BUFFER_TARGET_VALIDITY(target, error_flag)        \
         if(!detail::is_one_of(target,                               \
             AMGL_ARRAY_BUFFER,                                      \
             AMGL_ATOMIC_COUNTER_BUFFER,                             \
@@ -24,12 +24,12 @@ namespace amgl
             AMGL_TRANSFORM_FEEDBACK_BUFFER,                         \
             AMGL_UNIFORM_BUFFER)                                    \
         ) {                                                         \
-            gs_context_mng.update_error_flag(AMGL_INVALID_ENUM);    \
+            gs_context_mng.update_error_flag(error_flag);           \
             return;                                                 \
         }
 
 
-    #define CHECK_BUFFER_USAGE_VALIDITY(usage)                      \
+    #define CHECK_BUFFER_USAGE_VALIDITY(usage, error_flag)          \
         if(!detail::is_one_of(usage,                                \
             AMGL_STREAM_DRAW,                                       \
             AMGL_STREAM_READ,                                       \
@@ -41,24 +41,24 @@ namespace amgl
             AMGL_DYNAMIC_READ,                                      \
             AMGL_DYNAMIC_COPY)                                      \
         ) {                                                         \
-            gs_context_mng.update_error_flag(AMGL_INVALID_ENUM);    \
+            gs_context_mng.update_error_flag(error_flag);           \
             return;                                                 \
         }
 
 
     // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_BUFFER_VALIDITY(buffer)                           \
+    #define CHECK_BUFFER_VALIDITY(buffer, error_flag)               \
         if (!m_buffers.is_buffer_exist(buffer)) {                   \
-            gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);   \
+            gs_context_mng.update_error_flag(error_flag);           \
             return;                                                 \
         }
 
 
     // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_BUFFER_NOT_DEFAULT(buffer)                            \
-        if (is_default_id_internal_range(buffer)) {                     \
-            gs_context_mng.update_error_flag(AMGL_INVALID_OPERATION);   \
-            return;                                                     \
+    #define CHECK_BUFFER_NOT_DEFAULT(buffer, error_flag)            \
+        if (is_default_id_internal_range(buffer)) {                 \
+            gs_context_mng.update_error_flag(error_flag);           \
+            return;                                                 \
         }
 
 
@@ -98,10 +98,10 @@ namespace amgl
 
     void buffer_mng::bind_buffer(enum_t target, uint32_t buffer) noexcept
     {
-        CHECK_BUFFER_TARGET_VALIDITY(target);
+        CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
         
         const uint32_t internal_id = conv_user_to_inernal_range(buffer);
-        CHECK_BUFFER_VALIDITY(internal_id);
+        CHECK_BUFFER_VALIDITY(internal_id, AMGL_INVALID_VALUE);
 
         gs_context_mng.bind_target_buffer_unsafe(target, buffer);
 
@@ -114,7 +114,7 @@ namespace amgl
     
     void buffer_mng::buffer_data(enum_t target, size_t size, const void *data, enum_t usage) noexcept
     {
-        CHECK_BUFFER_TARGET_VALIDITY(target);
+        CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
     
         const uint32_t buffer = gs_context_mng.get_binding(target);
         named_buffer_data(buffer, size, data, usage);
@@ -123,11 +123,11 @@ namespace amgl
     
     void buffer_mng::named_buffer_data(uint32_t buffer, size_t size, const void *data, enum_t usage) noexcept
     {
-        CHECK_BUFFER_USAGE_VALIDITY(usage);
+        CHECK_BUFFER_USAGE_VALIDITY(usage, AMGL_INVALID_ENUM);
 
         const uint32_t internal_id = conv_user_to_inernal_range(buffer);
-        CHECK_BUFFER_VALIDITY(internal_id);
-        CHECK_BUFFER_NOT_DEFAULT(internal_id);
+        CHECK_BUFFER_VALIDITY(internal_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_DEFAULT(internal_id, AMGL_INVALID_OPERATION);
 
         m_buffers.reallocate_memory_block(internal_id, size);
 
@@ -137,6 +137,41 @@ namespace amgl
     }
 
     
+    void buffer_mng::buffer_sub_data(enum_t target, size_t offset, size_t size, const void *data) noexcept
+    {
+        CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
+
+        const uint32_t buffer = gs_context_mng.get_binding(target);
+        named_buffer_sub_data(buffer, offset, size, data);
+    }
+
+    
+    void buffer_mng::named_buffer_sub_data(uint32_t buffer, size_t offset, size_t size, const void *data) noexcept
+    {
+        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
+        CHECK_BUFFER_VALIDITY(internal_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_DEFAULT(internal_id, AMGL_INVALID_OPERATION);
+
+        const size_t buffer_size = m_buffers.m_memory_blocks[internal_id].size();
+        if (offset + size >= buffer_size) {
+            gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);
+            return;
+        }
+
+        if (m_buffers.is_buffer_mapped(internal_id)) {
+            gs_context_mng.update_error_flag(AMGL_INVALID_OPERATION);
+            return;
+        }
+
+        if (data == nullptr) {
+            return;
+        }
+
+        byte_t* dst = m_buffers.m_memory_blocks[internal_id].data() + offset;
+        memcpy_s(dst, buffer_size, data, size);
+    }
+
+
     bool buffer_mng::is_buffer(uint32_t buffer) noexcept
     {
         AM_RETURN_IF(is_default_id_user_range(buffer), false);

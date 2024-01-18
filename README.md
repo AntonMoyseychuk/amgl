@@ -37,9 +37,9 @@
 - [x] amglBufferData
   - [x] *amglBufferData*
   - [x] *amglNamedBufferData*
-- [ ] amglBufferSubData
-  - [ ] *amglBufferSubData*
-  - [ ] *amglNamedBufferSubData*
+- [x] amglBufferSubData
+  - [x] *amglBufferSubData*
+  - [x] *amglNamedBufferSubData*
 - [ ] amglCopyBufferSubData
   - [ ] *amglCopyBufferSubData*
   - [ ] *amglCopyNamedBufferSubData*
