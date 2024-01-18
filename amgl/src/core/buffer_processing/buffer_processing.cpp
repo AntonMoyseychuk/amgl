@@ -38,13 +38,13 @@ void amglNamedBufferSubData(uint32_t buffer, size_t offset, size_t size, const v
 
 void amglCopyBufferSubData(enum_t read_target, enum_t write_target, size_t read_offset, size_t write_offset, size_t size) noexcept
 {
-    
+    gs_buffer_mng.copy_buffer_sub_data(read_target, write_target, read_offset, write_offset, size);
 }
 
 
 void amglCopyNamedBufferSubData(uint32_t read_buffer, uint32_t write_buffer, size_t read_offset, size_t write_offset, size_t size) noexcept
 {
-    
+    gs_buffer_mng.copy_named_buffer_sub_data(read_buffer, write_buffer, read_offset, write_offset, size);
 }
 
 

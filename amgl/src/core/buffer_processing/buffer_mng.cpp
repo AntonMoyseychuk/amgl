@@ -61,6 +61,13 @@ namespace amgl
             return;                                                 \
         }
 
+    // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
+    #define CHECK_BUFFER_NOT_MAPPED(buffer, error_flag)             \
+        if (m_buffers.is_buffer_mapped(buffer)) {                   \
+            gs_context_mng.update_error_flag(error_flag);           \
+            return;                                                 \
+        }
+
 
     buffer_mng::buffer_mng(size_t preallocation_size)
         : m_buffers(preallocation_size), m_vertex_arrays(preallocation_size)
@@ -151,15 +158,11 @@ namespace amgl
         const uint32_t internal_id = conv_user_to_inernal_range(buffer);
         CHECK_BUFFER_VALIDITY(internal_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_DEFAULT(internal_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_MAPPED(internal_id, AMGL_INVALID_OPERATION);
 
         const size_t buffer_size = m_buffers.m_memory_blocks[internal_id].size();
         if (offset + size >= buffer_size) {
             gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);
-            return;
-        }
-
-        if (m_buffers.is_buffer_mapped(internal_id)) {
-            gs_context_mng.update_error_flag(AMGL_INVALID_OPERATION);
             return;
         }
 
@@ -171,7 +174,48 @@ namespace amgl
         memcpy_s(dst, buffer_size, data, size);
     }
 
+    
+    void buffer_mng::copy_buffer_sub_data(enum_t read_target, enum_t write_target, size_t read_offset, size_t write_offset, size_t size) noexcept
+    {
+        CHECK_BUFFER_TARGET_VALIDITY(read_target, AMGL_INVALID_ENUM);
+        CHECK_BUFFER_TARGET_VALIDITY(write_target, AMGL_INVALID_ENUM);
 
+        const uint32_t read_buffer = gs_context_mng.get_binding(read_target);
+        const uint32_t write_buffer = gs_context_mng.get_binding(write_target);
+        copy_named_buffer_sub_data(read_buffer, write_buffer, read_offset, write_offset, size);
+    }
+
+    
+    void buffer_mng::copy_named_buffer_sub_data(uint32_t read_buffer, uint32_t write_buffer, size_t read_offset, size_t write_offset, size_t size) noexcept
+    {
+        const uint32_t internal_read_id = conv_user_to_inernal_range(read_buffer);
+        CHECK_BUFFER_VALIDITY(internal_read_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_DEFAULT(internal_read_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_MAPPED(internal_read_id, AMGL_INVALID_OPERATION);
+
+        const uint32_t internal_write_id = conv_user_to_inernal_range(write_buffer);
+        CHECK_BUFFER_VALIDITY(internal_write_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_DEFAULT(internal_write_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_MAPPED(internal_write_id, AMGL_INVALID_OPERATION);
+
+        buffers::memory_block& read_mem_block = m_buffers.m_memory_blocks[internal_read_id];
+        buffers::memory_block& write_mem_block = m_buffers.m_memory_blocks[internal_write_id];
+        if (read_offset + size > read_mem_block.size() || write_offset + size > write_mem_block.size()) {
+            gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);
+            return;
+        }
+
+        if (internal_read_id == internal_write_id || 
+            detail::are_memory_regions_overlap(read_mem_block.data(), size, write_mem_block.data(), size)
+        ) {
+            gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);
+            return;
+        }
+        
+        memcpy_s(write_mem_block.data() + write_offset, write_mem_block.size(), read_mem_block.data() + read_offset, size);
+    }
+
+    
     bool buffer_mng::is_buffer(uint32_t buffer) noexcept
     {
         AM_RETURN_IF(is_default_id_user_range(buffer), false);

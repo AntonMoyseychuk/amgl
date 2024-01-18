@@ -40,9 +40,9 @@
 - [x] amglBufferSubData
   - [x] *amglBufferSubData*
   - [x] *amglNamedBufferSubData*
-- [ ] amglCopyBufferSubData
-  - [ ] *amglCopyBufferSubData*
-  - [ ] *amglCopyNamedBufferSubData*
+- [x] amglCopyBufferSubData
+  - [x] *amglCopyBufferSubData*
+  - [x] *amglCopyNamedBufferSubData*
 - [x] *amglDeleteBuffers*
 - [ ] amglEnableVertexAttrib
   - [ ] *amglEnableVertexAttribArray*
