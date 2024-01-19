@@ -144,6 +144,7 @@ namespace amgl
         CHECK_BUFFER_NOT_DEFAULT(internal_id, AMGL_INVALID_OPERATION);
 
         m_buffers.reallocate_memory_block(internal_id, size);
+        m_buffers.unmap_buffer(internal_id);
 
         if (data != nullptr) {
             memcpy_s(m_buffers.get_memory_block(internal_id).data(), size, data, size);

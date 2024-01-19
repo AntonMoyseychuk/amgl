@@ -22,6 +22,7 @@ namespace amgl
     void buffers::free_id(uint32_t id) noexcept
     {
         deallocate_memory_block(id);
+        unmap_buffer(id);
         m_id_pool.free_id(id);
     }
 
