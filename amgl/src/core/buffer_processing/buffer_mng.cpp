@@ -75,21 +75,30 @@ namespace amgl
         }
     }
 
+    
+    void buffer_mng::invalidate_buffer_data(uint32_t buffer) noexcept
+    {
+        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
+        CHECK_BUFFER_VALIDITY(internal_id, AMGL_INVALID_VALUE);
+        CHECK_BUFFER_NOT_MAPPED(internal_id, AMGL_INVALID_OPERATION);
+            
+        m_buffers.deallocate_memory_block(internal_id);
+    }
 
+    
     void buffer_mng::delete_buffers(uint32_t n, const uint32_t *buffers) noexcept
     {
         AM_RETURN_IF(!buffers);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            if (is_default_id_user_range(buffers[i])) {
-                continue;
-            }
+            const uint32_t internal_id = conv_user_to_inernal_range(buffers[i]);
+            AM_CONTINUE_IF(is_default_id_internal_range(internal_id) || !m_buffers.is_buffer_exist(internal_id));
 
             const int32_t target = gs_context_mng.get_binding_target(buffers[i]);
             if (target != AMGL_NONE) {
                 gs_context_mng.bind_target_buffer_unsafe(target, AM_DEFAULT_USER_ID);
             }
-            m_buffers.free_id(conv_user_to_inernal_range(buffers[i]));
+            m_buffers.free_id(internal_id);
         }
     }
     

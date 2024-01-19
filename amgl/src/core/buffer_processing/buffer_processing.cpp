@@ -98,13 +98,7 @@ void amglGetNamedBufferSubData(uint32_t buffer, size_t offset, size_t size, void
 
 void amglInvalidateBufferData(uint32_t buffer) noexcept
 {
-    
-}
-
-
-void amglInvalidateBufferSubData(uint32_t buffer, size_t offset, size_t length) noexcept
-{
-    
+    gs_buffer_mng.invalidate_buffer_data(buffer);
 }
 
 

@@ -27,6 +27,8 @@ namespace amgl
         void reallocate_memory_block(uint32_t id, size_t size) noexcept;
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         void deallocate_memory_block(uint32_t id) noexcept;
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
+        void shrink_buffer_to_size(uint32_t id, size_t size) noexcept;
 
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         const memory_block& get_memory_block(uint32_t id) const noexcept;

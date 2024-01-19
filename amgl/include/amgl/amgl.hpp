@@ -79,7 +79,6 @@ void amglGetBufferSubData(enum_t target, size_t offset, size_t size, void* data)
 void amglGetNamedBufferSubData(uint32_t buffer, size_t offset, size_t size, void* data) noexcept;
 
 void amglInvalidateBufferData(uint32_t buffer) noexcept;
-void amglInvalidateBufferSubData(uint32_t buffer, size_t offset, size_t length) noexcept;
 
 bool amglIsBuffer(uint32_t buffer) noexcept;
 

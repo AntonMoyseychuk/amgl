@@ -44,12 +44,12 @@
   - [x] *amglCopyBufferSubData*
   - [x] *amglCopyNamedBufferSubData*
 - [x] *amglDeleteBuffers*
-- [ ] amglEnableVertexAttrib
-  - [ ] *amglEnableVertexAttribArray*
-  - [ ] *amglEnableVertexArrayAttrib*
-- [ ] amglDisableVertexAttrib
-  - [ ] *amglDisableVertexAttribArray*
-  - [ ] *amglDisableVertexArrayAttrib*
+- [x] amglEnableVertexAttrib
+  - [x] *amglEnableVertexAttribArray*
+  - [x] *amglEnableVertexArrayAttrib*
+- [x] amglDisableVertexAttrib
+  - [x] *amglDisableVertexAttribArray*
+  - [x] *amglDisableVertexArrayAttrib*
 - [ ] *amglDrawArrays*
 - [ ] *amglDrawArraysIndirect*
 - [ ] *amglDrawArraysInstanced*
@@ -69,9 +69,9 @@
   - [ ] *amglGetBufferParameteri64v*
   - [ ] *amglGetNamedBufferParameteriv*
   - [ ] *amglGetNamedBufferParameteri64v*
-- [ ] amglGetBufferSubData
-  - [ ] *amglGetBufferSubData*
-  - [ ] *amglGetNamedBufferSubData*
+- [x] amglGetBufferSubData
+  - [x] *amglGetBufferSubData*
+  - [x] *amglGetNamedBufferSubData*
 - [ ] amglGetVertexAttrib
   - [ ] *amglGetVertexAttribdv*
   - [ ] *amglGetVertexAttribfv*
@@ -79,8 +79,7 @@
   - [ ] *amglGetVertexAttribIiv*
   - [ ] *amglGetVertexAttribIuiv*
   - [ ] *amglGetVertexAttribLdv*
-- [ ] *amglInvalidateBufferData*
-- [ ] *amglInvalidateBufferSubData*
+- [x] *amglInvalidateBufferData*
 - [x] *amglIsBuffer*
 - [ ] amglMapBuffer
   - [ ] *amglMapBuffer*

@@ -21,6 +21,10 @@ namespace amgl
         buffer_mng& operator=(const buffer_mng&) = delete;
 
         void gen_buffers(uint32_t n, uint32_t* buffers) noexcept;
+        // Clears memory allocated for 'buffer' but doesn't free buffer id
+        // Takes 'buffers' in the user range [1, UINT32_MAX]
+        void invalidate_buffer_data(uint32_t buffer) noexcept;
+        // Clears memory allocated for 'buffers' and buffers ids
         // Takes 'buffers' in the user range [1, UINT32_MAX]
         void delete_buffers(uint32_t n, const uint32_t* buffers) noexcept;
 

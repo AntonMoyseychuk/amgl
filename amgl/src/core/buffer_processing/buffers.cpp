@@ -29,7 +29,6 @@ namespace amgl
     void buffers::reallocate_memory_block(uint32_t id, size_t size) noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
-
         m_memory_blocks[id].resize(size);
     }
 
@@ -42,11 +41,18 @@ namespace amgl
         m_memory_blocks[id].shrink_to_fit();
     }
 
+    
+    void buffers::shrink_buffer_to_size(uint32_t id, size_t size) noexcept
+    {
+        AM_ASSERT(id < m_memory_blocks.size());
+        m_memory_blocks[id].resize(size);
+        m_memory_blocks[id].shrink_to_fit();
+    }
 
+    
     const buffers::memory_block& buffers::get_memory_block(uint32_t id) const noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
-
         return m_memory_blocks[id];
     }
 
@@ -54,7 +60,6 @@ namespace amgl
     buffers::memory_block& buffers::get_memory_block(uint32_t id) noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
-
         return m_memory_blocks[id];
     }
 
@@ -62,7 +67,6 @@ namespace amgl
     bool buffers::is_buffer_mapped(uint32_t id) const noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
-
         return m_map_states[id];
     }
 

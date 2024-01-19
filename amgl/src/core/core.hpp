@@ -27,6 +27,11 @@
         return __VA_ARGS__;             \
     }
 
+#define AM_CONTINUE_IF(condition)       \
+    if (condition) {                    \
+        continue;                       \
+    }
+
 #define AM_SET_ERROR_FLAG_IF(condition, error, context_manager)   \
     if ((condition)) {                                       \
         context_manager.update_error_flag(error);            \
