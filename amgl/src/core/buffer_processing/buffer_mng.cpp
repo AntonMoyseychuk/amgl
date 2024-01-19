@@ -78,7 +78,7 @@ namespace amgl
         AM_RETURN_IF(!buffers);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            buffers[i] = conv_internal_to_user_range(m_buffers.create_id());
+            buffers[i] = conv_internal_to_user_range(m_buffers.create_buffer());
         }
     }
 
@@ -105,7 +105,8 @@ namespace amgl
             if (target != AMGL_NONE) {
                 gs_context_mng.bind_target_buffer_unsafe(target, AM_DEFAULT_USER_ID);
             }
-            m_buffers.free_id(internal_id);
+            m_buffers.unmap_buffer(internal_id);
+            m_buffers.free_buffer(internal_id);
         }
     }
     

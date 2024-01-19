@@ -19,9 +19,9 @@ namespace amgl
         buffers(uint32_t size);
 
         // Returns 'id' in the internal range [0, UINT32_MAX - 1]
-        uint32_t create_id() noexcept;
+        uint32_t create_buffer() noexcept;
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]
-        void free_id(uint32_t id) noexcept;
+        void free_buffer(uint32_t id) noexcept;
 
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         void reallocate_memory_block(uint32_t id, size_t size) noexcept;

@@ -9,7 +9,7 @@ namespace amgl
     }
 
 
-    uint32_t buffers::create_id() noexcept
+    uint32_t buffers::create_buffer() noexcept
     {
         const uint32_t id = m_id_pool.generate_id();
         if (id >= m_memory_blocks.size()) {
@@ -19,10 +19,9 @@ namespace amgl
     }
 
 
-    void buffers::free_id(uint32_t id) noexcept
+    void buffers::free_buffer(uint32_t id) noexcept
     {
         deallocate_memory_block(id);
-        unmap_buffer(id);
         m_id_pool.free_id(id);
     }
 
