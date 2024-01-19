@@ -86,13 +86,13 @@ void amglGenBuffers(uint32_t n, uint32_t* buffers) noexcept
 
 void amglGetBufferSubData(enum_t target, size_t offset, size_t size, void* data) noexcept
 {
-    
+    gs_buffer_mng.get_buffer_sub_data(target, offset, size, data);
 }
 
 
 void amglGetNamedBufferSubData(uint32_t buffer, size_t offset, size_t size, void* data) noexcept
 {
-    
+    gs_buffer_mng.get_named_buffer_sub_data(buffer, offset, size, data);
 }
 
 

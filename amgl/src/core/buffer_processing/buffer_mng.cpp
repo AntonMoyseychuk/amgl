@@ -130,7 +130,7 @@ namespace amgl
         m_buffers.reallocate_memory_block(internal_id, size);
 
         if (data != nullptr) {
-            memcpy_s(m_buffers.m_memory_blocks[internal_id].data(), size, data, size);
+            memcpy_s(m_buffers.get_memory_block(internal_id).data(), size, data, size);
         }
     }
 
@@ -143,7 +143,7 @@ namespace amgl
         named_buffer_sub_data(buffer, offset, size, data);
     }
 
-    
+
     void buffer_mng::named_buffer_sub_data(uint32_t buffer, size_t offset, size_t size, const void *data) noexcept
     {
         const uint32_t internal_id = conv_user_to_inernal_range(buffer);
@@ -151,17 +151,14 @@ namespace amgl
         CHECK_BUFFER_NOT_DEFAULT(internal_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_MAPPED(internal_id, AMGL_INVALID_OPERATION);
 
-        const size_t buffer_size = m_buffers.m_memory_blocks[internal_id].size();
-        if (offset + size >= buffer_size) {
-            gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);
-            return;
-        }
+        buffers::memory_block& mem_block = m_buffers.get_memory_block(internal_id);
 
-        if (data == nullptr) {
-            return;
-        }
+        const size_t buffer_size = mem_block.size();
+        AM_SET_ERROR_FLAG_IF(offset + size > buffer_size, AMGL_INVALID_VALUE, gs_context_mng);
 
-        byte_t* dst = m_buffers.m_memory_blocks[internal_id].data() + offset;
+        AM_RETURN_IF(data == nullptr);
+
+        byte_t* dst = mem_block.data() + offset;
         memcpy_s(dst, buffer_size, data, size);
     }
 
@@ -189,21 +186,43 @@ namespace amgl
         CHECK_BUFFER_NOT_DEFAULT(internal_write_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_MAPPED(internal_write_id, AMGL_INVALID_OPERATION);
 
-        buffers::memory_block& read_mem_block = m_buffers.m_memory_blocks[internal_read_id];
-        buffers::memory_block& write_mem_block = m_buffers.m_memory_blocks[internal_write_id];
-        if (read_offset + size > read_mem_block.size() || write_offset + size > write_mem_block.size()) {
-            gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);
-            return;
-        }
+        buffers::memory_block& read_mem_block = m_buffers.get_memory_block(internal_read_id);
+        buffers::memory_block& write_mem_block = m_buffers.get_memory_block(internal_write_id);
+        AM_SET_ERROR_FLAG_IF(read_offset + size > read_mem_block.size() || write_offset + size > write_mem_block.size(), 
+            AMGL_INVALID_VALUE, gs_context_mng);
 
-        if (internal_read_id == internal_write_id || 
-            detail::are_memory_regions_overlap(read_mem_block.data(), size, write_mem_block.data(), size)
-        ) {
-            gs_context_mng.update_error_flag(AMGL_INVALID_VALUE);
-            return;
-        }
+        AM_SET_ERROR_FLAG_IF(internal_read_id == internal_write_id || 
+            detail::are_memory_regions_overlap(read_mem_block.data(), size, write_mem_block.data(), size), AMGL_INVALID_VALUE, gs_context_mng);
         
         memcpy_s(write_mem_block.data() + write_offset, write_mem_block.size(), read_mem_block.data() + read_offset, size);
+    }
+
+    
+    void buffer_mng::get_buffer_sub_data(enum_t target, size_t offset, size_t size, void *data) noexcept
+    {
+        CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
+
+        const uint32_t buffer = gs_context_mng.get_binding(target);
+        get_named_buffer_sub_data(buffer, offset, size, data);
+    }
+
+    
+    void buffer_mng::get_named_buffer_sub_data(uint32_t buffer, size_t offset, size_t size, void *data) noexcept
+    {
+        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
+        CHECK_BUFFER_VALIDITY(internal_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_DEFAULT(internal_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_MAPPED(internal_id, AMGL_INVALID_OPERATION);
+
+        buffers::memory_block& mem_block = m_buffers.get_memory_block(internal_id);
+
+        const size_t buffer_size = mem_block.size();
+        AM_SET_ERROR_FLAG_IF(offset + size > buffer_size, AMGL_INVALID_VALUE, gs_context_mng);
+
+        AM_RETURN_IF(data == nullptr);
+
+        const byte_t* src = mem_block.data() + offset;
+        memcpy(data, src, size);
     }
 
     

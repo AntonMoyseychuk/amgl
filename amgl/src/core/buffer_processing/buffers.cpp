@@ -43,19 +43,19 @@ namespace amgl
     }
 
 
-    const buffers::memory_block *buffers::get_memory_block(uint32_t id) const noexcept
+    const buffers::memory_block& buffers::get_memory_block(uint32_t id) const noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
 
-        return &m_memory_blocks[id];
+        return m_memory_blocks[id];
     }
 
 
-    buffers::memory_block *buffers::get_memory_block(uint32_t id) noexcept
+    buffers::memory_block& buffers::get_memory_block(uint32_t id) noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());
 
-        return &m_memory_blocks[id];
+        return m_memory_blocks[id];
     }
 
 

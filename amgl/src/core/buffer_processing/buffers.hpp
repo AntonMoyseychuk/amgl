@@ -29,9 +29,9 @@ namespace amgl
         void deallocate_memory_block(uint32_t id) noexcept;
 
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]
-        const memory_block* get_memory_block(uint32_t id) const noexcept;
+        const memory_block& get_memory_block(uint32_t id) const noexcept;
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]
-        memory_block* get_memory_block(uint32_t id) noexcept;
+        memory_block& get_memory_block(uint32_t id) noexcept;
 
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         bool is_buffer_mapped(uint32_t id) const noexcept;
