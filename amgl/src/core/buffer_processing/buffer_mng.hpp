@@ -51,6 +51,13 @@ namespace amgl
         // Takes 'vaobj' in the user range [1, UINT32_MAX]
         void set_vertex_array_attrib_state(uint32_t vaobj, uint32_t index, bool enabled) noexcept;
 
+        void* map_buffer(enum_t target, enum_t access /* unused */) noexcept;
+        // Takes 'buffer' in the user range [1, UINT32_MAX]
+        void* map_named_buffer(uint32_t buffer, enum_t access /* unused */) noexcept;
+        void unmap_buffer(enum_t target) noexcept;
+        // Takes 'buffer' in the user range [1, UINT32_MAX]
+        void unmap_named_buffer(uint32_t buffer) noexcept;
+
 
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         bool is_buffer(uint32_t buffer) noexcept;

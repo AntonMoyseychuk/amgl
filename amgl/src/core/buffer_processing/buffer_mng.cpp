@@ -8,56 +8,63 @@ namespace amgl
     static context_mng& gs_context_mng = context_mng::instance();
 
 
-    #define CHECK_BUFFER_TARGET_VALIDITY(target, error_flag)        \
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(target,                  \
-            AMGL_ARRAY_BUFFER,                                      \
-            AMGL_ATOMIC_COUNTER_BUFFER,                             \
-            AMGL_COPY_READ_BUFFER,                                  \
-            AMGL_COPY_WRITE_BUFFER,                                 \
-            AMGL_DISPATCH_INDIRECT_BUFFER,                          \
-            AMGL_DRAW_INDIRECT_BUFFER,                              \
-            AMGL_ELEMENT_ARRAY_BUFFER,                              \
-            AMGL_PIXEL_PACK_BUFFER,                                 \
-            AMGL_PIXEL_UNPACK_BUFFER,                               \
-            AMGL_QUERY_BUFFER,                                      \
-            AMGL_SHADER_STORAGE_BUFFER,                             \
-            AMGL_TEXTURE_BUFFER,                                    \
-            AMGL_TRANSFORM_FEEDBACK_BUFFER,                         \
-            AMGL_UNIFORM_BUFFER), error_flag, gs_context_mng)
+    #define CHECK_BUFFER_TARGET_VALIDITY(target, error_flag, ...)           \
+        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(target,                     \
+            AMGL_ARRAY_BUFFER,                                              \
+            AMGL_ATOMIC_COUNTER_BUFFER,                                     \
+            AMGL_COPY_READ_BUFFER,                                          \
+            AMGL_COPY_WRITE_BUFFER,                                         \
+            AMGL_DISPATCH_INDIRECT_BUFFER,                                  \
+            AMGL_DRAW_INDIRECT_BUFFER,                                      \
+            AMGL_ELEMENT_ARRAY_BUFFER,                                      \
+            AMGL_PIXEL_PACK_BUFFER,                                         \
+            AMGL_PIXEL_UNPACK_BUFFER,                                       \
+            AMGL_QUERY_BUFFER,                                              \
+            AMGL_SHADER_STORAGE_BUFFER,                                     \
+            AMGL_TEXTURE_BUFFER,                                            \
+            AMGL_TRANSFORM_FEEDBACK_BUFFER,                                 \
+            AMGL_UNIFORM_BUFFER), error_flag, gs_context_mng, __VA_ARGS__)
 
 
-    #define CHECK_BUFFER_USAGE_VALIDITY(usage, error_flag)          \
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(usage,                   \
-            AMGL_STREAM_DRAW,                                       \
-            AMGL_STREAM_READ,                                       \
-            AMGL_STREAM_COPY,                                       \
-            AMGL_STATIC_DRAW,                                       \
-            AMGL_STATIC_READ,                                       \
-            AMGL_STATIC_COPY,                                       \
-            AMGL_DYNAMIC_DRAW,                                      \
-            AMGL_DYNAMIC_READ,                                      \
-            AMGL_DYNAMIC_COPY), error_flag, gs_context_mng)
+    #define CHECK_BUFFER_USAGE_VALIDITY(usage, error_flag, ...)             \
+        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(usage,                      \
+            AMGL_STREAM_DRAW,                                               \
+            AMGL_STREAM_READ,                                               \
+            AMGL_STREAM_COPY,                                               \
+            AMGL_STATIC_DRAW,                                               \
+            AMGL_STATIC_READ,                                               \
+            AMGL_STATIC_COPY,                                               \
+            AMGL_DYNAMIC_DRAW,                                              \
+            AMGL_DYNAMIC_READ,                                              \
+            AMGL_DYNAMIC_COPY), error_flag, gs_context_mng, __VA_ARGS__)
+
+
+    #define CHECK_BUFFER_ACCESS_VALIDITY(access, error_flag, ...)           \
+        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(access,                     \
+            AMGL_READ_ONLY,                                                 \
+            AMGL_WRITE_ONLY,                                                \
+            AMGL_READ_WRITE), error_flag, gs_context_mng, __VA_ARGS__)
 
 
     // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_BUFFER_VALIDITY(buffer, error_flag) \
-        AM_SET_ERROR_FLAG_IF(!m_buffers.is_buffer_exist(buffer), error_flag, gs_context_mng)
+    #define CHECK_BUFFER_VALIDITY(buffer, error_flag, ...) \
+        AM_SET_ERROR_FLAG_IF(!m_buffers.is_buffer_exist(buffer), error_flag, gs_context_mng, __VA_ARGS__)
 
     // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_BUFFER_NOT_DEFAULT(buffer, error_flag) \
-        AM_SET_ERROR_FLAG_IF(is_default_id_internal_range(buffer), error_flag, gs_context_mng)
+    #define CHECK_BUFFER_NOT_DEFAULT(buffer, error_flag, ...) \
+        AM_SET_ERROR_FLAG_IF(is_default_id_internal_range(buffer), error_flag, gs_context_mng, __VA_ARGS__)
 
     // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_BUFFER_NOT_MAPPED(buffer, error_flag) \
-        AM_SET_ERROR_FLAG_IF(m_buffers.is_buffer_mapped(buffer), error_flag, gs_context_mng)
+    #define CHECK_BUFFER_NOT_MAPPED(buffer, error_flag, ...) \
+        AM_SET_ERROR_FLAG_IF(m_buffers.is_buffer_mapped(buffer), error_flag, gs_context_mng, __VA_ARGS__)
 
     // Takes 'vao' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_VAO_VALIDITY(vao, error_flag) \
-        AM_SET_ERROR_FLAG_IF(!m_vertex_arrays.is_vertex_array_exist(vao), error_flag, gs_context_mng)
+    #define CHECK_VAO_VALIDITY(vao, error_flag, ...) \
+        AM_SET_ERROR_FLAG_IF(!m_vertex_arrays.is_vertex_array_exist(vao), error_flag, gs_context_mng, __VA_ARGS__)
 
     // Takes 'vao' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_VAO_NOT_DEFAULT(vao, error_flag) \
-        AM_SET_ERROR_FLAG_IF(is_default_id_internal_range(vao), error_flag, gs_context_mng)
+    #define CHECK_VAO_NOT_DEFAULT(vao, error_flag, ...) \
+        AM_SET_ERROR_FLAG_IF(is_default_id_internal_range(vao), error_flag, gs_context_mng, __VA_ARGS__)
 
 
     buffer_mng::buffer_mng(size_t preallocation_size)
@@ -257,7 +264,49 @@ namespace amgl
         m_vertex_arrays.m_layouts[internal_id].enable_flags.set(index, enabled);
     }
 
+    
+    void *buffer_mng::map_buffer(enum_t target, enum_t access) noexcept
+    {
+        CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM, nullptr);
+        
+        const uint32_t buffer = gs_context_mng.get_binding(target);
+        return map_named_buffer(buffer, access);
+    }
 
+    
+    void *buffer_mng::map_named_buffer(uint32_t buffer, enum_t access) noexcept
+    {
+        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
+        CHECK_BUFFER_VALIDITY(internal_id, AMGL_INVALID_OPERATION, nullptr);
+        CHECK_BUFFER_NOT_DEFAULT(internal_id, AMGL_INVALID_OPERATION, nullptr);
+        
+        CHECK_BUFFER_ACCESS_VALIDITY(access, AMGL_INVALID_ENUM, nullptr);
+
+        return m_buffers.map_buffer(internal_id);
+    }
+
+    
+    void buffer_mng::unmap_buffer(enum_t target) noexcept
+    {
+        CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
+        
+        const uint32_t buffer = gs_context_mng.get_binding(target);
+        unmap_named_buffer(buffer);
+    }
+
+    
+    void buffer_mng::unmap_named_buffer(uint32_t buffer) noexcept
+    {
+        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
+        CHECK_BUFFER_VALIDITY(internal_id, AMGL_INVALID_OPERATION);
+        CHECK_BUFFER_NOT_DEFAULT(internal_id, AMGL_INVALID_OPERATION);
+
+        AM_SET_ERROR_FLAG_IF(!m_buffers.is_buffer_mapped(internal_id), AMGL_INVALID_OPERATION, gs_context_mng);
+
+        m_buffers.unmap_buffer(internal_id);
+    }
+
+    
     bool buffer_mng::is_buffer(uint32_t buffer) noexcept
     {
         AM_RETURN_IF(is_default_id_user_range(buffer), false);

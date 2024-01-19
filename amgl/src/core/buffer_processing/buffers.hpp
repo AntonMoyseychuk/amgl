@@ -36,6 +36,11 @@ namespace amgl
         memory_block& get_memory_block(uint32_t id) noexcept;
 
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]
+        void* map_buffer(uint32_t id) noexcept;
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
+        void unmap_buffer(uint32_t id) noexcept;
+
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         bool is_buffer_mapped(uint32_t id) const noexcept;
 
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]

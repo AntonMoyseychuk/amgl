@@ -63,7 +63,24 @@ namespace amgl
         return m_memory_blocks[id];
     }
 
+    
+    void *buffers::map_buffer(uint32_t id) noexcept
+    {
+        AM_ASSERT(id < m_memory_blocks.size());
+        AM_ASSERT(id < m_map_states.size());
 
+        m_map_states[id] = true;
+        return m_memory_blocks[id].data();
+    }
+
+    
+    void buffers::unmap_buffer(uint32_t id) noexcept
+    {
+        AM_ASSERT(id < m_map_states.size());
+        m_map_states[id] = false;
+    }
+
+    
     bool buffers::is_buffer_mapped(uint32_t id) const noexcept
     {
         AM_ASSERT(id < m_memory_blocks.size());

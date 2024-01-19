@@ -43,6 +43,10 @@ enum AMGLConstant : enum_t
     AMGL_DYNAMIC_READ                       = 0x88E9,
     AMGL_DYNAMIC_COPY                       = 0x88EA,
 
+    AMGL_READ_ONLY                          = 0x88B8,
+    AMGL_WRITE_ONLY                         = 0x88B9,
+    AMGL_READ_WRITE                         = 0x88BA,
+
     AMGL_VERTEX_ARRAY_BINDING               = 0x85B5,
 };
 
@@ -82,9 +86,8 @@ void amglInvalidateBufferData(uint32_t buffer) noexcept;
 
 bool amglIsBuffer(uint32_t buffer) noexcept;
 
-void* amglMapNamedBuffer(uint32_t buffer, enum_t access) noexcept;
 void* amglMapBuffer(enum_t target, enum_t access) noexcept;
-
+void* amglMapNamedBuffer(uint32_t buffer, enum_t access) noexcept;
 void amglUnmapBuffer(enum_t target) noexcept;
 void amglUnmapNamedBuffer(uint32_t buffer) noexcept;
 

@@ -108,27 +108,27 @@ bool amglIsBuffer(uint32_t buffer) noexcept
 }
 
 
-void* amglMapNamedBuffer(uint32_t buffer, enum_t access) noexcept
+void* amglMapBuffer(enum_t target, enum_t access) noexcept
 {
-    return nullptr;
+    return gs_buffer_mng.map_buffer(target, access);
 }
 
 
-void* amglMapBuffer(enum_t target, enum_t access) noexcept
+void* amglMapNamedBuffer(uint32_t buffer, enum_t access) noexcept
 {
-    return nullptr;
+    return gs_buffer_mng.map_named_buffer(buffer, access);
 }
 
 
 void amglUnmapBuffer(enum_t target) noexcept
 {
-    
+    gs_buffer_mng.unmap_buffer(target);
 }
 
 
 void amglUnmapNamedBuffer(uint32_t buffer) noexcept
 {
-    
+    gs_buffer_mng.unmap_named_buffer(buffer);
 }
 
 

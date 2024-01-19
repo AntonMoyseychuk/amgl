@@ -32,10 +32,10 @@
         continue;                       \
     }
 
-#define AM_SET_ERROR_FLAG_IF(condition, error, context_manager)   \
-    if ((condition)) {                                       \
-        context_manager.update_error_flag(error);            \
-        return;                                              \
+#define AM_SET_ERROR_FLAG_IF(condition, error, context_manager, ...)    \
+    if ((condition)) {                                                  \
+        context_manager.update_error_flag(error);                       \
+        return __VA_ARGS__;                                             \
     }
 
 namespace amgl

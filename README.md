@@ -81,9 +81,9 @@
   - [ ] *amglGetVertexAttribLdv*
 - [x] *amglInvalidateBufferData*
 - [x] *amglIsBuffer*
-- [ ] amglMapBuffer
-  - [ ] *amglMapBuffer*
-  - [ ] *amglMapNamedBuffer*
+- [x] amglMapBuffer
+  - [x] *amglMapBuffer*
+  - [x] *amglMapNamedBuffer*
 - [ ] amglMapBufferRange
   - [ ] *amglMapBufferRange*
   - [ ] *amglMapNamedBufferRange*
@@ -93,9 +93,9 @@
 - [ ] *amglMultiDrawElementsBaseVertex*
 - [ ] *amglMultiDrawElementsIndirect*
 - [ ] *amglProvokingVertex*
-- [ ] amglUnmapBuffer
-  - [ ] *amglUnmapBuffer*
-  - [ ] *amglUnmapNamedBuffer*
+- [x] amglUnmapBuffer
+  - [x] *amglUnmapBuffer*
+  - [x] *amglUnmapNamedBuffer*
 - [ ] *amglVertexAttribDivisor*
 - [ ] amglVertexAttribPointer
   - [ ] *amglVertexAttribPointer*
