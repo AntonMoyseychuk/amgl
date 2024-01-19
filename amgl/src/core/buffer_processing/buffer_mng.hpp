@@ -39,6 +39,11 @@ namespace amgl
         // Takes 'read_buffer' and 'write_buffer' in the user range [1, UINT32_MAX]
         void copy_named_buffer_sub_data(uint32_t read_buffer, uint32_t write_buffer, size_t read_offset, size_t write_offset, size_t size) noexcept;
 
+        void set_vertex_attrib_array_state(uint32_t index, bool enabled) noexcept;
+        // Takes 'vaobj' in the user range [1, UINT32_MAX]
+        void set_vertex_array_attrib_state(uint32_t vaobj, uint32_t index, bool enabled) noexcept;
+
+
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         bool is_buffer(uint32_t buffer) noexcept;
 

@@ -7,8 +7,9 @@ namespace amgl
 {
     static context_mng& gs_context_mng = context_mng::instance();
 
+
     #define CHECK_BUFFER_TARGET_VALIDITY(target, error_flag)        \
-        if(!detail::is_one_of(target,                               \
+        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(target,                  \
             AMGL_ARRAY_BUFFER,                                      \
             AMGL_ATOMIC_COUNTER_BUFFER,                             \
             AMGL_COPY_READ_BUFFER,                                  \
@@ -22,15 +23,11 @@ namespace amgl
             AMGL_SHADER_STORAGE_BUFFER,                             \
             AMGL_TEXTURE_BUFFER,                                    \
             AMGL_TRANSFORM_FEEDBACK_BUFFER,                         \
-            AMGL_UNIFORM_BUFFER)                                    \
-        ) {                                                         \
-            gs_context_mng.update_error_flag(error_flag);           \
-            return;                                                 \
-        }
+            AMGL_UNIFORM_BUFFER), error_flag, gs_context_mng)
 
 
     #define CHECK_BUFFER_USAGE_VALIDITY(usage, error_flag)          \
-        if(!detail::is_one_of(usage,                                \
+        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(usage,                   \
             AMGL_STREAM_DRAW,                                       \
             AMGL_STREAM_READ,                                       \
             AMGL_STREAM_COPY,                                       \
@@ -39,34 +36,28 @@ namespace amgl
             AMGL_STATIC_COPY,                                       \
             AMGL_DYNAMIC_DRAW,                                      \
             AMGL_DYNAMIC_READ,                                      \
-            AMGL_DYNAMIC_COPY)                                      \
-        ) {                                                         \
-            gs_context_mng.update_error_flag(error_flag);           \
-            return;                                                 \
-        }
+            AMGL_DYNAMIC_COPY), error_flag, gs_context_mng)
 
 
     // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_BUFFER_VALIDITY(buffer, error_flag)               \
-        if (!m_buffers.is_buffer_exist(buffer)) {                   \
-            gs_context_mng.update_error_flag(error_flag);           \
-            return;                                                 \
-        }
-
+    #define CHECK_BUFFER_VALIDITY(buffer, error_flag) \
+        AM_SET_ERROR_FLAG_IF(!m_buffers.is_buffer_exist(buffer), error_flag, gs_context_mng)
 
     // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_BUFFER_NOT_DEFAULT(buffer, error_flag)            \
-        if (is_default_id_internal_range(buffer)) {                 \
-            gs_context_mng.update_error_flag(error_flag);           \
-            return;                                                 \
-        }
+    #define CHECK_BUFFER_NOT_DEFAULT(buffer, error_flag) \
+        AM_SET_ERROR_FLAG_IF(is_default_id_internal_range(buffer), error_flag, gs_context_mng)
 
     // Takes 'buffer' in the internal range [0, UINT32_MAX - 1]
-    #define CHECK_BUFFER_NOT_MAPPED(buffer, error_flag)             \
-        if (m_buffers.is_buffer_mapped(buffer)) {                   \
-            gs_context_mng.update_error_flag(error_flag);           \
-            return;                                                 \
-        }
+    #define CHECK_BUFFER_NOT_MAPPED(buffer, error_flag) \
+        AM_SET_ERROR_FLAG_IF(m_buffers.is_buffer_mapped(buffer), error_flag, gs_context_mng)
+
+    // Takes 'vao' in the internal range [0, UINT32_MAX - 1]
+    #define CHECK_VAO_VALIDITY(vao, error_flag) \
+        AM_SET_ERROR_FLAG_IF(!m_vertex_arrays.is_vertex_array_exist(vao), error_flag, gs_context_mng)
+
+    // Takes 'vao' in the internal range [0, UINT32_MAX - 1]
+    #define CHECK_VAO_NOT_DEFAULT(vao, error_flag) \
+        AM_SET_ERROR_FLAG_IF(is_default_id_internal_range(vao), error_flag, gs_context_mng)
 
 
     buffer_mng::buffer_mng(size_t preallocation_size)
@@ -216,6 +207,29 @@ namespace amgl
     }
 
     
+    void buffer_mng::set_vertex_attrib_array_state(uint32_t index, bool enabled) noexcept
+    {
+        const uint32_t vao_user_range = conv_internal_to_user_range(gs_context_mng.get_context().bindings.vao);
+        set_vertex_array_attrib_state(vao_user_range, index, enabled);
+    }
+
+    
+    void buffer_mng::set_vertex_array_attrib_state(uint32_t vaobj, uint32_t index, bool enabled) noexcept
+    {
+        AM_ASSERT_MSG(false, "VAOs are not implemented yet");
+
+        const uint32_t internal_id = conv_user_to_inernal_range(vaobj);
+
+        CHECK_VAO_VALIDITY(internal_id, AMGL_INVALID_OPERATION);
+        CHECK_VAO_NOT_DEFAULT(internal_id, AMGL_INVALID_OPERATION);
+
+        AM_SET_ERROR_FLAG_IF(index >= context::MAX_VERTEX_ATTRIBS_COUNT, AMGL_INVALID_VALUE, gs_context_mng);
+
+        AM_ASSERT(internal_id < m_vertex_arrays.m_layouts.size());
+        m_vertex_arrays.m_layouts[internal_id].enable_flags.set(index, enabled);
+    }
+
+
     bool buffer_mng::is_buffer(uint32_t buffer) noexcept
     {
         AM_RETURN_IF(is_default_id_user_range(buffer), false);

@@ -27,6 +27,12 @@
         return __VA_ARGS__;             \
     }
 
+#define AM_SET_ERROR_FLAG_IF(condition, error, context_manager)   \
+    if ((condition)) {                                       \
+        context_manager.update_error_flag(error);            \
+        return;                                              \
+    }
+
 namespace amgl
 {
     // Converts id from internal [0, UINT32_MAX - 1] to user [1, UINT32_MAX] range

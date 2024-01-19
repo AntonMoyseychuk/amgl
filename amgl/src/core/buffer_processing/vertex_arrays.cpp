@@ -4,8 +4,8 @@
 namespace amgl
 {
     vertex_arrays::vertex_arrays(uint32_t size)
-        : m_vbo_ids(size), m_ebo_ids(size), m_layouts(size)
     {
+        resize_buffers(size);
     }
     
     
@@ -27,8 +27,14 @@ namespace amgl
         const uint32_t internal_id = conv_user_to_inernal_range(id);
         m_id_pool.free_id(internal_id);
     }
-    
 
+    
+    bool vertex_arrays::is_vertex_array_exist(uint32_t id) const noexcept
+    {
+        return id == AM_DEFAULT_INTERNAL_ID || m_id_pool.is_busy(id);
+    }
+
+    
     void vertex_arrays::bind_buffer_unsafe(uint32_t vertex_array, enum_t target, uint32_t buffer) noexcept
     {
         switch (target) {

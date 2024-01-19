@@ -56,25 +56,25 @@ void amglDeleteBuffers(uint32_t n, const uint32_t* buffers) noexcept
 
 void amglEnableVertexAttribArray(uint32_t index) noexcept
 {
-    
+    gs_buffer_mng.set_vertex_attrib_array_state(index, true);
 }
 
 
 void amglEnableVertexArrayAttrib(uint32_t vaobj, uint32_t index) noexcept
 {
-    
+    gs_buffer_mng.set_vertex_array_attrib_state(vaobj, index, true);
 }
 
 
 void amglDisableVertexAttribArray(uint32_t index) noexcept
 {
-    
+    gs_buffer_mng.set_vertex_attrib_array_state(index, false);
 }
 
 
 void amglDisableVertexArrayAttrib(uint32_t vaobj, uint32_t index) noexcept
 {
-    
+    gs_buffer_mng.set_vertex_array_attrib_state(vaobj, index, false);
 }
 
 
