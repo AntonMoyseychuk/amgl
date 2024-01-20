@@ -104,10 +104,10 @@
 - [ ] *amglVertexBindingDivisor*
 
 #### *Vertex Array Objects:*
-- [ ] *amglBindVertexArray*
-- [ ] *amglDeleteVertexArray*
-- [ ] *amglGenVertexArray*
-- [ ] *amglIsVertexArray*
+- [x] *amglBindVertexArray*
+- [x] *amglDeleteVertexArray*
+- [x] *amglGenVertexArray*
+- [x] *amglIsVertexArray*
 
 #### *State Management:*
 - [ ] *amglBlendColor*
