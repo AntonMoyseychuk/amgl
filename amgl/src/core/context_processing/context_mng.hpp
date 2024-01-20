@@ -27,6 +27,10 @@ namespace amgl
         // Doesn't check 'target' and 'buffer' validity
         void bind_target_buffer_unsafe(enum_t target, uint32_t buffer) noexcept;
 
+        // Takes 'array', 'vbo' and 'ebo' in the user range [1, UINT32_MAX]
+        // Doesn't check 'array', 'vbo' and 'ebo' validity
+        void bind_vertex_array_unsafe(uint32_t array, uint32_t vbo, uint32_t ebo) noexcept;
+
         // Takes 'binding' in the user range [1, UINT32_MAX]
         // Returns AMGL_NONE if buffer is not binded to any target or it's default buffer
         enum_t get_binding_target(uint32_t binding) const noexcept;

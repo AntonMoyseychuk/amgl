@@ -253,8 +253,6 @@ namespace amgl
     
     void buffer_mng::set_vertex_array_attrib_state(uint32_t vaobj, uint32_t index, bool enabled) noexcept
     {
-        AM_ASSERT_MSG(false, "VAOs are not implemented yet");
-
         const uint32_t internal_id = conv_user_to_inernal_range(vaobj);
 
         CHECK_VAO_VALIDITY(internal_id, AMGL_INVALID_OPERATION);
@@ -314,5 +312,48 @@ namespace amgl
         AM_RETURN_IF(is_default_id_user_range(buffer), false);
 
         return m_buffers.is_buffer_exist(conv_user_to_inernal_range(buffer));
+    }
+    
+    
+    void buffer_mng::bind_vertex_array(uint32_t array) noexcept
+    {
+        const uint32_t internal_id = conv_user_to_inernal_range(array);
+        CHECK_VAO_VALIDITY(internal_id, AMGL_INVALID_OPERATION);
+
+        const uint32_t vbo = conv_internal_to_user_range(m_vertex_arrays.m_vbo_ids[internal_id]);
+        const uint32_t ebo = conv_internal_to_user_range(m_vertex_arrays.m_ebo_ids[internal_id]);
+        gs_context_mng.bind_vertex_array_unsafe(array, vbo, ebo);
+    }
+    
+    
+    void buffer_mng::delete_vertex_arrays(size_t n, const uint32_t *arrays) noexcept
+    {
+        AM_RETURN_IF(!arrays);
+
+        for (uint32_t i = 0u; i < n; ++i) {
+            const uint32_t internal_id = conv_user_to_inernal_range(arrays[i]);
+            AM_CONTINUE_IF(is_default_id_internal_range(internal_id) || !m_vertex_arrays.is_vertex_array_exist(internal_id));
+
+            gs_context_mng.bind_vertex_array_unsafe(AM_DEFAULT_USER_ID, AM_DEFAULT_USER_ID, AM_DEFAULT_USER_ID);
+            m_vertex_arrays.free_array(internal_id);
+        }
+    }
+    
+    
+    void buffer_mng::gen_vertex_arrays(size_t n, uint32_t *arrays) noexcept
+    {
+        AM_RETURN_IF(!arrays);
+
+        for (uint32_t i = 0u; i < n; ++i) {
+            arrays[i] = conv_internal_to_user_range(m_vertex_arrays.create_array());
+        }
+    }
+    
+    
+    bool buffer_mng::is_vertex_array(uint32_t array) noexcept
+    {
+        AM_RETURN_IF(is_default_id_user_range(array), false);
+
+        return m_vertex_arrays.is_vertex_array_exist(conv_user_to_inernal_range(array));
     }
 }

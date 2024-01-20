@@ -148,3 +148,27 @@ void amglVertexAttribLPointer(uint32_t index, size_t size, enum_t type, size_t s
 {
     
 }
+
+
+void amglBindVertexArray(uint32_t array) noexcept
+{
+    gs_buffer_mng.bind_vertex_array(array);
+}
+
+
+void amglDeleteVertexArrays(size_t n, const uint32_t* arrays) noexcept
+{
+    gs_buffer_mng.delete_vertex_arrays(n, arrays);
+}
+
+
+void amglGenVertexArrays(size_t n, uint32_t* arrays) noexcept
+{
+    gs_buffer_mng.gen_vertex_arrays(n, arrays);
+}
+
+
+bool amglIsVertexArray(uint32_t array) noexcept
+{
+    return gs_buffer_mng.is_vertex_array(array);
+}

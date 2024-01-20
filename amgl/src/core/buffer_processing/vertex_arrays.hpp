@@ -31,8 +31,10 @@ namespace amgl
         vertex_arrays() = default;
         vertex_arrays(uint32_t size);
 
-        uint32_t create_id() noexcept;
-        void free_id(uint32_t id) noexcept;
+        // Returns 'id' in the internal range [0, UINT32_MAX - 1]
+        uint32_t create_array() noexcept;
+        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
+        void free_array(uint32_t id) noexcept;
 
         // Takes 'id' in the internal range [0, UINT32_MAX - 1]
         bool is_vertex_array_exist(uint32_t id) const noexcept;

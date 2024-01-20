@@ -58,9 +58,16 @@ namespace amgl
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         void unmap_named_buffer(uint32_t buffer) noexcept;
 
-
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         bool is_buffer(uint32_t buffer) noexcept;
+
+        // Takes 'array' in the user range [1, UINT32_MAX]
+        void bind_vertex_array(uint32_t array) noexcept;
+        // Takes 'arrays' in the user range [1, UINT32_MAX]
+        void delete_vertex_arrays(size_t n, const uint32_t* arrays) noexcept;
+        void gen_vertex_arrays(size_t n, uint32_t* arrays) noexcept;
+        // Takes 'array' in the user range [1, UINT32_MAX]
+        bool is_vertex_array(uint32_t array) noexcept;
 
     private:
         buffer_mng() = default;

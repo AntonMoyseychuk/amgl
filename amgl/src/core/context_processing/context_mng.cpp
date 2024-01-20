@@ -80,7 +80,15 @@ namespace amgl
             break;
         };
     }
+
     
+    void context_mng::bind_vertex_array_unsafe(uint32_t array, uint32_t vbo, uint32_t ebo) noexcept
+    {
+        m_context.bindings.vao = conv_user_to_inernal_range(array);
+        m_context.bindings.vbo = conv_user_to_inernal_range(vbo);
+        m_context.bindings.ebo = conv_user_to_inernal_range(ebo);
+    }
+
     
     enum_t context_mng::get_binding_target(uint32_t binding) const noexcept
     {

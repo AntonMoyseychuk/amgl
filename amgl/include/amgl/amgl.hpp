@@ -97,6 +97,16 @@ void amglVertexAttribLPointer(uint32_t index, size_t size, enum_t type, size_t s
 
 
 //
+//  Vertex Array Objects
+//
+
+void amglBindVertexArray(uint32_t array) noexcept;
+void amglDeleteVertexArrays(size_t n, const uint32_t* arrays) noexcept;
+void amglGenVertexArrays(size_t n, uint32_t* arrays) noexcept;
+bool amglIsVertexArray(uint32_t array) noexcept;
+
+
+//
 //  State Management
 //
 
