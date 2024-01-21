@@ -46,6 +46,51 @@ namespace amgl
         }
     }
 
+    
+    void vertex_arrays::set_layout(uint32_t vertex_array, uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void *pointer) noexcept
+    {
+        attribute_layout& layout = m_layouts[vertex_array];
+
+        attribute_layout::memory_mapping& mm = layout.mem_mappings[index];
+        mm.size     = size;
+        mm.stride   = stride;
+        mm.pointer  = (uintptr_t)pointer;
+
+        layout.types[index]                 = type;
+        layout.normalized_flags[index]      = normalized;
+    }
+
+    
+    void vertex_arrays::set_layout_size(uint32_t vertex_array, uint32_t index, size_t size) noexcept
+    {
+        m_layouts[vertex_array].mem_mappings[index].size = size;
+    }
+
+
+    void vertex_arrays::set_layout_stride(uint32_t vertex_array, uint32_t index, size_t stride) noexcept
+    {
+        m_layouts[vertex_array].mem_mappings[index].stride = stride;
+    }
+
+    
+    void vertex_arrays::set_layout_pointer(uint32_t vertex_array, uint32_t index, const void *pointer) noexcept
+    {
+        m_layouts[vertex_array].mem_mappings[index].pointer = (uintptr_t)pointer;
+    }
+
+    
+    void vertex_arrays::set_layout_type(uint32_t vertex_array, uint32_t index, enum_t type) noexcept
+    {
+        m_layouts[vertex_array].types[index] = type;
+    }
+
+    
+    void vertex_arrays::set_layout_normalized(uint32_t vertex_array, uint32_t index, bool normalized) noexcept
+    {
+        m_layouts[vertex_array].normalized_flags[index] = normalized;
+    }
+
+    
     void vertex_arrays::resize_buffers(uint32_t size) noexcept
     {
         m_layouts.resize(size);

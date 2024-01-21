@@ -12,7 +12,7 @@ namespace amgl
     {
         friend class buffer_mng;
     public:
-        using memory_block = std::vector<byte_t>;
+        using memory_block = std::vector<ubyte_t>;
 
     public:
         buffers() = default;

@@ -1,13 +1,22 @@
 #pragma once
 #include <cstdint>
 
-using byte_t = uint8_t;
+using ubyte_t = uint8_t;
 using enum_t = uint16_t;
 
 
 enum AMGLConstant : enum_t
 {
     AMGL_NONE                               = 0,
+
+    AMGL_BYTE                               = 0x1400,
+    AMGL_UNSIGNED_BYTE                      = 0x1401,
+    AMGL_SHORT                              = 0x1402,
+    AMGL_UNSIGNED_SHORT                     = 0x1403,
+    AMGL_INT                                = 0x1404,
+    AMGL_UNSIGNED_INT                       = 0x1405,
+    AMGL_FLOAT                              = 0x1406,
+    AMGL_DOUBLE                             = 0x140A,
 
     AMGL_NO_ERROR                           = 0,
     AMGL_INVALID_ENUM                       = 0x0500,

@@ -80,9 +80,29 @@ namespace amgl
         // Takes 'array' in the user range [1, UINT32_MAX]
         bool is_vertex_array(uint32_t array) noexcept;
 
+        void vertex_attrib_pointer(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept;
+        void vertex_attrib_I_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void* pointer) noexcept;
+        void vertex_attrib_L_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void* pointer) noexcept;
+
     private:
         buffer_mng() = default;
         buffer_mng(size_t preallocation_size);
+
+        template <enum_t type0, enum_t... types>
+        void vertex_attrib_pointer(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept
+        {
+            AM_SET_ERROR_FLAG_IF(index >= context::MAX_VERTEX_ATTRIB_BINDINGS, AMGL_INVALID_VALUE, gs_context_mng);
+        
+            AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, gs_context_mng);
+            
+            AM_SET_ERROR_FLAG_IF(!detail::is_one_of(type, type0, std::forward<enum_t>(types)...), AMGL_INVALID_ENUM, gs_context_mng);
+            
+            const uint32_t vao_internal_id = conv_user_to_inernal_range(gs_context_mng.get_binding(AMGL_VERTEX_ARRAY_BINDING));
+            const uint32_t vbo_internal_id = m_vertex_arrays.m_vbo_ids[vao_internal_id];
+            AM_SET_ERROR_FLAG_IF(vbo_internal_id == AM_DEFAULT_INTERNAL_ID && pointer != nullptr, AMGL_INVALID_OPERATION, gs_context_mng);
+
+            m_vertex_arrays.set_layout(vao_internal_id, index, size, type, normalized, stride, pointer);
+        }
 
     private:
         buffers m_buffers;

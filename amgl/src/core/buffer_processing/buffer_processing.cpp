@@ -158,19 +158,19 @@ void amglUnmapNamedBuffer(uint32_t buffer) noexcept
 
 void amglVertexAttribPointer(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept
 {
-    
+    gs_buffer_mng.vertex_attrib_pointer(index, size, type, normalized, stride, pointer);
 }
 
 
 void amglVertexAttribIPointer(uint32_t index, size_t size, enum_t type, size_t stride, const void* pointer) noexcept
 {
-    
+    gs_buffer_mng.vertex_attrib_I_pointer(index, size, type, stride, pointer);
 }
 
 
 void amglVertexAttribLPointer(uint32_t index, size_t size, enum_t type, size_t stride, const void* pointer) noexcept
 {
-    
+    gs_buffer_mng.vertex_attrib_L_pointer(index, size, type, stride, pointer);
 }
 
 

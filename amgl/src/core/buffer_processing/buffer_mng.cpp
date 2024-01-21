@@ -217,7 +217,7 @@ namespace amgl
 
         AM_RETURN_IF(data == nullptr);
 
-        byte_t* dst = mem_block.data() + offset;
+        ubyte_t* dst = mem_block.data() + offset;
         memcpy_s(dst, buffer_size, data, size);
     }
 
@@ -280,7 +280,7 @@ namespace amgl
 
         AM_RETURN_IF(data == nullptr);
 
-        const byte_t* src = mem_block.data() + offset;
+        const ubyte_t* src = mem_block.data() + offset;
         memcpy(data, src, size);
     }
 
@@ -396,5 +396,25 @@ namespace amgl
         AM_RETURN_IF(is_default_id_user_range(array), false);
 
         return m_vertex_arrays.is_vertex_array_exist(conv_user_to_inernal_range(array));
+    }
+    
+    
+    void buffer_mng::vertex_attrib_pointer(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void *pointer) noexcept
+    {
+        vertex_attrib_pointer<AMGL_BYTE, AMGL_UNSIGNED_BYTE, AMGL_SHORT, AMGL_UNSIGNED_SHORT, 
+            AMGL_INT, AMGL_UNSIGNED_INT, AMGL_FLOAT, AMGL_DOUBLE>(index, size, type, normalized, stride, pointer);
+    }
+    
+    
+    void buffer_mng::vertex_attrib_I_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void *pointer) noexcept
+    {
+        vertex_attrib_pointer<AMGL_BYTE, AMGL_UNSIGNED_BYTE, AMGL_SHORT, AMGL_UNSIGNED_SHORT, 
+            AMGL_INT, AMGL_UNSIGNED_INT>(index, size, type, false, stride, pointer);
+    }
+    
+    
+    void buffer_mng::vertex_attrib_L_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void *pointer) noexcept
+    {
+        vertex_attrib_pointer<AMGL_DOUBLE>(index, size, type, false, stride, pointer);
     }
 }
