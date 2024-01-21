@@ -98,10 +98,10 @@ namespace amgl
 
         AM_RETURN_IF(m_context.bindings.vbo    == internal_id, AMGL_ARRAY_BUFFER);
         AM_RETURN_IF(m_context.bindings.ebo    == internal_id, AMGL_ELEMENT_ARRAY_BUFFER);
-        AM_RETURN_IF(m_context.bindings.crbo   == internal_id, AMGL_COPY_READ_BUFFER);
-        AM_RETURN_IF(m_context.bindings.cwbo   == internal_id, AMGL_COPY_WRITE_BUFFER);
         AM_RETURN_IF(m_context.bindings.ssbo   == internal_id, AMGL_SHADER_STORAGE_BUFFER);
         AM_RETURN_IF(m_context.bindings.ubo    == internal_id, AMGL_UNIFORM_BUFFER);
+        AM_RETURN_IF(m_context.bindings.crbo   == internal_id, AMGL_COPY_READ_BUFFER);
+        AM_RETURN_IF(m_context.bindings.cwbo   == internal_id, AMGL_COPY_WRITE_BUFFER);
         AM_RETURN_IF(m_context.bindings.tbo    == internal_id, AMGL_TEXTURE_BUFFER);
         AM_RETURN_IF(m_context.bindings.tfbo   == internal_id, AMGL_TRANSFORM_FEEDBACK_BUFFER);
         AM_RETURN_IF(m_context.bindings.dribo  == internal_id, AMGL_DRAW_INDIRECT_BUFFER);

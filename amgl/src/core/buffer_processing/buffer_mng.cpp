@@ -101,7 +101,7 @@ namespace amgl
             const uint32_t internal_id = conv_user_to_inernal_range(buffers[i]);
             AM_CONTINUE_IF(is_default_id_internal_range(internal_id) || !m_buffers.is_buffer_exist(internal_id));
 
-            const int32_t target = gs_context_mng.get_binding_target(buffers[i]);
+            const enum_t target = gs_context_mng.get_binding_target(buffers[i]);
             if (target != AMGL_NONE) {
                 gs_context_mng.bind_target_buffer_unsafe(target, AM_DEFAULT_USER_ID);
             }

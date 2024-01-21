@@ -6,12 +6,23 @@ namespace amgl
     class context
     {
     public:
+        static constexpr size_t MAX_VERTEX_ATTRIBS_COUNT                  = 16u;
+        
+        static constexpr size_t MAX_UNIFORM_BUFFER_BINDINGS               = 36u;
+        static constexpr size_t MAX_SHADER_STORAGE_BUFFER_BINDINGS        = 8u;
+        static constexpr size_t MAX_ATOMIC_COUNTER_BUFFER_BINDINGS        = 1u;
+        static constexpr size_t MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS    = 4u;
+        
+        static constexpr size_t MAX_UNIFORM_LOCATIONS                     = 1024u;
+        static constexpr size_t MAX_TEXTURE_IMAGE_UNITS                   = 16u;
+
+    public:
         // struct depth_range_t
         // {
         //     float near  = 0.0f;
         //     float far   = 1.0f;
         // };
-
+        //
         // struct color_mask_t
         // {
         //     bool red    = true;
@@ -19,7 +30,7 @@ namespace amgl
         //     bool blue   = true;
         //     bool alpha  = true;
         // };
-
+        //
         // struct rect_t
         // {
         //     int32_t x       = 0;
@@ -27,7 +38,7 @@ namespace amgl
         //     uint32_t width  = 0u;
         //     uint32_t height = 0u;
         // };
-
+        //
         // struct color_t
         // {
         //     float red   = 0.0f;
@@ -55,9 +66,6 @@ namespace amgl
             uint32_t tfbo   = AM_DEFAULT_INTERNAL_ID;   // transform feedback buffer object
             uint32_t ubo    = AM_DEFAULT_INTERNAL_ID;   // uniform buffer object
         };
-
-    public:
-        static constexpr uint32_t MAX_VERTEX_ATTRIBS_COUNT = 16u;
 
 
     public:
