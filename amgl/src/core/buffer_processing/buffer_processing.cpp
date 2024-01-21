@@ -32,7 +32,7 @@ void amglBindBufferRange(enum_t target, uint32_t index, uint32_t buffer, size_t 
 
 void amglBindBuffersRange(enum_t target, uint32_t first, size_t count, const uint32_t *buffers, const size_t *offsets, const size_t *sizes) noexcept
 {
-    gs_buffer_mng.bind_buffer_range(target, first, count, buffers, offsets, sizes);
+    gs_buffer_mng.bind_buffers_range(target, first, count, buffers, offsets, sizes);
 }
 
 

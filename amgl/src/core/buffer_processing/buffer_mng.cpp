@@ -146,25 +146,25 @@ namespace amgl
     
     void buffer_mng::bind_buffer_base(enum_t target, uint32_t index, uint32_t buffer) noexcept
     {
-        
+        AM_ASSERT_MSG(false, "Not implemented yet");
     }
 
     
     void buffer_mng::bind_buffers_base(enum_t target, uint32_t first, size_t count, const uint32_t *buffers) noexcept
     {
-
+        AM_ASSERT_MSG(false, "Not implemented yet");
     }
 
     
     void buffer_mng::bind_buffer_range(enum_t target, uint32_t index, uint32_t buffer, size_t offset, size_t size) noexcept
     {
-
+        AM_ASSERT_MSG(false, "Not implemented yet");
     }
 
     
     void buffer_mng::bind_buffers_range(enum_t target, uint32_t first, size_t count, const uint32_t *buffers, const size_t *offsets, const size_t *sizes) noexcept
     {
-
+        AM_ASSERT_MSG(false, "Not implemented yet");
     }
 
     

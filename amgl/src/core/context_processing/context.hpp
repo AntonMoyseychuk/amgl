@@ -8,6 +8,16 @@ namespace amgl
     public:
         static constexpr size_t MAX_VERTEX_ATTRIB_BINDINGS                  = 16u;
         
+        static constexpr size_t MAX_VERTEX_BUFFER_BINDINGS                  = 1u;
+        static constexpr size_t MAX_COPY_READ_BUFFER_BINDINGS               = 1u;
+        static constexpr size_t MAX_COPY_WRITE_BUFFER_BINDINGS              = 1u;
+        static constexpr size_t MAX_DISPATCH_INDIRECT_BUFFER_BINDINGS       = 1u;
+        static constexpr size_t MAX_DRAW_INDIRECT_BUFFER_BINDINGS           = 1u;
+        static constexpr size_t MAX_ELEMENT_BUFFER_BINDINGS                 = 1u;
+        static constexpr size_t MAX_PIXEL_PACK_BUFFER_BINDINGS              = 1u;
+        static constexpr size_t MAX_PIXEL_UNPACK_BUFFER_BINDINGS            = 1u;
+        static constexpr size_t MAX_QUERY_BUFFER_BINDINGS                   = 1u;
+        static constexpr size_t MAX_TEXTURE_BUFFER_BINDINGS                 = 1u;
         static constexpr size_t MAX_UNIFORM_BUFFER_BINDINGS                 = 36u;
         static constexpr size_t MAX_SHADER_STORAGE_BUFFER_BINDINGS          = 8u;
         static constexpr size_t MAX_ATOMIC_COUNTER_BUFFER_BINDINGS          = 1u;
@@ -47,8 +57,30 @@ namespace amgl
         //     float alpha = 0.0f;
         // };
 
+        // struct binding_point
+        // {
+        //     uint32_t buffer = AM_DEFAULT_INTERNAL_ID;
+        //     size_t offset = 0u;
+        //     size_t size = 0u;
+        // };
+
         struct bindings
         {
+            // uint32_t vao                               = AM_DEFAULT_INTERNAL_ID;    // vertex array object
+            // std::array<uint32_t, MAX_VERTEX_BUFFER_BINDINGS>                vbo;    // vertex buffer object binding points
+            // std::array<uint32_t, MAX_ELEMENT_BUFFER_BINDINGS>               ebo;    // element buffer object binding points
+            // std::array<uint32_t, MAX_UNIFORM_BUFFER_BINDINGS>               ubo;    // uniform buffer object binding points   
+            // std::array<uint32_t, MAX_SHADER_STORAGE_BUFFER_BINDINGS>       ssbo;    // shader storage buffer object binding points   
+            // std::array<uint32_t, MAX_TEXTURE_BUFFER_BINDINGS>               tbo;    // texture buffer object binding points
+            // std::array<uint32_t, MAX_COPY_READ_BUFFER_BINDINGS>            crbo;    // copy read buffer object binding points
+            // std::array<uint32_t, MAX_COPY_WRITE_BUFFER_BINDINGS>           cwbo;    // copy write buffer object binding points
+            // std::array<uint32_t, MAX_DISPATCH_INDIRECT_BUFFER_BINDINGS>    dibo;    // dispatch indirect buffer object binding points
+            // std::array<uint32_t, MAX_DRAW_INDIRECT_BUFFER_BINDINGS>       dribo;    // draw indirect buffer object binding points
+            // std::array<uint32_t, MAX_PIXEL_PACK_BUFFER_BINDINGS>           ppbo;    // pixel pack buffer object binding points
+            // std::array<uint32_t, MAX_PIXEL_UNPACK_BUFFER_BINDINGS>         pubo;    // pixel unpack buffer object binding points
+            // std::array<uint32_t, MAX_QUERY_BUFFER_BINDINGS>                 qbo;    // query buffer object binding points
+            // std::array<uint32_t, MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS>   tfbo;    // transform feedback buffer object binding points   
+            // std::array<uint32_t, MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>       acbo;    // atomic counter buffer object binding points
             uint32_t vao    = AM_DEFAULT_INTERNAL_ID;   // vertex array object
             
             uint32_t vbo    = AM_DEFAULT_INTERNAL_ID;   // vertex buffer object
@@ -66,7 +98,6 @@ namespace amgl
             uint32_t tfbo   = AM_DEFAULT_INTERNAL_ID;   // transform feedback buffer object
             uint32_t ubo    = AM_DEFAULT_INTERNAL_ID;   // uniform buffer object
         };
-
 
     public:
         bindings bindings;
