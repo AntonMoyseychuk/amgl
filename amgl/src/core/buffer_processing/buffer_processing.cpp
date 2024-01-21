@@ -12,6 +12,30 @@ void amglBindBuffer(enum_t target, uint32_t buffer) noexcept
 }
 
 
+void amglBindBufferBase(enum_t target, uint32_t index, uint32_t buffer) noexcept
+{
+    gs_buffer_mng.bind_buffer_base(target, index, buffer);
+}
+
+
+void amglBindBuffersBase(enum_t target, uint32_t first, size_t count, const uint32_t* buffers) noexcept
+{
+    gs_buffer_mng.bind_buffers_base(target, first, count, buffers);
+}
+
+
+void amglBindBufferRange(enum_t target, uint32_t index, uint32_t buffer, size_t offset, size_t size) noexcept
+{
+    gs_buffer_mng.bind_buffer_range(target, index, buffer, offset, size);
+}
+
+
+void amglBindBuffersRange(enum_t target, uint32_t first, size_t count, const uint32_t *buffers, const size_t *offsets, const size_t *sizes) noexcept
+{
+    gs_buffer_mng.bind_buffer_range(target, first, count, buffers, offsets, sizes);
+}
+
+
 void amglBufferData(enum_t target, size_t size, const void *data, enum_t usage) noexcept
 {
     gs_buffer_mng.buffer_data(target, size, data, usage);

@@ -6,15 +6,15 @@ namespace amgl
     class context
     {
     public:
-        static constexpr size_t MAX_VERTEX_ATTRIBS_COUNT                  = 16u;
+        static constexpr size_t MAX_VERTEX_ATTRIB_BINDINGS                  = 16u;
         
-        static constexpr size_t MAX_UNIFORM_BUFFER_BINDINGS               = 36u;
-        static constexpr size_t MAX_SHADER_STORAGE_BUFFER_BINDINGS        = 8u;
-        static constexpr size_t MAX_ATOMIC_COUNTER_BUFFER_BINDINGS        = 1u;
-        static constexpr size_t MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS    = 4u;
+        static constexpr size_t MAX_UNIFORM_BUFFER_BINDINGS                 = 36u;
+        static constexpr size_t MAX_SHADER_STORAGE_BUFFER_BINDINGS          = 8u;
+        static constexpr size_t MAX_ATOMIC_COUNTER_BUFFER_BINDINGS          = 1u;
+        static constexpr size_t MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS      = 4u;
         
-        static constexpr size_t MAX_UNIFORM_LOCATIONS                     = 1024u;
-        static constexpr size_t MAX_TEXTURE_IMAGE_UNITS                   = 16u;
+        static constexpr size_t MAX_UNIFORM_LOCATIONS                       = 1024u;
+        static constexpr size_t MAX_TEXTURE_IMAGE_UNITS                     = 16u;
 
     public:
         // struct depth_range_t

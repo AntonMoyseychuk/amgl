@@ -31,6 +31,17 @@ namespace amgl
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         void bind_buffer(enum_t target, uint32_t buffer) noexcept;
 
+        // Takes 'buffer' in the user range [1, UINT32_MAX]
+        void bind_buffer_base(enum_t target, uint32_t index, uint32_t buffer) noexcept;
+        // Takes 'buffers' in the user range [1, UINT32_MAX]
+        void bind_buffers_base(enum_t target, uint32_t first, size_t count, const uint32_t* buffers) noexcept;
+
+        // Takes 'buffer' in the user range [1, UINT32_MAX]
+        void bind_buffer_range(enum_t target, uint32_t index, uint32_t buffer, size_t offset, size_t size) noexcept;
+        // Takes 'buffers' in the user range [1, UINT32_MAX]
+        void bind_buffers_range(enum_t target, uint32_t first, size_t count, 
+            const uint32_t *buffers, const size_t *offsets, const size_t *sizes) noexcept;
+
         void buffer_data(enum_t target, size_t size, const void *data, enum_t usage /* unused */) noexcept;
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         void named_buffer_data(uint32_t buffer, size_t size, const void *data, enum_t usage /* unused */) noexcept;
@@ -61,11 +72,11 @@ namespace amgl
         // Takes 'buffer' in the user range [1, UINT32_MAX]
         bool is_buffer(uint32_t buffer) noexcept;
 
+        void gen_vertex_arrays(size_t n, uint32_t* arrays) noexcept;
         // Takes 'array' in the user range [1, UINT32_MAX]
         void bind_vertex_array(uint32_t array) noexcept;
         // Takes 'arrays' in the user range [1, UINT32_MAX]
         void delete_vertex_arrays(size_t n, const uint32_t* arrays) noexcept;
-        void gen_vertex_arrays(size_t n, uint32_t* arrays) noexcept;
         // Takes 'array' in the user range [1, UINT32_MAX]
         bool is_vertex_array(uint32_t array) noexcept;
 

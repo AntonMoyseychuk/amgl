@@ -61,6 +61,12 @@ using debugproc = void (*)(enum_t source, enum_t type, uint32_t id, enum_t sever
 
 void amglBindBuffer(enum_t target, uint32_t buffer) noexcept;
 
+void amglBindBufferBase(enum_t target, uint32_t index, uint32_t buffer) noexcept;
+void amglBindBuffersBase(enum_t target, uint32_t first, size_t count, const uint32_t* buffers) noexcept;
+
+void amglBindBufferRange(enum_t target, uint32_t index, uint32_t buffer, size_t offset, size_t size) noexcept;
+void amglBindBuffersRange(enum_t target, uint32_t first, size_t count, const uint32_t *buffers, const size_t *offsets, const size_t *sizes) noexcept;
+
 void amglBufferData(enum_t target, size_t size, const void* data, enum_t usage) noexcept;
 void amglNamedBufferData(uint32_t buffer, size_t size, const void* data, enum_t usage) noexcept;
 void amglBufferSubData(enum_t target, size_t offset, size_t size, const void* data) noexcept;

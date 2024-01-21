@@ -18,10 +18,10 @@ namespace amgl
             size_t size       = 0u;
         };
 
-        memory_mapping mem_mappings[context::MAX_VERTEX_ATTRIBS_COUNT] {};
-        enum_t types[context::MAX_VERTEX_ATTRIBS_COUNT] {};
-        std::bitset<context::MAX_VERTEX_ATTRIBS_COUNT> normalized_flags {};
-        std::bitset<context::MAX_VERTEX_ATTRIBS_COUNT> enable_flags {};
+        memory_mapping mem_mappings[context::MAX_VERTEX_ATTRIB_BINDINGS] {};
+        enum_t types[context::MAX_VERTEX_ATTRIB_BINDINGS] {};
+        std::bitset<context::MAX_VERTEX_ATTRIB_BINDINGS> normalized_flags {};
+        std::bitset<context::MAX_VERTEX_ATTRIB_BINDINGS> enable_flags {};
     };
 
     class vertex_arrays
