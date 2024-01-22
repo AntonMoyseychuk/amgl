@@ -17,5 +17,5 @@ target_include_directories(${PROJECT_NAME}
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src/pch.hpp)
 
 target_compile_definitions(${PROJECT_NAME} 
-    PRIVATE AMGL_CFG_PREALLOCATION_SIZE=1024
+    PRIVATE AMGL_CFG_BUFFER_PREALLOCATION_SIZE=1024
 )

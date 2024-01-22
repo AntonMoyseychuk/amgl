@@ -37,35 +37,35 @@ namespace amgl
         vertex_arrays() = default;
         vertex_arrays(uint32_t size);
 
-        // Returns 'id' in the internal range [0, UINT32_MAX - 1]
+        // RETURNS: Vertex array ID in the internal range [0, UINT32_MAX - 1]
         uint32_t create_array() noexcept;
-        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
+        // NOTE: Takes 'id' in the internal range [0, UINT32_MAX - 1]
         void free_array(uint32_t id) noexcept;
 
-        // Takes 'id' in the internal range [0, UINT32_MAX - 1]
+        // NOTE: Takes 'id' in the internal range [0, UINT32_MAX - 1]
         bool is_vertex_array_exist(uint32_t id) const noexcept;
 
-        // Takes 'buffer' and 'vertex_array' in the internal range [0, UINT32_MAX - 1]
-        // Doesn't check 'target', 'buffer' and 'vertex_array' validity
+        // NOTE: Takes 'vertex_array' and 'buffer' in the internal range [0, UINT32_MAX - 1]
+        // NOTE: Doesn't check 'target', 'buffer' and 'vertex_array' validity
         void bind_buffer_unsafe(uint32_t vertex_array, enum_t target, uint32_t buffer) noexcept;
 
-        // Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
-        // Doesn't check 'vertex_array', 'index', 'size', 'type', 'stride' and 'pointer' validity
+        // NOTE: Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
+        // NOTE: Doesn't check 'vertex_array', 'index', 'size', 'type', 'stride' and 'pointer' validity
         void set_layout(uint32_t vertex_array, uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept;
-        // Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
-        // Doesn't check 'size' validity
+        // NOTE: Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
+        // NOTE: Doesn't check 'size' validity
         void set_layout_size(uint32_t vertex_array, uint32_t index, size_t size) noexcept;
-        // Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
-        // Doesn't check 'vertex_array', 'index' and 'stride' validity
+        // NOTE: Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
+        // NOTE: Doesn't check 'vertex_array', 'index' and 'stride' validity
         void set_layout_stride(uint32_t vertex_array, uint32_t index, size_t stride) noexcept;
-        // Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
-        // Doesn't check 'vertex_array', 'index' and 'pointer' validity
+        // NOTE: Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
+        // NOTE: Doesn't check 'vertex_array', 'index' and 'pointer' validity
         void set_layout_pointer(uint32_t vertex_array, uint32_t index, const void* pointer) noexcept;
-        // Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
-        // Doesn't check 'vertex_array', 'index' and 'type' validity
+        // NOTE: Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
+        // NOTE: Doesn't check 'vertex_array', 'index' and 'type' validity
         void set_layout_type(uint32_t vertex_array, uint32_t index, enum_t type) noexcept;
-        // Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
-        // Doesn't check 'vertex_array', 'index' and 'normalized' validity
+        // NOTE: Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
+        // NOTE: Doesn't check 'vertex_array', 'index' and 'normalized' validity
         void set_layout_normalized(uint32_t vertex_array, uint32_t index, bool normalized) noexcept;
 
     private:

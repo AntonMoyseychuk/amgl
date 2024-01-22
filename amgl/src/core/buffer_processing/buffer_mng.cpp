@@ -1,8 +1,6 @@
 #include "pch.hpp"
 #include "buffer_mng.hpp"
 
-#include "core/context_processing/context_mng.hpp"
-
 namespace amgl
 {
     static context_mng& gs_context_mng = context_mng::instance();
@@ -67,23 +65,6 @@ namespace amgl
         AM_SET_ERROR_FLAG_IF(is_default_id_internal_range(vao), error_flag, gs_context_mng, __VA_ARGS__)
 
 
-    // Return AMGL_NONE if target is not:
-    // - AMGL_ATOMIC_COUNTER_BUFFER
-    // - AMGL_TRANSFORM_FEEDBACK_BUFFER
-    // - AMGL_UNIFORM_BUFFER
-    // - AMGL_SHADER_STORAGE_BUFFER
-    static constexpr inline size_t get_binding_points_count_unsafe(enum_t target) noexcept
-    {
-        switch (target) {
-            case AMGL_ATOMIC_COUNTER_BUFFER:        return context::MAX_ATOMIC_COUNTER_BUFFER_BINDINGS;
-            case AMGL_TRANSFORM_FEEDBACK_BUFFER:    return context::MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS;
-            case AMGL_UNIFORM_BUFFER:               return context::MAX_UNIFORM_BUFFER_BINDINGS;
-            case AMGL_SHADER_STORAGE_BUFFER:        return context::MAX_SHADER_STORAGE_BUFFER_BINDINGS;
-            default:                                return AMGL_NONE;
-        };
-    }
-
-
     buffer_mng::buffer_mng(size_t preallocation_size)
         : m_buffers(preallocation_size), m_vertex_arrays(preallocation_size)
     {
@@ -137,7 +118,7 @@ namespace amgl
 
         gs_context_mng.bind_target_buffer_unsafe(target, buffer);
 
-        const uint32_t vao = conv_user_to_inernal_range(gs_context_mng.get_binding(AMGL_VERTEX_ARRAY_BINDING));
+        const uint32_t vao = conv_user_to_inernal_range(gs_context_mng.get_binded_vertex_array());
         if (vao != AM_DEFAULT_INTERNAL_ID) {
             m_vertex_arrays.bind_buffer_unsafe(vao, target, internal_id);
         }

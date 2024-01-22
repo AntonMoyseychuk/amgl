@@ -18,25 +18,29 @@ namespace amgl
         
         const context& get_context() const noexcept { return m_context; }
         context& get_context() noexcept { return m_context; }
-
-        void update_error_flag(enum_t error) noexcept;
-        enum_t get_error_flag_and_invalidate_state() noexcept;
+        
+        void update_error_flag(enum_t error) const noexcept;
+        enum_t get_error_flag_and_invalidate_state() const noexcept;
         enum_t get_error_flag() const noexcept;
 
-        // Takes 'buffer' in the user range [1, UINT32_MAX]
-        // Doesn't check 'target' and 'buffer' validity
-        void bind_target_buffer_unsafe(enum_t target, uint32_t buffer) noexcept;
+        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        // NOTE: Doesn't check 'target', and 'buffer' validity
+        void bind_target_buffer_unsafe(enum_t target, uint32_t buffer, size_t binding_point = 0) noexcept;
 
-        // Takes 'array', 'vbo' and 'ebo' in the user range [1, UINT32_MAX]
-        // Doesn't check 'array', 'vbo' and 'ebo' validity
-        void bind_vertex_array_unsafe(uint32_t array, uint32_t vbo, uint32_t ebo) noexcept;
+        // NOTE: Takes 'array', 'vbo' and 'ebo' in the user range [1, UINT32_MAX]
+        // NOTE: Doesn't check 'array', 'vbo' and 'ebo' validity
+        void bind_vertex_array_unsafe(uint32_t array, uint32_t vbo, uint32_t ebo, size_t vbo_binding_point = 0, size_t ebo_binding_point = 0) noexcept;
+        
+        // Returns ID in user range [1, UINT32_MAX] if there is any binded vertex array, otherwise AM_DEFAULT_USER_ID
+        uint32_t get_binded_vertex_array() const noexcept;
 
-        // Takes 'binding' in the user range [1, UINT32_MAX]
-        // Returns AMGL_NONE if buffer is not binded to any target or it's default buffer
-        enum_t get_binding_target(uint32_t binding) const noexcept;
+        // NOTE: Extremely slow, try to avoid in speed-demanding code
+        // NOTE: Takes 'binding' in the user range [1, UINT32_MAX]
+        // RETURNS: target if any buffer is bound, otherwise AMGL_NONE
+        enum_t get_binding_target(uint32_t buffer) const noexcept;
 
-        // Returns id in user range [1, UINT32_MAX] if there is any binding of target, otherwise AM_DEFAULT_USER_ID
-        uint32_t get_binding(enum_t target) const noexcept;
+        // RETURNS: ID in user range [1, UINT32_MAX] if there is any binding of target, otherwise AM_DEFAULT_USER_ID
+        uint32_t get_binding(enum_t target, size_t binding_point = 0) const noexcept;
 
     private:
         context_mng() = default;

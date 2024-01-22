@@ -34,8 +34,13 @@
 
 #define AM_SET_ERROR_FLAG_IF(condition, error, context_manager, ...)    \
     if ((condition)) {                                                  \
-        context_manager.update_error_flag(error);                       \
+        (context_manager).update_error_flag(error);                     \
         return __VA_ARGS__;                                             \
+    }
+
+#define AM_RETURN_VALUE_IF_FIND_ELEMENT(collection, element, return_value)  \
+    for (const auto& elem : collection) {                                   \
+        AM_RETURN_IF(elem == element, return_value);                        \
     }
 
 namespace amgl
@@ -51,16 +56,11 @@ namespace amgl
 
     namespace detail
     {
-        template <typename type>
-        inline constexpr bool is_in_range_include_boundaries(const type& value, const type& left, const type& right) noexcept
-        {
-            return value >= left && value <= right;
-        }
-
+        // Checks if value belongs to [left, right)
         template <typename type>
         inline constexpr bool is_in_range(const type& value, const type& left, const type& right) noexcept
         {
-            return value > left && value < right;
+            return value >= left && value < right;
         }
 
         template<typename type0, typename type1, typename... Args>
@@ -89,8 +89,8 @@ namespace amgl
 
         inline constexpr bool are_memory_regions_overlap(const void* region0, size_t size0, const void* region1, size_t size1) noexcept
         {
-            return is_in_range_include_boundaries(uintptr_t(region0), uintptr_t(region1), uintptr_t(region1) + size1 - 1) ||
-                is_in_range_include_boundaries(uintptr_t(region1), uintptr_t(region0), uintptr_t(region0) + size0 - 1);
+            return is_in_range(uintptr_t(region0), uintptr_t(region1), uintptr_t(region1) + size1) ||
+                is_in_range(uintptr_t(region1), uintptr_t(region0), uintptr_t(region0) + size0);
         }
     }
 }

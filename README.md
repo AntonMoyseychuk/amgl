@@ -97,10 +97,10 @@
   - [x] *amglUnmapBuffer*
   - [x] *amglUnmapNamedBuffer*
 - [ ] *amglVertexAttribDivisor*
-- [ ] amglVertexAttribPointer
-  - [ ] *amglVertexAttribPointer*
-  - [ ] *amglVertexAttribIPointer*
-  - [ ] *amglVertexAttribLPointer*
+- [x] amglVertexAttribPointer
+  - [x] *amglVertexAttribPointer*
+  - [x] *amglVertexAttribIPointer*
+  - [x] *amglVertexAttribLPointer*
 - [ ] *amglVertexBindingDivisor*
 
 #### *Vertex Array Objects:*
