@@ -91,14 +91,12 @@ namespace amgl
         buffer_mng(size_t preallocation_size);
 
         template <enum_t type0, enum_t... types>
-        void vertex_attrib_pointer(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept
+        void vertex_attrib_pointer_impl(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept
         {
             static context_mng& context_mng = context_mng::instance();
 
-            AM_SET_ERROR_FLAG_IF(index >= context::MAX_VERTEX_ATTRIB_BINDINGS, AMGL_INVALID_VALUE, context_mng);
-        
+            AM_SET_ERROR_FLAG_IF(index >= context::MAX_VERTEX_ATTRIB_BINDINGS, AMGL_INVALID_VALUE, context_mng);    
             AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, context_mng);
-            
             AM_SET_ERROR_FLAG_IF(!detail::is_one_of(type, type0, std::forward<enum_t>(types)...), AMGL_INVALID_ENUM, context_mng);
             
             const uint32_t vao_internal_id = conv_user_to_inernal_range(context_mng.get_binded_vertex_array());

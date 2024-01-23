@@ -382,20 +382,20 @@ namespace amgl
     
     void buffer_mng::vertex_attrib_pointer(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void *pointer) noexcept
     {
-        vertex_attrib_pointer<AMGL_BYTE, AMGL_UNSIGNED_BYTE, AMGL_SHORT, AMGL_UNSIGNED_SHORT, 
+        vertex_attrib_pointer_impl<AMGL_BYTE, AMGL_UNSIGNED_BYTE, AMGL_SHORT, AMGL_UNSIGNED_SHORT, 
             AMGL_INT, AMGL_UNSIGNED_INT, AMGL_FLOAT, AMGL_DOUBLE>(index, size, type, normalized, stride, pointer);
     }
     
     
     void buffer_mng::vertex_attrib_I_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void *pointer) noexcept
     {
-        vertex_attrib_pointer<AMGL_BYTE, AMGL_UNSIGNED_BYTE, AMGL_SHORT, AMGL_UNSIGNED_SHORT, 
+        vertex_attrib_pointer_impl<AMGL_BYTE, AMGL_UNSIGNED_BYTE, AMGL_SHORT, AMGL_UNSIGNED_SHORT, 
             AMGL_INT, AMGL_UNSIGNED_INT>(index, size, type, false, stride, pointer);
     }
     
     
     void buffer_mng::vertex_attrib_L_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void *pointer) noexcept
     {
-        vertex_attrib_pointer<AMGL_DOUBLE>(index, size, type, false, stride, pointer);
+        vertex_attrib_pointer_impl<AMGL_DOUBLE>(index, size, type, false, stride, pointer);
     }
 }
