@@ -61,7 +61,7 @@ namespace amgl
         {
             operator uint32_t() const noexcept { return buffer; }
 
-            uint32_t buffer = AM_DEFAULT_INTERNAL_ID;
+            uint32_t buffer = AM_DEFAULT_KERNEL_ID;
         };
 
         struct binding_point_range
@@ -106,7 +106,7 @@ namespace amgl
             binding_points<MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS>        tfbo;    // transform feedback buffer object binding points   
             binding_points<MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>            acbo;    // atomic counter buffer object binding points
             
-            uint32_t vao                              = AM_DEFAULT_INTERNAL_ID;    // vertex array object
+            uint32_t vao                              = AM_DEFAULT_KERNEL_ID;    // vertex array object
         };
         
 

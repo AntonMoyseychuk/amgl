@@ -99,14 +99,14 @@ namespace amgl
             AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, context_mng);
             AM_SET_ERROR_FLAG_IF(!detail::is_one_of(type, type0, std::forward<enum_t>(types)...), AMGL_INVALID_ENUM, context_mng);
             
-            const uint32_t vao_internal_id = conv_user_to_inernal_range(context_mng.get_binded_vertex_array());
+            const uint32_t vao_kernel_id = context_mng.get_binded_vertex_array();
             // TODO: think about having an attribute layout as binding in context or something like that
-            AM_SET_ERROR_FLAG_IF(is_default_id_internal_range(vao_internal_id), AMGL_INVALID_VALUE, context_mng);
+            AM_SET_ERROR_FLAG_IF(IS_DEFAULT_ID_KERNEL_SPACE(vao_kernel_id), AMGL_INVALID_VALUE, context_mng);
             
-            const uint32_t vbo_internal_id = m_vertex_arrays.m_vbo_ids[vao_internal_id];
-            AM_SET_ERROR_FLAG_IF(is_default_id_internal_range(vbo_internal_id) && pointer != nullptr, AMGL_INVALID_OPERATION, context_mng);
+            const uint32_t vbo_kernel_id = m_vertex_arrays.m_vbo_ids[vao_kernel_id];
+            AM_SET_ERROR_FLAG_IF(IS_DEFAULT_ID_KERNEL_SPACE(vbo_kernel_id) && pointer != nullptr, AMGL_INVALID_OPERATION, context_mng);
 
-            m_vertex_arrays.set_layout(vao_internal_id, index, size, type, normalized, stride, pointer);
+            m_vertex_arrays.set_layout(vao_kernel_id, index, size, type, normalized, stride, pointer);
         }
 
     private:

@@ -30,7 +30,7 @@ namespace amgl
     
     bool vertex_arrays::is_vertex_array_exist(uint32_t id) const noexcept
     {
-        return id == AM_DEFAULT_INTERNAL_ID || m_id_pool.is_busy(id);
+        return id == AM_DEFAULT_KERNEL_ID || m_id_pool.is_busy(id);
     }
 
     
@@ -94,7 +94,7 @@ namespace amgl
     void vertex_arrays::resize_buffers(uint32_t size) noexcept
     {
         m_layouts.resize(size);
-        m_vbo_ids.resize(size, AM_DEFAULT_INTERNAL_ID);
-        m_ebo_ids.resize(size, AM_DEFAULT_INTERNAL_ID);
+        m_vbo_ids.resize(size, AM_DEFAULT_KERNEL_ID);
+        m_ebo_ids.resize(size, AM_DEFAULT_KERNEL_ID);
     }
 }

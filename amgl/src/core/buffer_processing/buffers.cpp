@@ -90,7 +90,7 @@ namespace amgl
 
     bool buffers::is_buffer_exist(uint32_t id) const noexcept
     {
-        return id == AM_DEFAULT_INTERNAL_ID || m_id_pool.is_busy(id);
+        return id == AM_DEFAULT_KERNEL_ID || m_id_pool.is_busy(id);
     }
     
 

@@ -1,7 +1,15 @@
 #pragma once
 
 #define AM_DEFAULT_USER_ID 0U
-#define AM_DEFAULT_INTERNAL_ID UINT32_MAX
+#define AM_DEFAULT_KERNEL_ID UINT32_MAX
+
+#define IS_DEFAULT_ID_USER_SPACE(id)    (id == AM_DEFAULT_USER_ID)
+#define IS_DEFAULT_ID_KERNEL_SPACE(id)  (id == AM_DEFAULT_KERNEL_ID)
+
+// Converts id from kernel [0, UINT32_MAX - 1] to user [1, UINT32_MAX] range
+#define CONV_KERNEL_TO_USER_RANGE(id) ((uint32_t)id + (uint32_t)1)
+// Converts id from user [1, UINT32_MAX] to kernel [0, UINT32_MAX - 1] range
+#define CONV_USER_TO_KERNEL_RANGE(id) ((uint32_t)id - (uint32_t)1)
 
 #if defined(_DEBUG) || defined(DEBUG) || !defined(NDEBUG)
     #include "debugbreak/debugbreak.h"
@@ -38,22 +46,8 @@
         return __VA_ARGS__;                                             \
     }
 
-#define AM_RETURN_VALUE_IF_FIND_ELEMENT(collection, element, return_value)  \
-    for (const auto& elem : collection) {                                   \
-        AM_RETURN_IF(elem == element, return_value);                        \
-    }
-
 namespace amgl
 {
-    // Converts id from internal [0, UINT32_MAX - 1] to user [1, UINT32_MAX] range
-    inline constexpr uint32_t conv_internal_to_user_range(uint32_t id) noexcept { return id + 1; }
-    // Converts id from user [1, UINT32_MAX] to internal [0, UINT32_MAX - 1] range
-    inline constexpr uint32_t conv_user_to_inernal_range(uint32_t id) noexcept { return id - 1; }
-        
-    inline constexpr bool is_default_id_user_range(uint32_t id) noexcept { return id == AM_DEFAULT_USER_ID; }
-    inline constexpr bool is_default_id_internal_range(uint32_t id) noexcept { return id == AM_DEFAULT_INTERNAL_ID; }
-    
-
     namespace detail
     {
         // Checks if value belongs to [left, right)
