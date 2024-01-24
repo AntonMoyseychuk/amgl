@@ -9,11 +9,11 @@ namespace amgl
         static constexpr size_t MAX_VERTEX_ATTRIB_BINDINGS                  = 16u;
         
         static constexpr size_t MAX_VERTEX_BUFFER_BINDINGS                  = 1u;
+        static constexpr size_t MAX_ELEMENT_BUFFER_BINDINGS                 = 1u;
         static constexpr size_t MAX_COPY_READ_BUFFER_BINDINGS               = 1u;
         static constexpr size_t MAX_COPY_WRITE_BUFFER_BINDINGS              = 1u;
         static constexpr size_t MAX_DISPATCH_INDIRECT_BUFFER_BINDINGS       = 1u;
         static constexpr size_t MAX_DRAW_INDIRECT_BUFFER_BINDINGS           = 1u;
-        static constexpr size_t MAX_ELEMENT_BUFFER_BINDINGS                 = 1u;
         static constexpr size_t MAX_PIXEL_PACK_BUFFER_BINDINGS              = 1u;
         static constexpr size_t MAX_PIXEL_UNPACK_BUFFER_BINDINGS            = 1u;
         static constexpr size_t MAX_QUERY_BUFFER_BINDINGS                   = 1u;
@@ -59,8 +59,7 @@ namespace amgl
 
         struct binding_point
         {
-            constexpr binding_point() = default;
-            constexpr operator uint32_t() const noexcept { return buffer; }
+            operator uint32_t() const noexcept { return buffer; }
 
             uint32_t buffer = AM_DEFAULT_INTERNAL_ID;
         };
@@ -71,60 +70,43 @@ namespace amgl
             size_t size   = 0u;
         };
 
-
         struct bindings
         {
             template<size_t SIZE>
-            using ranges = std::array<binding_point_range, SIZE>;
-            template<size_t SIZE>
             using binding_points = std::array<binding_point, SIZE>;
+            template<size_t SIZE>
+            using bp_ranges = std::array<binding_point_range, SIZE>;
 
-            ranges<MAX_VERTEX_BUFFER_BINDINGS>                   vbo_ranges;    // vertex buffer object binding point ranges
-            ranges<MAX_ELEMENT_BUFFER_BINDINGS>                  ebo_ranges;    // element buffer object binding point ranges
-            ranges<MAX_UNIFORM_BUFFER_BINDINGS>                  ubo_ranges;    // uniform buffer object binding point ranges   
-            ranges<MAX_SHADER_STORAGE_BUFFER_BINDINGS>          ssbo_ranges;    // shader storage buffer object binding point ranges  
-            ranges<MAX_TEXTURE_BUFFER_BINDINGS>                  tbo_ranges;    // texture buffer object binding point ranges
-            ranges<MAX_COPY_READ_BUFFER_BINDINGS>               crbo_ranges;    // copy read buffer object binding point ranges
-            ranges<MAX_COPY_WRITE_BUFFER_BINDINGS>              cwbo_ranges;    // copy write buffer object binding point ranges
-            ranges<MAX_DISPATCH_INDIRECT_BUFFER_BINDINGS>       dibo_ranges;    // dispatch indirect buffer object binding point ranges
-            ranges<MAX_DRAW_INDIRECT_BUFFER_BINDINGS>          dribo_ranges;    // draw indirect buffer object binding point ranges
-            ranges<MAX_PIXEL_PACK_BUFFER_BINDINGS>              ppbo_ranges;    // pixel pack buffer object binding point ranges
-            ranges<MAX_PIXEL_UNPACK_BUFFER_BINDINGS>            pubo_ranges;    // pixel unpack buffer object binding point ranges
-            ranges<MAX_QUERY_BUFFER_BINDINGS>                    qbo_ranges;    // query buffer object binding point ranges
-            ranges<MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS>      tfbo_ranges;    // transform feedback buffer object binding point ranges   
-            ranges<MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>          acbo_ranges;    // atomic counter buffer object binding point ranges
-            binding_points<MAX_VERTEX_BUFFER_BINDINGS>                  vbo;    // vertex buffer object binding points
-            binding_points<MAX_ELEMENT_BUFFER_BINDINGS>                 ebo;    // element buffer object binding points
-            binding_points<MAX_UNIFORM_BUFFER_BINDINGS>                 ubo;    // uniform buffer object binding points   
-            binding_points<MAX_SHADER_STORAGE_BUFFER_BINDINGS>         ssbo;    // shader storage buffer object binding points   
-            binding_points<MAX_TEXTURE_BUFFER_BINDINGS>                 tbo;    // texture buffer object binding points
-            binding_points<MAX_COPY_READ_BUFFER_BINDINGS>              crbo;    // copy read buffer object binding points
-            binding_points<MAX_COPY_WRITE_BUFFER_BINDINGS>             cwbo;    // copy write buffer object binding points
-            binding_points<MAX_DISPATCH_INDIRECT_BUFFER_BINDINGS>      dibo;    // dispatch indirect buffer object binding points
-            binding_points<MAX_DRAW_INDIRECT_BUFFER_BINDINGS>         dribo;    // draw indirect buffer object binding points
-            binding_points<MAX_PIXEL_PACK_BUFFER_BINDINGS>             ppbo;    // pixel pack buffer object binding points
-            binding_points<MAX_PIXEL_UNPACK_BUFFER_BINDINGS>           pubo;    // pixel unpack buffer object binding points
-            binding_points<MAX_QUERY_BUFFER_BINDINGS>                   qbo;    // query buffer object binding points
-            binding_points<MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS>     tfbo;    // transform feedback buffer object binding points   
-            binding_points<MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>         acbo;    // atomic counter buffer object binding points
+            bp_ranges<MAX_VERTEX_BUFFER_BINDINGS>                   vbo_ranges;    // vertex buffer object binding point ranges
+            bp_ranges<MAX_ELEMENT_BUFFER_BINDINGS>                  ebo_ranges;    // element buffer object binding point ranges
+            bp_ranges<MAX_UNIFORM_BUFFER_BINDINGS>                  ubo_ranges;    // uniform buffer object binding point ranges   
+            bp_ranges<MAX_SHADER_STORAGE_BUFFER_BINDINGS>          ssbo_ranges;    // shader storage buffer object binding point ranges  
+            bp_ranges<MAX_TEXTURE_BUFFER_BINDINGS>                  tbo_ranges;    // texture buffer object binding point ranges
+            bp_ranges<MAX_COPY_READ_BUFFER_BINDINGS>               crbo_ranges;    // copy read buffer object binding point ranges
+            bp_ranges<MAX_COPY_WRITE_BUFFER_BINDINGS>              cwbo_ranges;    // copy write buffer object binding point ranges
+            bp_ranges<MAX_DISPATCH_INDIRECT_BUFFER_BINDINGS>       dibo_ranges;    // dispatch indirect buffer object binding point ranges
+            bp_ranges<MAX_DRAW_INDIRECT_BUFFER_BINDINGS>          dribo_ranges;    // draw indirect buffer object binding point ranges
+            bp_ranges<MAX_PIXEL_PACK_BUFFER_BINDINGS>              ppbo_ranges;    // pixel pack buffer object binding point ranges
+            bp_ranges<MAX_PIXEL_UNPACK_BUFFER_BINDINGS>            pubo_ranges;    // pixel unpack buffer object binding point ranges
+            bp_ranges<MAX_QUERY_BUFFER_BINDINGS>                    qbo_ranges;    // query buffer object binding point ranges
+            bp_ranges<MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS>      tfbo_ranges;    // transform feedback buffer object binding point ranges   
+            bp_ranges<MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>          acbo_ranges;    // atomic counter buffer object binding point ranges
+            binding_points<MAX_VERTEX_BUFFER_BINDINGS>                     vbo;    // vertex buffer object binding points
+            binding_points<MAX_ELEMENT_BUFFER_BINDINGS>                    ebo;    // element buffer object binding points
+            binding_points<MAX_UNIFORM_BUFFER_BINDINGS>                    ubo;    // uniform buffer object binding points   
+            binding_points<MAX_SHADER_STORAGE_BUFFER_BINDINGS>            ssbo;    // shader storage buffer object binding points   
+            binding_points<MAX_TEXTURE_BUFFER_BINDINGS>                    tbo;    // texture buffer object binding points
+            binding_points<MAX_COPY_READ_BUFFER_BINDINGS>                 crbo;    // copy read buffer object binding points
+            binding_points<MAX_COPY_WRITE_BUFFER_BINDINGS>                cwbo;    // copy write buffer object binding points
+            binding_points<MAX_DISPATCH_INDIRECT_BUFFER_BINDINGS>         dibo;    // dispatch indirect buffer object binding points
+            binding_points<MAX_DRAW_INDIRECT_BUFFER_BINDINGS>            dribo;    // draw indirect buffer object binding points
+            binding_points<MAX_PIXEL_PACK_BUFFER_BINDINGS>                ppbo;    // pixel pack buffer object binding points
+            binding_points<MAX_PIXEL_UNPACK_BUFFER_BINDINGS>              pubo;    // pixel unpack buffer object binding points
+            binding_points<MAX_QUERY_BUFFER_BINDINGS>                      qbo;    // query buffer object binding points
+            binding_points<MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS>        tfbo;    // transform feedback buffer object binding points   
+            binding_points<MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>            acbo;    // atomic counter buffer object binding points
             
-            uint32_t vao                           = AM_DEFAULT_INTERNAL_ID;    // vertex array object
-            
-            // uint32_t vao    = AM_DEFAULT_INTERNAL_ID;   // vertex array object
-            // uint32_t vbo    = AM_DEFAULT_INTERNAL_ID;   // vertex buffer object
-            // uint32_t acbo   = AM_DEFAULT_INTERNAL_ID;   // atomic counter buffer object
-            // uint32_t crbo   = AM_DEFAULT_INTERNAL_ID;   // copy read buffer object
-            // uint32_t cwbo   = AM_DEFAULT_INTERNAL_ID;   // copy write buffer object
-            // uint32_t dibo   = AM_DEFAULT_INTERNAL_ID;   // dispatch indirect buffer object
-            // uint32_t dribo  = AM_DEFAULT_INTERNAL_ID;   // draw indirect buffer object
-            // uint32_t ebo    = AM_DEFAULT_INTERNAL_ID;   // element buffer object
-            // uint32_t ppbo   = AM_DEFAULT_INTERNAL_ID;   // pixel pack buffer object
-            // uint32_t pubo   = AM_DEFAULT_INTERNAL_ID;   // pixel unpack buffer object
-            // uint32_t qbo    = AM_DEFAULT_INTERNAL_ID;   // query buffer object
-            // uint32_t ssbo   = AM_DEFAULT_INTERNAL_ID;   // shader storage buffer object
-            // uint32_t tbo    = AM_DEFAULT_INTERNAL_ID;   // texture buffer object
-            // uint32_t tfbo   = AM_DEFAULT_INTERNAL_ID;   // transform feedback buffer object
-            // uint32_t ubo    = AM_DEFAULT_INTERNAL_ID;   // uniform buffer object
+            uint32_t vao                              = AM_DEFAULT_INTERNAL_ID;    // vertex array object
         };
         
 

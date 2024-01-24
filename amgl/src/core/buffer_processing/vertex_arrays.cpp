@@ -34,7 +34,7 @@ namespace amgl
     }
 
     
-    void vertex_arrays::bind_buffer_unsafe(uint32_t vertex_array, enum_t target, uint32_t buffer) noexcept
+    void vertex_arrays::bind_buffer(uint32_t vertex_array, enum_t target, uint32_t buffer) noexcept
     {
         switch (target) {
         case AMGL_ARRAY_BUFFER:

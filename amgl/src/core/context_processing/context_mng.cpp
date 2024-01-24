@@ -70,8 +70,31 @@ namespace amgl
         return m_context.error_status;
     }
 
+
+    void context_mng::bind_vertex_array(uint32_t array, uint32_t vbo, uint32_t ebo, size_t vbo_binding_point, size_t ebo_binding_poin) noexcept
+    {
+        CHECK_BINDING_INDEX_VALIDITY(AMGL_ARRAY_BUFFER, vbo_binding_point, AMGL_INVALID_VALUE);
+        CHECK_BINDING_INDEX_VALIDITY(AMGL_ELEMENT_ARRAY_BUFFER, ebo_binding_poin, AMGL_INVALID_VALUE);
+
+        m_context.bindings.vao                              = conv_user_to_inernal_range(array);
+        m_context.bindings.vbo[vbo_binding_point].buffer    = conv_user_to_inernal_range(vbo);
+        m_context.bindings.ebo[ebo_binding_poin].buffer     = conv_user_to_inernal_range(ebo);
+    }
+
     
-    void context_mng::bind_target_buffer_unsafe(enum_t target, uint32_t buffer, size_t binding_point) noexcept
+    void context_mng::bind_vertex_array(uint32_t array) noexcept
+    {
+        m_context.bindings.vao = conv_user_to_inernal_range(array);
+    }
+
+
+    uint32_t context_mng::get_binded_vertex_array() const noexcept
+    {
+        return conv_internal_to_user_range(m_context.bindings.vao);
+    }
+
+    
+    void context_mng::bind_target_buffer(enum_t target, uint32_t buffer, size_t binding_point) noexcept
     {
         CHECK_BINDING_INDEX_VALIDITY(target, binding_point, AMGL_INVALID_VALUE);
 
@@ -95,49 +118,8 @@ namespace amgl
         };
     }
 
-    
-    void context_mng::bind_vertex_array_unsafe(uint32_t array, uint32_t vbo, uint32_t ebo, size_t vbo_binding_point, size_t ebo_binding_poin) noexcept
-    {
-        CHECK_BINDING_INDEX_VALIDITY(AMGL_ARRAY_BUFFER, vbo_binding_point, AMGL_INVALID_VALUE);
-        CHECK_BINDING_INDEX_VALIDITY(AMGL_ELEMENT_ARRAY_BUFFER, ebo_binding_poin, AMGL_INVALID_VALUE);
 
-        m_context.bindings.vao                              = conv_user_to_inernal_range(array);
-        m_context.bindings.vbo[vbo_binding_point].buffer    = conv_user_to_inernal_range(vbo);
-        m_context.bindings.ebo[ebo_binding_poin].buffer     = conv_user_to_inernal_range(ebo);
-    }
-
-
-    uint32_t context_mng::get_binded_vertex_array() const noexcept
-    {
-        return conv_internal_to_user_range(m_context.bindings.vao);
-    }
-
-    
-    enum_t context_mng::get_binding_target(uint32_t buffer) const noexcept
-    {
-        AM_RETURN_IF(is_default_id_user_range(buffer), AMGL_NONE);
-
-        const uint32_t internal_id = conv_user_to_inernal_range(buffer);
-
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.vbo,   internal_id, AMGL_ARRAY_BUFFER);        
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.ebo,   internal_id, AMGL_ELEMENT_ARRAY_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.ssbo,  internal_id, AMGL_SHADER_STORAGE_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.ubo,   internal_id, AMGL_UNIFORM_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.crbo,  internal_id, AMGL_COPY_READ_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.cwbo,  internal_id, AMGL_COPY_WRITE_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.tbo,   internal_id, AMGL_TEXTURE_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.tfbo,  internal_id, AMGL_TRANSFORM_FEEDBACK_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.dribo, internal_id, AMGL_DRAW_INDIRECT_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.ppbo,  internal_id, AMGL_PIXEL_PACK_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.pubo,  internal_id, AMGL_PIXEL_UNPACK_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.qbo,   internal_id, AMGL_QUERY_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.dibo,  internal_id, AMGL_DISPATCH_INDIRECT_BUFFER);
-        AM_RETURN_VALUE_IF_FIND_ELEMENT(m_context.bindings.acbo,  internal_id, AMGL_ATOMIC_COUNTER_BUFFER);
-
-        return AMGL_NONE;
-    }
-
-    uint32_t context_mng::get_binding(enum_t target, size_t binding_point) const noexcept
+    uint32_t context_mng::get_binded_buffer(enum_t target, size_t binding_point) const noexcept
     {
         CHECK_BINDING_INDEX_VALIDITY(target, binding_point, AMGL_INVALID_VALUE, AM_DEFAULT_USER_ID);
 

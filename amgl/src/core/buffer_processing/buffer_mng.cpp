@@ -98,11 +98,7 @@ namespace amgl
         for (uint32_t i = 0u; i < n; ++i) {
             const uint32_t internal_id = conv_user_to_inernal_range(buffers[i]);
             AM_CONTINUE_IF(is_default_id_internal_range(internal_id) || !m_buffers.is_buffer_exist(internal_id));
-
-            const enum_t target = gs_context_mng.get_binding_target(buffers[i]);
-            if (target != AMGL_NONE) {
-                gs_context_mng.bind_target_buffer_unsafe(target, AM_DEFAULT_USER_ID);
-            }
+            
             m_buffers.unmap_buffer(internal_id);
             m_buffers.free_buffer(internal_id);
         }
@@ -116,11 +112,11 @@ namespace amgl
         const uint32_t internal_id = conv_user_to_inernal_range(buffer);
         CHECK_BUFFER_VALIDITY(internal_id, AMGL_INVALID_VALUE);
 
-        gs_context_mng.bind_target_buffer_unsafe(target, buffer);
+        gs_context_mng.bind_target_buffer(target, buffer, 0);
 
         const uint32_t vao = conv_user_to_inernal_range(gs_context_mng.get_binded_vertex_array());
         if (vao != AM_DEFAULT_INTERNAL_ID) {
-            m_vertex_arrays.bind_buffer_unsafe(vao, target, internal_id);
+            m_vertex_arrays.bind_buffer(vao, target, internal_id);
         }
     }
 
@@ -153,7 +149,7 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
     
-        const uint32_t buffer = gs_context_mng.get_binding(target);
+        const uint32_t buffer = gs_context_mng.get_binded_buffer(target, 0);
         named_buffer_data(buffer, size, data, usage);
     }
 
@@ -179,7 +175,7 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
 
-        const uint32_t buffer = gs_context_mng.get_binding(target);
+        const uint32_t buffer = gs_context_mng.get_binded_buffer(target, 0);
         named_buffer_sub_data(buffer, offset, size, data);
     }
 
@@ -208,8 +204,8 @@ namespace amgl
         CHECK_BUFFER_TARGET_VALIDITY(read_target, AMGL_INVALID_ENUM);
         CHECK_BUFFER_TARGET_VALIDITY(write_target, AMGL_INVALID_ENUM);
 
-        const uint32_t read_buffer = gs_context_mng.get_binding(read_target);
-        const uint32_t write_buffer = gs_context_mng.get_binding(write_target);
+        const uint32_t read_buffer = gs_context_mng.get_binded_buffer(read_target, 0);
+        const uint32_t write_buffer = gs_context_mng.get_binded_buffer(write_target, 0);
         copy_named_buffer_sub_data(read_buffer, write_buffer, read_offset, write_offset, size);
     }
 
@@ -242,7 +238,7 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
 
-        const uint32_t buffer = gs_context_mng.get_binding(target);
+        const uint32_t buffer = gs_context_mng.get_binded_buffer(target, 0);
         get_named_buffer_sub_data(buffer, offset, size, data);
     }
 
@@ -291,7 +287,7 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM, nullptr);
         
-        const uint32_t buffer = gs_context_mng.get_binding(target);
+        const uint32_t buffer = gs_context_mng.get_binded_buffer(target, 0);
         return map_named_buffer(buffer, access);
     }
 
@@ -312,7 +308,7 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
         
-        const uint32_t buffer = gs_context_mng.get_binding(target);
+        const uint32_t buffer = gs_context_mng.get_binded_buffer(target, 0);
         unmap_named_buffer(buffer);
     }
 
@@ -344,7 +340,7 @@ namespace amgl
 
         const uint32_t vbo = conv_internal_to_user_range(m_vertex_arrays.m_vbo_ids[internal_id]);
         const uint32_t ebo = conv_internal_to_user_range(m_vertex_arrays.m_ebo_ids[internal_id]);
-        gs_context_mng.bind_vertex_array_unsafe(array, vbo, ebo);
+        gs_context_mng.bind_vertex_array(array, vbo, ebo, 0, 0);
     }
     
     
@@ -353,11 +349,15 @@ namespace amgl
         AM_RETURN_IF(!arrays);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            const uint32_t internal_id = conv_user_to_inernal_range(arrays[i]);
-            AM_CONTINUE_IF(is_default_id_internal_range(internal_id) || !m_vertex_arrays.is_vertex_array_exist(internal_id));
+            const uint32_t internal_vao_id = conv_user_to_inernal_range(arrays[i]);
+            AM_CONTINUE_IF(is_default_id_internal_range(internal_vao_id) || !m_vertex_arrays.is_vertex_array_exist(internal_vao_id));
 
-            gs_context_mng.bind_vertex_array_unsafe(AM_DEFAULT_USER_ID, AM_DEFAULT_USER_ID, AM_DEFAULT_USER_ID);
-            m_vertex_arrays.free_array(internal_id);
+            if (gs_context_mng.get_binded_vertex_array() == arrays[i]) {
+                gs_context_mng.bind_vertex_array(AM_DEFAULT_USER_ID, AM_DEFAULT_USER_ID, AM_DEFAULT_USER_ID, 0, 0);
+            } else {
+                gs_context_mng.bind_vertex_array(AM_DEFAULT_USER_ID);
+            }
+            m_vertex_arrays.free_array(internal_vao_id);
         }
     }
     

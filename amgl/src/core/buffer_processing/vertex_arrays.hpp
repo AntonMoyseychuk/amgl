@@ -47,7 +47,7 @@ namespace amgl
 
         // NOTE: Takes 'vertex_array' and 'buffer' in the internal range [0, UINT32_MAX - 1]
         // NOTE: Doesn't check 'target', 'buffer' and 'vertex_array' validity
-        void bind_buffer_unsafe(uint32_t vertex_array, enum_t target, uint32_t buffer) noexcept;
+        void bind_buffer(uint32_t vertex_array, enum_t target, uint32_t buffer) noexcept;
 
         // NOTE: Takes 'vertex_array' in the internal range [0, UINT32_MAX - 1]
         // NOTE: Doesn't check 'vertex_array', 'index', 'size', 'type', 'stride' and 'pointer' validity
