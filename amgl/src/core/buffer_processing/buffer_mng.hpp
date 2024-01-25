@@ -2,6 +2,7 @@
 #include "buffers.hpp"
 #include "vertex_arrays.hpp"
 
+#include "core/core.hpp"
 #include "core/context_processing/context_mng.hpp"
 
 namespace amgl
@@ -39,7 +40,8 @@ namespace amgl
         void bind_buffers_base(enum_t target, uint32_t first, size_t count, const uint32_t* buffers) noexcept;
 
         // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
-        void bind_buffer_range(enum_t target, uint32_t index, uint32_t buffer, size_t offset, size_t size) noexcept;
+        // NOTE: If 'offset' or 'size' are nullptr than 'offset' is considered to be zero and 'size' is the size of buffer
+        void bind_buffer_range(enum_t target, uint32_t index, uint32_t buffer, const size_t* offset, const size_t* size) noexcept;
         // NOTE: Takes 'buffers' in the user range [1, UINT32_MAX]
         void bind_buffers_range(enum_t target, uint32_t first, size_t count, 
             const uint32_t *buffers, const size_t *offsets, const size_t *sizes) noexcept;
@@ -101,10 +103,10 @@ namespace amgl
             
             const uint32_t vao_kernel_id = context_mng.get_binded_vertex_array();
             // TODO: think about having an attribute layout as binding in context or something like that
-            AM_SET_ERROR_FLAG_IF(IS_DEFAULT_ID_KERNEL_SPACE(vao_kernel_id), AMGL_INVALID_VALUE, context_mng);
+            AM_SET_ERROR_FLAG_IF(AM_IS_DEFAULT_ID_KERNEL_SPACE(vao_kernel_id), AMGL_INVALID_VALUE, context_mng);
             
             const uint32_t vbo_kernel_id = m_vertex_arrays.m_vbo_ids[vao_kernel_id];
-            AM_SET_ERROR_FLAG_IF(IS_DEFAULT_ID_KERNEL_SPACE(vbo_kernel_id) && pointer != nullptr, AMGL_INVALID_OPERATION, context_mng);
+            AM_SET_ERROR_FLAG_IF(AM_IS_DEFAULT_ID_KERNEL_SPACE(vbo_kernel_id) && pointer != nullptr, AMGL_INVALID_OPERATION, context_mng);
 
             m_vertex_arrays.set_layout(vao_kernel_id, index, size, type, normalized, stride, pointer);
         }

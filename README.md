@@ -28,12 +28,12 @@
   
 #### *Buffer Objects:*
 - [x] *amglBindBuffer*
-- [ ] amglBindBufferBase
-  - [ ] *amglBindBufferBase*
-  - [ ] *amglBindBuffersBase*
-- [ ] amglBindBufferRange
-  - [ ] *amglBindBufferRange*
-  - [ ] *amglBindBuffersRange*
+- [x] amglBindBufferBase
+  - [x] *amglBindBufferBase*
+  - [x] *amglBindBuffersBase*
+- [x] amglBindBufferRange
+  - [x] *amglBindBufferRange*
+  - [x] *amglBindBuffersRange*
 - [x] amglBufferData
   - [x] *amglBufferData*
   - [x] *amglNamedBufferData*

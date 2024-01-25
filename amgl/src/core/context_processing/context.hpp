@@ -3,6 +3,19 @@
 
 namespace amgl
 {
+    struct binding_point
+    {
+        operator uint32_t() const noexcept { return buffer; }
+
+        uint32_t buffer = AM_DEFAULT_KERNEL_ID;
+    };
+
+    struct binding_point_range
+    {
+        size_t offset = 0u;
+        size_t size   = 0u;
+    };
+
     class context
     {
     public:
@@ -57,19 +70,6 @@ namespace amgl
         //     float alpha = 0.0f;
         // };
 
-        struct binding_point
-        {
-            operator uint32_t() const noexcept { return buffer; }
-
-            uint32_t buffer = AM_DEFAULT_KERNEL_ID;
-        };
-
-        struct binding_point_range
-        {
-            size_t offset = 0u;
-            size_t size   = 0u;
-        };
-
         struct bindings
         {
             template<size_t SIZE>
@@ -77,18 +77,8 @@ namespace amgl
             template<size_t SIZE>
             using bp_ranges = std::array<binding_point_range, SIZE>;
 
-            bp_ranges<MAX_VERTEX_BUFFER_BINDINGS>                   vbo_ranges;    // vertex buffer object binding point ranges
-            bp_ranges<MAX_ELEMENT_BUFFER_BINDINGS>                  ebo_ranges;    // element buffer object binding point ranges
             bp_ranges<MAX_UNIFORM_BUFFER_BINDINGS>                  ubo_ranges;    // uniform buffer object binding point ranges   
             bp_ranges<MAX_SHADER_STORAGE_BUFFER_BINDINGS>          ssbo_ranges;    // shader storage buffer object binding point ranges  
-            bp_ranges<MAX_TEXTURE_BUFFER_BINDINGS>                  tbo_ranges;    // texture buffer object binding point ranges
-            bp_ranges<MAX_COPY_READ_BUFFER_BINDINGS>               crbo_ranges;    // copy read buffer object binding point ranges
-            bp_ranges<MAX_COPY_WRITE_BUFFER_BINDINGS>              cwbo_ranges;    // copy write buffer object binding point ranges
-            bp_ranges<MAX_DISPATCH_INDIRECT_BUFFER_BINDINGS>       dibo_ranges;    // dispatch indirect buffer object binding point ranges
-            bp_ranges<MAX_DRAW_INDIRECT_BUFFER_BINDINGS>          dribo_ranges;    // draw indirect buffer object binding point ranges
-            bp_ranges<MAX_PIXEL_PACK_BUFFER_BINDINGS>              ppbo_ranges;    // pixel pack buffer object binding point ranges
-            bp_ranges<MAX_PIXEL_UNPACK_BUFFER_BINDINGS>            pubo_ranges;    // pixel unpack buffer object binding point ranges
-            bp_ranges<MAX_QUERY_BUFFER_BINDINGS>                    qbo_ranges;    // query buffer object binding point ranges
             bp_ranges<MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS>      tfbo_ranges;    // transform feedback buffer object binding point ranges   
             bp_ranges<MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>          acbo_ranges;    // atomic counter buffer object binding point ranges
             binding_points<MAX_VERTEX_BUFFER_BINDINGS>                     vbo;    // vertex buffer object binding points

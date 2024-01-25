@@ -43,6 +43,12 @@ namespace amgl
         // RETURNS: ID in kernel range [0, UINT32_MAX - 1] if there is any binding of target, otherwise AM_DEFAULT_KERNEL_ID
         uint32_t get_binded_buffer(enum_t target, size_t index) const noexcept;
 
+        // NOTE: Takes 'buffer' in the kernel range [0, UINT32_MAX - 1]
+        // NOTE: Doesn't check 'target', and 'buffer' validity
+        void bind_target_buffer_range(enum_t target, size_t index, const binding_point_range& range) noexcept;
+        // NOTE: Doesn't check 'target' validity
+        const binding_point_range& get_binded_buffer_range(enum_t target, size_t index) const noexcept;
+
     private:
         context_mng() = default;
 
