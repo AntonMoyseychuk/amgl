@@ -1,5 +1,11 @@
 #pragma once
 
+#if defined(_DEBUG) || defined(DEBUG) || !defined(NDEBUG)
+    #define AM_DEBUG
+#else
+    #define AM_RELEASE
+#endif
+
 #define AM_DEFAULT_USER_ID 0U
 #define AM_DEFAULT_KERNEL_ID UINT32_MAX
 
@@ -11,7 +17,7 @@
 // Converts id from user [1, UINT32_MAX] to kernel [0, UINT32_MAX - 1] range
 #define CONV_USER_TO_KERNEL_RANGE(id) ((uint32_t)id - (uint32_t)1)
 
-#if defined(_DEBUG) || defined(DEBUG) || !defined(NDEBUG)
+#ifdef AM_DEBUG
     #include "debugbreak/debugbreak.h"
     #include <cstdio>
     
@@ -24,27 +30,30 @@
             }                                                \
         }
     #define AM_ASSERT(expr) AM_ASSERT_MSG(expr, "\033[31m" #expr " failed\033[0m")
-
 #else
     #define AM_ASSERT_MSG(expr, ...)
     #define AM_ASSERT(expr)
 #endif
+
+
+#define AM_SET_ERROR_FLAG_IF(condition, error, context_manager, ...)    \
+    if (condition) {                                                    \
+        (context_manager).update_error_flag(error);                     \
+        return __VA_ARGS__;                                             \
+    }
+
 
 #define AM_RETURN_IF(condition, ...)    \
     if (condition) {                    \
         return __VA_ARGS__;             \
     }
 
+
 #define AM_CONTINUE_IF(condition)       \
     if (condition) {                    \
         continue;                       \
     }
 
-#define AM_SET_ERROR_FLAG_IF(condition, error, context_manager, ...)    \
-    if ((condition)) {                                                  \
-        (context_manager).update_error_flag(error);                     \
-        return __VA_ARGS__;                                             \
-    }
 
 namespace amgl
 {
@@ -56,6 +65,7 @@ namespace amgl
         {
             return value >= left && value < right;
         }
+
 
         template<typename type0, typename type1, typename... Args>
         inline constexpr bool is_one_of(const type0& value, const type1& arg0, Args&&... args) noexcept
@@ -69,6 +79,7 @@ namespace amgl
             return value == arg;
         }
 
+
         template<typename type0, typename type1, typename... Args>
         inline constexpr bool are_equal(const type0& value, const type1& arg0, Args&&... args) noexcept
         {
@@ -80,6 +91,7 @@ namespace amgl
         {
             return value == arg;
         }
+        
 
         inline constexpr bool are_memory_regions_overlap(const void* region0, size_t size0, const void* region1, size_t size1) noexcept
         {
