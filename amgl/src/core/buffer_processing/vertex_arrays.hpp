@@ -9,27 +9,21 @@
 
 namespace amgl
 {
-    struct attribute_layout
+    struct attributes
     {
-        attribute_layout() 
-            : mem_mappings(), types(), normalized_flags(), enable_flags()
-        {
-            std::fill_n(types.begin(), types.size(), AMGL_FLOAT);
-        }
-
-        struct memory_mapping
+        struct layout_desc
         {
             uintptr_t pointer = 0u;
             size_t stride     = 0u;
             size_t size       = 4u;
+            enum_t type       = AMGL_FLOAT;
+            bool normalized   = false;
         };
 
-        std::array<memory_mapping, context::MAX_VERTEX_ATTRIB_BINDINGS> mem_mappings;
-        std::array<enum_t, context::MAX_VERTEX_ATTRIB_BINDINGS> types;
-        std::bitset<context::MAX_VERTEX_ATTRIB_BINDINGS> normalized_flags;
+        std::array<layout_desc, context::MAX_VERTEX_ATTRIB_BINDINGS> layout_descs;
         std::bitset<context::MAX_VERTEX_ATTRIB_BINDINGS> enable_flags;
     };
-
+    
     class vertex_arrays
     {
         friend class buffer_mng;
@@ -72,7 +66,7 @@ namespace amgl
         void resize_buffers(uint32_t size) noexcept;
 
     private:
-        std::vector<attribute_layout> m_layouts;
+        std::vector<attributes> m_attributes;
         std::vector<uint32_t> m_vbo_ids;
         std::vector<uint32_t> m_ebo_ids;
 
