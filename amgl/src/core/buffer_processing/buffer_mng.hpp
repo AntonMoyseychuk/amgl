@@ -108,7 +108,7 @@ namespace amgl
             const uint32_t vbo_kernel_id = m_vertex_arrays.m_vbo_ids[vao_kernel_id];
             AM_SET_ERROR_FLAG_IF(AM_IS_DEFAULT_ID_KERNEL_SPACE(vbo_kernel_id) && pointer != nullptr, AMGL_INVALID_OPERATION, context_mng);
 
-            m_vertex_arrays.set_layout(vao_kernel_id, index, size, type, normalized, stride, pointer);
+            m_vertex_arrays.set_attribute_desc(vao_kernel_id, index, size, type, normalized, stride, pointer);
         }
 
     private:
