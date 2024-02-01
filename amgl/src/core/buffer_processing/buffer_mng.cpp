@@ -312,8 +312,8 @@ namespace amgl
 
         AM_SET_ERROR_FLAG_IF(index >= context::MAX_VERTEX_ATTRIB_BINDINGS, AMGL_INVALID_VALUE, gs_context_mng);
 
-        AM_ASSERT(kernel_id < m_vertex_arrays.m_attributes.size());
-        m_vertex_arrays.m_attributes[kernel_id].enable_flags.set(index, enabled);
+        AM_ASSERT(kernel_id < m_vertex_arrays.m_layouts.size());
+        m_vertex_arrays.m_layouts[kernel_id].enable_flags.set(index, enabled);
     }
 
     
