@@ -12,11 +12,7 @@ namespace amgl
     public:
         static buffer_mng& instance() noexcept
         {
-            #ifdef AMGL_CFG_BUFFER_PREALLOCATION_SIZE
-                static buffer_mng manager(AMGL_CFG_BUFFER_PREALLOCATION_SIZE);
-            #else
-                static buffer_mng manager;
-            #endif
+            static buffer_mng manager(AM_INIT_BUFF_COUNT);
             return manager;
         }
 

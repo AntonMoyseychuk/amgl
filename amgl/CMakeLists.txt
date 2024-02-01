@@ -16,6 +16,23 @@ target_include_directories(${PROJECT_NAME}
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src/pch.hpp)
 
+option(CFG_DISABLE_ERROR_FLAGS "Disable error flags" OFF)
+option(CFG_DISABLE_DEBUG_LAYER "Disable debug layer" OFF)
+
+set(CFG_INITIAL_BUFF_COUNT 1024 STRING "Precreated buffers count")
+
 target_compile_definitions(${PROJECT_NAME} 
-    PRIVATE AMGL_CFG_BUFFER_PREALLOCATION_SIZE=1024
+    PRIVATE AM_INIT_BUFF_COUNT=${CFG_INITIAL_BUFF_COUNT}
 )
+
+if(CFG_DISABLE_ERROR_FLAGS)
+    target_compile_definitions(${PROJECT_NAME} 
+        PRIVATE AM_DISABLE_ERROR_FLAGS=1
+    )
+endif()
+
+if(CFG_DISABLE_DEBUG_LAYER)
+    target_compile_definitions(${PROJECT_NAME} 
+        PRIVATE AM_DISABLE_DEBUG_LAYER=1
+    )
+endif()
