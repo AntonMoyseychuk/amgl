@@ -5,7 +5,7 @@ namespace amgl
 {
     vertex_arrays::vertex_arrays(uint32_t size)
     {
-        resize_buffers(size);
+        resize(size);
     }
     
     
@@ -16,7 +16,7 @@ namespace amgl
 
         const uint32_t id = m_id_pool.generate_id();
         if (id >= buffer_size) {
-            resize_buffers(static_cast<size_t>(buffer_size* 1.5f) + 1u);
+            resize(static_cast<size_t>(buffer_size* 1.5f) + 1u);
         }
         return id;
     }
@@ -88,10 +88,11 @@ namespace amgl
     }
 
     
-    void vertex_arrays::resize_buffers(uint32_t size) noexcept
+    void vertex_arrays::resize(uint32_t size) noexcept
     {
         m_attributes.resize(size);
         m_vbo_ids.resize(size, AM_DEFAULT_KERNEL_ID);
         m_ebo_ids.resize(size, AM_DEFAULT_KERNEL_ID);
+        m_id_pool.reserve(size);
     }
 }

@@ -47,7 +47,7 @@ namespace amgl
         bool is_buffer_exist(uint32_t id) const noexcept;
 
     private:
-        void resize_buffers(uint32_t size) noexcept;
+        void resize(uint32_t size) noexcept;
 
     private:
         std::vector<memory_block> m_memory_blocks;

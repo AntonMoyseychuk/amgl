@@ -3,7 +3,7 @@
 #include "vertex_arrays.hpp"
 
 #include "core/core.hpp"
-#include "core/context_processing/context_mng.hpp"
+#include "core/context/context_mng.hpp"
 
 namespace amgl
 {

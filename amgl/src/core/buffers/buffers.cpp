@@ -5,7 +5,7 @@ namespace amgl
 {
     buffers::buffers(uint32_t size)
     {
-        resize_buffers(size);
+        resize(size);
     }
 
 
@@ -13,7 +13,7 @@ namespace amgl
     {
         const uint32_t id = m_id_pool.generate_id();
         if (id >= m_memory_blocks.size()) {
-            resize_buffers(static_cast<size_t>(m_memory_blocks.size() * 1.5f) + 1u);
+            resize(static_cast<size_t>(m_memory_blocks.size() * 1.5f) + 1u);
         }
         return id;
     }
@@ -94,9 +94,10 @@ namespace amgl
     }
     
 
-    void buffers::resize_buffers(uint32_t size) noexcept
+    void buffers::resize(uint32_t size) noexcept
     {
         m_memory_blocks.resize(size);
         m_map_states.resize(size);
+        m_id_pool.reserve(size);
     }
 }

@@ -6,6 +6,8 @@
     #define AM_BUILD_RELEASE
 #endif
 
+static_assert(AM_INIT_BUFF_COUNT > 0, "AM_INIT_BUFF_COUNT must be greater than 0");
+
 #define AM_DEFAULT_USER_ID 0U
 #define AM_DEFAULT_KERNEL_ID UINT32_MAX
 
