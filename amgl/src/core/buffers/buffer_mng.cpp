@@ -1,6 +1,10 @@
 #include "pch.hpp"
 #include "buffer_mng.hpp"
 
+
+static_assert(AM_INIT_BUFF_COUNT > 0, "AM_INIT_BUFF_COUNT must be greater than 0");
+
+
 namespace amgl
 {
     static context_mng& gs_context_mng = context_mng::instance();

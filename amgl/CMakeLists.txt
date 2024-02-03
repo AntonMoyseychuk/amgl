@@ -20,8 +20,12 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src/pch.
 option(CFG_DISABLE_ERROR_FLAGS "Disable error flags" OFF)
 option(CFG_DISABLE_DEBUG_LAYER "Disable debug layer" OFF)
 
-set(CFG_INITIAL_BUFF_COUNT 1024 STRING "Precreated buffers count")
+set(CFG_INITIAL_BUFF_COUNT "1024" CACHE STRING "Precreated buffers count" FORCE)
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE "AM_BUILD_DEBUG=$<CONFIG:Debug>")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "AM_BUILD_RELEASE=$<CONFIG:Release>")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "AM_BUILD_RELEASE_MIN_SIZE=$<CONFIG:MinSizeRel>")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "AM_BUILD_RELEASE_WITH_DEBUG_INFO=$<CONFIG:RelWithDebInfo>")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE AM_INIT_BUFF_COUNT=${CFG_INITIAL_BUFF_COUNT})
 

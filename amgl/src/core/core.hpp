@@ -1,13 +1,5 @@
 #pragma once
 
-#if defined(_DEBUG) || defined(DEBUG) || !defined(NDEBUG)
-    #define AM_BUILD_DEBUG
-#else
-    #define AM_BUILD_RELEASE
-#endif
-
-static_assert(AM_INIT_BUFF_COUNT > 0, "AM_INIT_BUFF_COUNT must be greater than 0");
-
 #define AM_DEFAULT_USER_ID 0U
 #define AM_DEFAULT_KERNEL_ID UINT32_MAX
 
@@ -19,7 +11,7 @@ static_assert(AM_INIT_BUFF_COUNT > 0, "AM_INIT_BUFF_COUNT must be greater than 0
 // Converts id from user [1, UINT32_MAX] to kernel [0, UINT32_MAX - 1] range
 #define CONV_USER_TO_KERNEL_RANGE(id) ((uint32_t)id - (uint32_t)1)
 
-#ifdef AM_BUILD_DEBUG
+#if AM_BUILD_DEBUG || AM_BUILD_RELEASE_WITH_DEBUG_INFO
     #include "debugbreak/debugbreak.h"
     #include <cstdio>
     
@@ -32,7 +24,7 @@ static_assert(AM_INIT_BUFF_COUNT > 0, "AM_INIT_BUFF_COUNT must be greater than 0
             }                                                \
         }
     #define AM_ASSERT(expr) AM_ASSERT_MSG(expr, "\033[31m" #expr " failed\033[0m")
-#else
+#elif AM_BUILD_RELEASE
     #define AM_ASSERT_MSG(expr, ...)
     #define AM_ASSERT(expr)
 #endif
