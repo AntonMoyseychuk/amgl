@@ -13,6 +13,8 @@
 template<typename Func, typename... Args>
 inline void benchmark(size_t test_count, const Func& func, const Args&... args)
 {
+    puts("Benchmarking...\n");
+
     assert(test_count > 0 && "test_count must be greater than 0");
 
     #if !defined(NDEBUG) || defined(_DEBUG) || defined(DEBUG)

@@ -10,6 +10,8 @@ else ()
     message(FATAL_ERROR "Unknown architecture")
 endif()
 
+message("\nTARGET_ARCHITECTURE = ${TARGET_ARCHITECTURE}\n")
+
 
 file(GLOB_RECURSE SANDBOX_SRC CONFIGURE_DEPENDS 
     ${CMAKE_CURRENT_LIST_DIR}/*.cpp
@@ -22,12 +24,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 set(SDL2_PATH ${CMAKE_CURRENT_LIST_DIR}/thirdparty/SDL2/2.28.5)
 
 find_package(SDL2 REQUIRED)
-
-message(
-    "\nSDL2_INCLUDE_DIR = ${SDL2_INCLUDE_DIR}"
-    "\nSDL2_LIBRARY = ${SDL2_LIBRARY}"
-    "\nTARGET_ARCHITECTURE = ${TARGET_ARCHITECTURE}\n"
-)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARY})

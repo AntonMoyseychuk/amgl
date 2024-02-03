@@ -216,7 +216,11 @@
 #### *Textures:*
 - [ ] *amglActiveTexture*
 - [ ] *amglBindImageTexture*
+- [ ] *amglBindImageTextures*
 - [ ] *amglBindTexture*
+- [ ] *amglBindTextures*
+- [ ] *amglClearTexImage*
+- [ ] *amglClearTexSubImage*
 - [ ] *amglCopyImageSubData*
 - [ ] *amglCopyTexImage1D*
 - [ ] *amglCopyTexImage2D*
@@ -249,6 +253,7 @@
   - [ ] *amglGetTextureParameteriv*
   - [ ] *amglGetTextureParameterIiv*
   - [ ] *amglGetTextureParameterIuiv*
+- [ ] *amglGetTextureSubImage*
 - [ ] *amglInvalidateTexImage*
 - [ ] *amglInvalidateTexSubImage*
 - [ ] *amglIsTexture*
@@ -266,6 +271,7 @@
 - [ ] amglTexParameter
   - [ ] *amglTexParameterf*
   - [ ] *amglTexParameteri*
+  - [ ] *amglTextureParameterf*
   - [ ] *amglTextureParameteri*
   - [ ] *amglTexParameterfv*
   - [ ] *amglTexParameteriv*

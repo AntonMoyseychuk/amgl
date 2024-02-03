@@ -32,6 +32,7 @@ set(CFG_DISABLE_ERROR_FLAGS OFF CACHE BOOL "Disable error flags" FORCE)
 set(CFG_DISABLE_DEBUG_LAYER OFF CACHE BOOL "Disable debug layer" FORCE)
 
 set(CFG_INITIAL_BUFF_COUNT "1024" CACHE STRING "Precreated buffers count" FORCE)
+set(CFG_INITIAL_TEX_COUNT "1024" CACHE STRING "Precreated texture count" FORCE)
 
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "AM_BUILD_DEBUG=$<CONFIG:Debug>")
@@ -40,6 +41,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE "AM_BUILD_RELEASE_MIN_SIZE=$<
 target_compile_definitions(${PROJECT_NAME} PRIVATE "AM_BUILD_RELEASE_WITH_DEBUG_INFO=$<CONFIG:RelWithDebInfo>")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE AM_INIT_BUFF_COUNT=${CFG_INITIAL_BUFF_COUNT})
+target_compile_definitions(${PROJECT_NAME} PRIVATE AM_INIT_TEX_COUNT=${CFG_INITIAL_TEX_COUNT})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE AM_DISABLE_ERROR_FLAGS=${CFG_DISABLE_ERROR_FLAGS})
 target_compile_definitions(${PROJECT_NAME} PRIVATE AM_DISABLE_DEBUG_LAYER=${CFG_DISABLE_DEBUG_LAYER})

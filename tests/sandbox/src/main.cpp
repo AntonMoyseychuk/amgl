@@ -57,6 +57,8 @@ float ssbo_data[1024u];
 
 void test() noexcept
 {
+    constexpr float ssbo_sub_data[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
     for (size_t i = 0; i < 1'000'000; ++i) {
         uint32_t vao;
         amglGenVertexArrays(1, &vao);
@@ -89,6 +91,12 @@ void test() noexcept
         const bool is_ssbo = amglIsBuffer(ssbo);
         amglBindBuffer(AMGL_SHADER_STORAGE_BUFFER, ssbo);
         amglBufferData(AMGL_SHADER_STORAGE_BUFFER, sizeof(ssbo_data), ssbo_data, AMGL_STATIC_DRAW);
+        amglBufferSubData(AMGL_SHADER_STORAGE_BUFFER, 0, sizeof(ssbo_sub_data), ssbo_sub_data);
+        amglBindBufferBase(AMGL_SHADER_STORAGE_BUFFER, 2, ssbo);
+        amglBindBufferRange(AMGL_SHADER_STORAGE_BUFFER, 2, ssbo, 0, sizeof(ssbo_sub_data));
+
+        const float* buffer_data = (const float*)amglMapBuffer(AMGL_SHADER_STORAGE_BUFFER, AMGL_READ_WRITE);
+        amglUnmapBuffer(AMGL_SHADER_STORAGE_BUFFER);
 
         amglDeleteBuffers(1, &ssbo);
         amglDeleteBuffers(1, &ebo);
