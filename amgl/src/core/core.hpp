@@ -24,9 +24,11 @@
             }                                                \
         }
     #define AM_ASSERT(expr) AM_ASSERT_MSG(expr, "\033[31m" #expr " failed\033[0m")
-#elif AM_BUILD_RELEASE
+#elif AM_BUILD_RELEASE || AM_BUILD_RELEASE_MIN_SIZE
     #define AM_ASSERT_MSG(expr, ...)
     #define AM_ASSERT(expr)
+#else
+    #error invalid build type
 #endif
 
 #if AM_DISABLE_ERROR_FLAGS
