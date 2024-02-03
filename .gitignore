@@ -5,6 +5,3 @@
 # Build dirs
 /build
 /out
-
-# Test dir
-/test

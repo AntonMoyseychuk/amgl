@@ -23,6 +23,10 @@ target_include_directories(${PROJECT_NAME}
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${AMGL_DIR}/src/pch.hpp)
 
+set(CFG_BUILD_TESTS ON CACHE BOOL "Build tests" FORCE)
+if (CFG_BUILD_TESTS)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
+endif()
 
 set(CFG_DISABLE_ERROR_FLAGS OFF CACHE BOOL "Disable error flags" FORCE)
 set(CFG_DISABLE_DEBUG_LAYER OFF CACHE BOOL "Disable debug layer" FORCE)
