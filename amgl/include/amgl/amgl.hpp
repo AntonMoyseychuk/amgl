@@ -17,6 +17,9 @@ enum AMGLConstant : enum_t
     AMGL_UNSIGNED_INT                       = 0x1405,
     AMGL_FLOAT                              = 0x1406,
     AMGL_DOUBLE                             = 0x140A,
+    AMGL_INT_2_10_10_10_REV                 = 0x8D9F,
+    AMGL_UNSIGNED_INT_2_10_10_10_REV          = 0x8368,
+    AMGL_UNSIGNED_INT_10F_11F_11F_REV         = 0x8C3B,
 
     AMGL_NO_ERROR                           = 0,
     AMGL_INVALID_ENUM                       = 0x0500,
