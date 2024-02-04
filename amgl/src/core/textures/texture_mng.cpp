@@ -8,15 +8,24 @@ namespace amgl
 {
     texture_mng::texture_mng(size_t preallocation_size)
     {
+        resize(preallocation_size);
     }
 
+    
+    void texture_mng::resize(size_t size) noexcept
+    {
 
+    }
+
+    
     void texture_mng::gen_textures(size_t n, uint32_t *textures) noexcept
     {
+
     }
     
     
     void texture_mng::delete_textures(size_t n, const uint32_t *textures) noexcept
     {
+        
     }
 }

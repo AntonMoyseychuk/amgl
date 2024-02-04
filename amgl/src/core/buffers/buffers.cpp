@@ -94,7 +94,7 @@ namespace amgl
     }
     
 
-    void buffers::resize(uint32_t size) noexcept
+    void buffers::resize(size_t size) noexcept
     {
         m_memory_blocks.resize(size);
         m_map_states.resize(size);

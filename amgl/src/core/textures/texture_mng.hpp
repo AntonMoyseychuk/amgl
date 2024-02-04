@@ -1,4 +1,5 @@
 #pragma once
+#include "image.hpp"
 
 
 namespace amgl
@@ -22,5 +23,10 @@ namespace amgl
     private:
         texture_mng() = default;
         texture_mng(size_t preallocation_size);
+
+        void resize(size_t size) noexcept;
+
+    private:
+
     };
 }

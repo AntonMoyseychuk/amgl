@@ -153,6 +153,8 @@ void amglCopyTextureSubImage3D(uint32_t texture, uint32_t level, size_t xoffset,
     size_t x, size_t y, size_t width, size_t height);
 void amglDeleteTextures(size_t n, const uint32_t* textures);
 void amglGenTextures(size_t n, uint32_t* textures);
+void amglGenerateMipmap(enum_t target);
+void amglGenerateTextureMipmap(uint32_t texture);
 void amglGetTexImage(enum_t target, uint32_t level, enum_t format, enum_t type, void* pixels);
 void amglGetnTexImage(enum_t target, uint32_t level, enum_t format, enum_t type, size_t bufSize, void* pixels);
 void amglGetTextureImage(uint32_t texture, uint32_t level, enum_t format, enum_t type, size_t bufSize, void* pixels);

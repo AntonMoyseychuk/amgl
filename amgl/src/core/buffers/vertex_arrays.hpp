@@ -64,7 +64,7 @@ namespace amgl
         void set_attribute_normalized(uint32_t vertex_array, uint32_t index, bool normalized) noexcept;
 
     private:
-        void resize(uint32_t size) noexcept;
+        void resize(size_t size) noexcept;
 
     private:
         std::vector<attributes> m_attributes;
