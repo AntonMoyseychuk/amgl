@@ -98,6 +98,10 @@ void test() noexcept
         const float* buffer_data = (const float*)amglMapBuffer(AMGL_SHADER_STORAGE_BUFFER, AMGL_READ_WRITE);
         amglUnmapBuffer(AMGL_SHADER_STORAGE_BUFFER);
 
+        uint32_t texture;
+        amglGenTextures(1, &texture);
+
+        amglDeleteTextures(1, &texture);
         amglDeleteBuffers(1, &ssbo);
         amglDeleteBuffers(1, &ebo);
         amglDeleteBuffers(1, &vbo);

@@ -1,4 +1,5 @@
 #pragma once
+#include "textures.hpp"
 
 
 namespace amgl
@@ -17,7 +18,11 @@ namespace amgl
 
 
         void gen_textures(size_t n, uint32_t *textures) noexcept;
+        // Clears memory allocated for 'textures' and textures ids
+        // NOTE: Takes 'textures' in the user range [1, UINT32_MAX]
         void delete_textures(size_t n, const uint32_t *textures) noexcept;
+
+        
 
     private:
         texture_mng() = default;
@@ -26,6 +31,6 @@ namespace amgl
         void resize(size_t size) noexcept;
 
     private:
-
+        textures m_textures;
     };
 }

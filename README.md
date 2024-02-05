@@ -233,8 +233,8 @@
 - [ ] amglCopyTexSubImage3D
   - [ ] *amglCopyTexSubImage3D*
   - [ ] *amglCopyTextureSubImage3D*
-- [ ] *amglDeleteTextures*
-- [ ] *amglGenTextures*
+- [x] *amglDeleteTextures*
+- [x] *amglGenTextures*
 - [ ] *amglGenerateMipmap*
 - [ ] *amglGenerateTextureMipmap*
 - [ ] amglGetTexImage
