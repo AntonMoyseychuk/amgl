@@ -45,9 +45,16 @@ namespace amgl
 
         // NOTE: Takes 'buffer' in the kernel range [0, UINT32_MAX - 1]
         // NOTE: Doesn't check 'target', and 'buffer' validity
-        void bind_target_buffer_range(enum_t target, size_t index, const binding_point_range& range) noexcept;
+        void bind_target_buffer_range(enum_t target, size_t index, const buffer_range& range) noexcept;
         // NOTE: Doesn't check 'target' validity
-        const binding_point_range& get_binded_buffer_range(enum_t target, size_t index) const noexcept;
+        const buffer_range& get_binded_buffer_range(enum_t target, size_t index) const noexcept;
+
+
+        /*----------------------- Texture Manager related API -----------------------*/
+
+        // NOTE: Takes 'texture' in the kernel range [0, UINT32_MAX - 1]
+        // NOTE: Doesn't check 'target', and 'texture' validity
+        void bind_target_texture(enum_t target, uint32_t texture) noexcept;
 
     private:
         context_mng() = default;

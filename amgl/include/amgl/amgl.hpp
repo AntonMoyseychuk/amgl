@@ -59,6 +59,17 @@ enum AMGLConstant : enum_t
     AMGL_WRITE_ONLY                         = 0x88B9,
     AMGL_READ_WRITE                         = 0x88BA,
 
+    AMGL_TEXTURE_1D                         = 0x0DE0,
+    AMGL_TEXTURE_2D                         = 0x0DE1,
+    AMGL_TEXTURE_3D                         = 0x806F,
+    AMGL_TEXTURE_1D_ARRAY                   = 0x8C18,
+    AMGL_TEXTURE_2D_ARRAY                   = 0x8C1A,
+    AMGL_TEXTURE_RECTANGLE                  = 0x84F5,
+    AMGL_TEXTURE_CUBE_MAP                   = 0x8513,
+    AMGL_TEXTURE_CUBE_MAP_ARRAY             = 0x9009,
+    AMGL_TEXTURE_2D_MULTISAMPLE             = 0x9100,
+    AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY       = 0x9102,
+
     AMGL_VERTEX_ARRAY_BINDING               = 0x85B5,
 };
 

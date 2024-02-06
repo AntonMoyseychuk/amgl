@@ -7,13 +7,6 @@
 
 namespace amgl
 {
-    struct image_desc
-    {
-        uint32_t width;
-        uint32_t height;
-        uint32_t depth;
-    };
-
     class textures
     {
         friend class texture_mng;
@@ -38,8 +31,19 @@ namespace amgl
         void resize(size_t size) noexcept;
 
     private:
-        std::vector<image_desc> m_descs;
+        struct tex_target
+        {
+            enum_t target = AMGL_NONE;
+        };
+
         std::vector<memory_block> m_memory_blocks;
+        std::vector<uint32_t> m_widths;
+        std::vector<uint32_t> m_heights;
+        std::vector<uint32_t> m_depths;
+        
+        // Textures cannot be attached to another target if they have already been attached before. 
+        // Therefore, we need to keep their original targets
+        std::vector<tex_target> m_targets;
 
         id_pool m_id_pool;
     };

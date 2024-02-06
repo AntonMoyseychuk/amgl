@@ -100,6 +100,9 @@ void test() noexcept
 
         uint32_t texture;
         amglGenTextures(1, &texture);
+        amglBindTexture(AMGL_TEXTURE_2D, texture);
+        amglBindTexture(AMGL_TEXTURE_3D, texture);
+        amglBindTexture(AMGL_TEXTURE_2D, 0);
 
         amglDeleteTextures(1, &texture);
         amglDeleteBuffers(1, &ssbo);

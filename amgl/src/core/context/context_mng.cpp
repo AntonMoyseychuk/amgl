@@ -44,7 +44,7 @@ namespace amgl
             default:                                return -1;
         };
     }
-
+    
 
     void context_mng::update_error_flag(enum_t error) const noexcept
     {
@@ -76,21 +76,21 @@ namespace amgl
         CHECK_BINDING_INDEX_VALIDITY(AMGL_ARRAY_BUFFER, vbo_idx, AMGL_INVALID_VALUE);
         CHECK_BINDING_INDEX_VALIDITY(AMGL_ELEMENT_ARRAY_BUFFER, ebo_idx, AMGL_INVALID_VALUE);
 
-        m_context.bindings.vao                 = array;
-        m_context.bindings.vbo[vbo_idx].buffer = vbo;
-        m_context.bindings.ebo[ebo_idx].buffer = ebo;
+        m_context.buf_bindings.vao          = array;
+        m_context.buf_bindings.vbo[vbo_idx] = vbo;
+        m_context.buf_bindings.ebo[ebo_idx] = ebo;
     }
 
     
     void context_mng::bind_vertex_array(uint32_t array) noexcept
     {
-        m_context.bindings.vao = array;
+        m_context.buf_bindings.vao = array;
     }
 
 
     uint32_t context_mng::get_binded_vertex_array() const noexcept
     {
-        return m_context.bindings.vao;
+        return m_context.buf_bindings.vao;
     }
 
     
@@ -99,20 +99,20 @@ namespace amgl
         CHECK_BINDING_INDEX_VALIDITY(target, index, AMGL_INVALID_VALUE);
 
         switch (target) {
-            case AMGL_ARRAY_BUFFER:                 m_context.bindings.vbo[index].buffer   = buffer; break;
-            case AMGL_ATOMIC_COUNTER_BUFFER:        m_context.bindings.acbo[index].buffer  = buffer; break;
-            case AMGL_COPY_READ_BUFFER:             m_context.bindings.crbo[index].buffer  = buffer; break;
-            case AMGL_COPY_WRITE_BUFFER:            m_context.bindings.cwbo[index].buffer  = buffer; break;
-            case AMGL_DISPATCH_INDIRECT_BUFFER:     m_context.bindings.dibo[index].buffer  = buffer; break;
-            case AMGL_DRAW_INDIRECT_BUFFER:         m_context.bindings.dribo[index].buffer = buffer; break;
-            case AMGL_ELEMENT_ARRAY_BUFFER:         m_context.bindings.ebo[index].buffer   = buffer; break;
-            case AMGL_PIXEL_PACK_BUFFER:            m_context.bindings.ppbo[index].buffer  = buffer; break;
-            case AMGL_PIXEL_UNPACK_BUFFER:          m_context.bindings.pubo[index].buffer  = buffer; break;
-            case AMGL_QUERY_BUFFER:                 m_context.bindings.qbo[index].buffer   = buffer; break;
-            case AMGL_SHADER_STORAGE_BUFFER:        m_context.bindings.ssbo[index].buffer  = buffer; break;
-            case AMGL_TEXTURE_BUFFER:               m_context.bindings.tbo[index].buffer   = buffer; break;
-            case AMGL_TRANSFORM_FEEDBACK_BUFFER:    m_context.bindings.tfbo[index].buffer  = buffer; break;
-            case AMGL_UNIFORM_BUFFER:               m_context.bindings.ubo[index].buffer   = buffer; break;
+            case AMGL_ARRAY_BUFFER:                 m_context.buf_bindings.vbo[index]   = buffer; break;
+            case AMGL_ATOMIC_COUNTER_BUFFER:        m_context.buf_bindings.acbo[index]  = buffer; break;
+            case AMGL_COPY_READ_BUFFER:             m_context.buf_bindings.crbo[index]  = buffer; break;
+            case AMGL_COPY_WRITE_BUFFER:            m_context.buf_bindings.cwbo[index]  = buffer; break;
+            case AMGL_DISPATCH_INDIRECT_BUFFER:     m_context.buf_bindings.dibo[index]  = buffer; break;
+            case AMGL_DRAW_INDIRECT_BUFFER:         m_context.buf_bindings.dribo[index] = buffer; break;
+            case AMGL_ELEMENT_ARRAY_BUFFER:         m_context.buf_bindings.ebo[index]   = buffer; break;
+            case AMGL_PIXEL_PACK_BUFFER:            m_context.buf_bindings.ppbo[index]  = buffer; break;
+            case AMGL_PIXEL_UNPACK_BUFFER:          m_context.buf_bindings.pubo[index]  = buffer; break;
+            case AMGL_QUERY_BUFFER:                 m_context.buf_bindings.qbo[index]   = buffer; break;
+            case AMGL_SHADER_STORAGE_BUFFER:        m_context.buf_bindings.ssbo[index]  = buffer; break;
+            case AMGL_TEXTURE_BUFFER:               m_context.buf_bindings.tbo[index]   = buffer; break;
+            case AMGL_TRANSFORM_FEEDBACK_BUFFER:    m_context.buf_bindings.tfbo[index]  = buffer; break;
+            case AMGL_UNIFORM_BUFFER:               m_context.buf_bindings.ubo[index]   = buffer; break;
         };
     }
 
@@ -122,50 +122,67 @@ namespace amgl
         CHECK_BINDING_INDEX_VALIDITY(target, index, AMGL_INVALID_VALUE, AM_DEFAULT_KERNEL_ID);
 
         switch (target) {
-            case AMGL_ARRAY_BUFFER:                 return m_context.bindings.vbo[index].buffer;
-            case AMGL_ELEMENT_ARRAY_BUFFER:         return m_context.bindings.ebo[index].buffer;
-            case AMGL_COPY_READ_BUFFER:             return m_context.bindings.crbo[index].buffer;
-            case AMGL_COPY_WRITE_BUFFER:            return m_context.bindings.cwbo[index].buffer;
-            case AMGL_SHADER_STORAGE_BUFFER:        return m_context.bindings.ssbo[index].buffer;
-            case AMGL_UNIFORM_BUFFER:               return m_context.bindings.ubo[index].buffer;
-            case AMGL_TEXTURE_BUFFER:               return m_context.bindings.tbo[index].buffer;
-            case AMGL_TRANSFORM_FEEDBACK_BUFFER:    return m_context.bindings.tfbo[index].buffer;
-            case AMGL_DRAW_INDIRECT_BUFFER:         return m_context.bindings.dribo[index].buffer;
-            case AMGL_PIXEL_PACK_BUFFER:            return m_context.bindings.ppbo[index].buffer;
-            case AMGL_PIXEL_UNPACK_BUFFER:          return m_context.bindings.pubo[index].buffer;
-            case AMGL_QUERY_BUFFER:                 return m_context.bindings.qbo[index].buffer;
-            case AMGL_DISPATCH_INDIRECT_BUFFER:     return m_context.bindings.dibo[index].buffer;
-            case AMGL_ATOMIC_COUNTER_BUFFER:        return m_context.bindings.acbo[index].buffer;
+            case AMGL_ARRAY_BUFFER:                 return m_context.buf_bindings.vbo[index];
+            case AMGL_ELEMENT_ARRAY_BUFFER:         return m_context.buf_bindings.ebo[index];
+            case AMGL_COPY_READ_BUFFER:             return m_context.buf_bindings.crbo[index];
+            case AMGL_COPY_WRITE_BUFFER:            return m_context.buf_bindings.cwbo[index];
+            case AMGL_SHADER_STORAGE_BUFFER:        return m_context.buf_bindings.ssbo[index];
+            case AMGL_UNIFORM_BUFFER:               return m_context.buf_bindings.ubo[index];
+            case AMGL_TEXTURE_BUFFER:               return m_context.buf_bindings.tbo[index];
+            case AMGL_TRANSFORM_FEEDBACK_BUFFER:    return m_context.buf_bindings.tfbo[index];
+            case AMGL_DRAW_INDIRECT_BUFFER:         return m_context.buf_bindings.dribo[index];
+            case AMGL_PIXEL_PACK_BUFFER:            return m_context.buf_bindings.ppbo[index];
+            case AMGL_PIXEL_UNPACK_BUFFER:          return m_context.buf_bindings.pubo[index];
+            case AMGL_QUERY_BUFFER:                 return m_context.buf_bindings.qbo[index];
+            case AMGL_DISPATCH_INDIRECT_BUFFER:     return m_context.buf_bindings.dibo[index];
+            case AMGL_ATOMIC_COUNTER_BUFFER:        return m_context.buf_bindings.acbo[index];
             default:                                return AM_DEFAULT_KERNEL_ID;
         };
     }
     
     
-    void context_mng::bind_target_buffer_range(enum_t target, size_t index, const binding_point_range& range) noexcept
+    void context_mng::bind_target_buffer_range(enum_t target, size_t index, const buffer_range& range) noexcept
     {
         CHECK_BINDING_INDEX_VALIDITY(target, index, AMGL_INVALID_VALUE);
 
         switch (target) {
-            case AMGL_ATOMIC_COUNTER_BUFFER:        m_context.bindings.acbo_ranges[index] = range; break;
-            case AMGL_SHADER_STORAGE_BUFFER:        m_context.bindings.ssbo_ranges[index] = range; break;
-            case AMGL_TRANSFORM_FEEDBACK_BUFFER:    m_context.bindings.tfbo_ranges[index] = range; break;
-            case AMGL_UNIFORM_BUFFER:               m_context.bindings.ubo_ranges[index]  = range; break;
+            case AMGL_ATOMIC_COUNTER_BUFFER:        m_context.buf_bindings.acbo_ranges[index] = range; break;
+            case AMGL_SHADER_STORAGE_BUFFER:        m_context.buf_bindings.ssbo_ranges[index] = range; break;
+            case AMGL_TRANSFORM_FEEDBACK_BUFFER:    m_context.buf_bindings.tfbo_ranges[index] = range; break;
+            case AMGL_UNIFORM_BUFFER:               m_context.buf_bindings.ubo_ranges[index]  = range; break;
         };
     }
     
     
-    const binding_point_range& context_mng::get_binded_buffer_range(enum_t target, size_t index) const noexcept
+    const buffer_range& context_mng::get_binded_buffer_range(enum_t target, size_t index) const noexcept
     {
-        const static binding_point_range default_range;
+        const static buffer_range default_range;
 
         CHECK_BINDING_INDEX_VALIDITY(target, index, AMGL_INVALID_VALUE, default_range);
 
         switch (target) {
-            case AMGL_ATOMIC_COUNTER_BUFFER:        return m_context.bindings.acbo_ranges[index];
-            case AMGL_SHADER_STORAGE_BUFFER:        return m_context.bindings.ssbo_ranges[index];
-            case AMGL_TRANSFORM_FEEDBACK_BUFFER:    return m_context.bindings.tfbo_ranges[index];
-            case AMGL_UNIFORM_BUFFER:               return m_context.bindings.ubo_ranges[index];
+            case AMGL_ATOMIC_COUNTER_BUFFER:        return m_context.buf_bindings.acbo_ranges[index];
+            case AMGL_SHADER_STORAGE_BUFFER:        return m_context.buf_bindings.ssbo_ranges[index];
+            case AMGL_TRANSFORM_FEEDBACK_BUFFER:    return m_context.buf_bindings.tfbo_ranges[index];
+            case AMGL_UNIFORM_BUFFER:               return m_context.buf_bindings.ubo_ranges[index];
             default:                                return default_range;
+        };
+    }
+
+    
+    void context_mng::bind_target_texture(enum_t target, uint32_t texture) noexcept
+    {
+        switch (target) {
+            case AMGL_TEXTURE_1D:                   m_context.tex_bindings.texture1d                    = texture; break;
+            case AMGL_TEXTURE_2D:                   m_context.tex_bindings.texture2d                    = texture; break;
+            case AMGL_TEXTURE_3D:                   m_context.tex_bindings.texture3d                    = texture; break;
+            case AMGL_TEXTURE_RECTANGLE:            m_context.tex_bindings.texture_rect                 = texture; break;
+            case AMGL_TEXTURE_1D_ARRAY:             m_context.tex_bindings.texture1d_array              = texture; break;
+            case AMGL_TEXTURE_2D_ARRAY:             m_context.tex_bindings.texture2d_array              = texture; break;
+            case AMGL_TEXTURE_CUBE_MAP:             m_context.tex_bindings.texture_cubemap              = texture; break;
+            case AMGL_TEXTURE_CUBE_MAP_ARRAY:       m_context.tex_bindings.texture_cubemap_array        = texture; break;
+            case AMGL_TEXTURE_2D_MULTISAMPLE:       m_context.tex_bindings.texture_2d_multisample       = texture; break;
+            case AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY: m_context.tex_bindings.texture_2d_multisample_array = texture; break;
         };
     }
 }

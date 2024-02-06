@@ -31,7 +31,7 @@ inline void benchmark(size_t test_count, const Func& func, const Args&... args)
 
         const float test_duration = DURATION(start, end);
 
-        printf_s("Benchmark %u time (%s): %f ms\n", i, build_type, test_duration);
+        printf_s("Benchmark %zu time (%s): %f ms\n", i, build_type, test_duration);
 
         total_time += test_duration;
     }

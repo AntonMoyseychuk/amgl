@@ -148,7 +148,7 @@ namespace amgl
         const uint32_t kernel_buf_id = CONV_USER_TO_KERNEL_RANGE(buffer);
         CHECK_BUFFER_VALIDITY(kernel_buf_id, AMGL_INVALID_OPERATION);
 
-        binding_point_range range;
+        buffer_range range;
 
         if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(kernel_buf_id)) {
             const size_t buffer_size = m_buffers.get_memory_block(kernel_buf_id).size();
@@ -302,7 +302,7 @@ namespace amgl
     
     void buffer_mng::set_vertex_attrib_array_state(uint32_t index, bool enabled) noexcept
     {
-        const uint32_t vao_user_range = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_context().bindings.vao);
+        const uint32_t vao_user_range = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_context().buf_bindings.vao);
         set_vertex_array_attrib_state(vao_user_range, index, enabled);
     }
 

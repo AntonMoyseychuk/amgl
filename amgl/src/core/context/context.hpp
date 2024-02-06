@@ -3,18 +3,12 @@
 
 namespace amgl
 {
-    struct binding_point
-    {
-        operator uint32_t() const noexcept { return buffer; }
-
-        uint32_t buffer = AM_DEFAULT_KERNEL_ID;
-    };
-
-    struct binding_point_range
+    struct buffer_range
     {
         size_t offset = 0u;
         size_t size   = 0u;
     };
+
 
     class context
     {
@@ -70,12 +64,10 @@ namespace amgl
         //     float alpha = 0.0f;
         // };
 
-        struct bindings
+        struct buffer_bindings
         {
-            template<size_t SIZE>
-            using binding_points = std::array<binding_point, SIZE>;
-            template<size_t SIZE>
-            using bp_ranges = std::array<binding_point_range, SIZE>;
+            template<size_t SIZE> using binding_points = std::array<uint32_t, SIZE>;
+            template<size_t SIZE> using bp_ranges = std::array<buffer_range, SIZE>;
 
             bp_ranges<MAX_UNIFORM_BUFFER_BINDINGS>                  ubo_ranges;    // uniform buffer object binding point ranges   
             bp_ranges<MAX_SHADER_STORAGE_BUFFER_BINDINGS>          ssbo_ranges;    // shader storage buffer object binding point ranges  
@@ -96,12 +88,27 @@ namespace amgl
             binding_points<MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS>        tfbo;    // transform feedback buffer object binding points   
             binding_points<MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>            acbo;    // atomic counter buffer object binding points
             
-            uint32_t vao                              = AM_DEFAULT_KERNEL_ID;    // vertex array object
+            uint32_t vao                                = AM_DEFAULT_KERNEL_ID;    // vertex array object
         };
         
+        struct texture_bindings
+        {
+            uint32_t texture1d                      = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture2d                      = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture3d                      = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture1d_array                = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture2d_array                = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_rect                   = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_cubemap                = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_cubemap_array          = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_buffer                 = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_2d_multisample         = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_2d_multisample_array   = AM_DEFAULT_KERNEL_ID;
+        };
 
     public:
-        bindings bindings;
+        buffer_bindings buf_bindings;
+        texture_bindings tex_bindings;
         
         mutable enum_t error_status = AMGL_NO_ERROR;
 

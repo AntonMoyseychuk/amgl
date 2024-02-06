@@ -22,6 +22,8 @@ namespace amgl
         // NOTE: Takes 'textures' in the user range [1, UINT32_MAX]
         void delete_textures(size_t n, const uint32_t *textures) noexcept;
 
+        // NOTE: Takes 'texture' in the user range [1, UINT32_MAX]
+        void bind_texture(enum_t target, uint32_t texture) noexcept;
         
 
     private:
