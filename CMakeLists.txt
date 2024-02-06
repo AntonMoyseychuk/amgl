@@ -24,9 +24,6 @@ target_include_directories(${PROJECT_NAME}
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${AMGL_DIR}/src/pch.hpp)
 
 set(CFG_BUILD_TESTS ON CACHE BOOL "Build tests" FORCE)
-if (CFG_BUILD_TESTS)
-    add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
-endif()
 
 set(CFG_DISABLE_ERROR_FLAGS OFF CACHE BOOL "Disable error flags" FORCE)
 set(CFG_DISABLE_DEBUG_LAYER OFF CACHE BOOL "Disable debug layer" FORCE)
@@ -43,5 +40,19 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE "AM_BUILD_RELEASE_WITH_DEBUG_
 target_compile_definitions(${PROJECT_NAME} PRIVATE AM_INIT_BUFF_COUNT=${CFG_INITIAL_BUFF_COUNT})
 target_compile_definitions(${PROJECT_NAME} PRIVATE AM_INIT_TEX_COUNT=${CFG_INITIAL_TEX_COUNT})
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE AM_DISABLE_ERROR_FLAGS=${CFG_DISABLE_ERROR_FLAGS})
-target_compile_definitions(${PROJECT_NAME} PRIVATE AM_DISABLE_DEBUG_LAYER=${CFG_DISABLE_DEBUG_LAYER})
+
+if (CFG_BUILD_TESTS)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
+endif()
+
+if(CFG_DISABLE_DEBUG_LAYER)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE AM_DISABLE_DEBUG_LAYER=1)
+else() 
+    target_compile_definitions(${PROJECT_NAME} PRIVATE AM_DISABLE_DEBUG_LAYER=0)
+endif()
+
+if(CFG_DISABLE_ERROR_FLAGS)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE AM_DISABLE_ERROR_FLAGS=1)
+else()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE AM_DISABLE_ERROR_FLAGS=0)
+endif()
