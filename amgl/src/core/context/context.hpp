@@ -103,17 +103,27 @@ namespace amgl
         
         struct texture_bindings
         {
-            uint32_t texture1d                      = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture2d                      = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture3d                      = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture1d_array                = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture2d_array                = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture_rect                   = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture_cubemap                = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture_cubemap_array          = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture_buffer                 = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture_2d_multisample         = AM_DEFAULT_KERNEL_ID;
-            uint32_t texture_2d_multisample_array   = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture1d                          = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture1d                    = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture2d                          = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture2d                    = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture3d                          = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture3d                    = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture1d_array                    = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture1d_array              = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture2d_array                    = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture2d_array              = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_rect                       = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture_rect                 = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_cubemap                    = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture_cubemap              = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_cubemap_array              = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture_cubemap_array        = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_buffer                     = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_2d_multisample             = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture_2d_multisample       = AM_DEFAULT_KERNEL_ID;
+            uint32_t texture_2d_multisample_array       = AM_DEFAULT_KERNEL_ID;
+            uint32_t proxy_texture_2d_multisample_array = AM_DEFAULT_KERNEL_ID;
         };
 
     public:

@@ -173,16 +173,56 @@ namespace amgl
     void context_mng::bind_target_texture(enum_t target, uint32_t texture) noexcept
     {
         switch (target) {
-            case AMGL_TEXTURE_1D:                   m_context.tex_bindings.texture1d                    = texture; break;
-            case AMGL_TEXTURE_2D:                   m_context.tex_bindings.texture2d                    = texture; break;
-            case AMGL_TEXTURE_3D:                   m_context.tex_bindings.texture3d                    = texture; break;
-            case AMGL_TEXTURE_RECTANGLE:            m_context.tex_bindings.texture_rect                 = texture; break;
-            case AMGL_TEXTURE_1D_ARRAY:             m_context.tex_bindings.texture1d_array              = texture; break;
-            case AMGL_TEXTURE_2D_ARRAY:             m_context.tex_bindings.texture2d_array              = texture; break;
-            case AMGL_TEXTURE_CUBE_MAP:             m_context.tex_bindings.texture_cubemap              = texture; break;
-            case AMGL_TEXTURE_CUBE_MAP_ARRAY:       m_context.tex_bindings.texture_cubemap_array        = texture; break;
-            case AMGL_TEXTURE_2D_MULTISAMPLE:       m_context.tex_bindings.texture_2d_multisample       = texture; break;
-            case AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY: m_context.tex_bindings.texture_2d_multisample_array = texture; break;
+            case AMGL_TEXTURE_1D:                         m_context.tex_bindings.texture1d                          = texture; break;
+            case AMGL_PROXY_TEXTURE_1D:                   m_context.tex_bindings.proxy_texture1d                    = texture; break;
+            case AMGL_TEXTURE_2D:                         m_context.tex_bindings.texture2d                          = texture; break;
+            case AMGL_PROXY_TEXTURE_2D:                   m_context.tex_bindings.proxy_texture2d                    = texture; break;
+            case AMGL_TEXTURE_3D:                         m_context.tex_bindings.texture3d                          = texture; break;
+            case AMGL_PROXY_TEXTURE_3D:                   m_context.tex_bindings.proxy_texture3d                    = texture; break;
+            case AMGL_TEXTURE_RECTANGLE:                  m_context.tex_bindings.texture_rect                       = texture; break;
+            case AMGL_PROXY_TEXTURE_RECTANGLE:            m_context.tex_bindings.proxy_texture_rect                 = texture; break;
+            case AMGL_TEXTURE_1D_ARRAY:                   m_context.tex_bindings.texture1d_array                    = texture; break;
+            case AMGL_PROXY_TEXTURE_1D_ARRAY:             m_context.tex_bindings.proxy_texture1d_array              = texture; break;
+            case AMGL_TEXTURE_2D_ARRAY:                   m_context.tex_bindings.texture2d_array                    = texture; break;
+            case AMGL_PROXY_TEXTURE_2D_ARRAY:             m_context.tex_bindings.proxy_texture2d_array              = texture; break;
+            case AMGL_TEXTURE_CUBE_MAP:                   m_context.tex_bindings.texture_cubemap                    = texture; break;
+            case AMGL_PROXY_TEXTURE_CUBE_MAP:             m_context.tex_bindings.proxy_texture_cubemap              = texture; break;
+            case AMGL_TEXTURE_CUBE_MAP_ARRAY:             m_context.tex_bindings.texture_cubemap_array              = texture; break;
+            case AMGL_PROXY_TEXTURE_CUBE_MAP_ARRAY:       m_context.tex_bindings.proxy_texture_cubemap_array        = texture; break;
+            case AMGL_TEXTURE_2D_MULTISAMPLE:             m_context.tex_bindings.texture_2d_multisample             = texture; break;
+            case AMGL_PROXY_TEXTURE_2D_MULTISAMPLE:       m_context.tex_bindings.proxy_texture_2d_multisample       = texture; break;
+            case AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY:       m_context.tex_bindings.texture_2d_multisample_array       = texture; break;
+            case AMGL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY: m_context.tex_bindings.proxy_texture_2d_multisample_array = texture; break;
+            case AMGL_TEXTURE_BUFFER:                     m_context.tex_bindings.texture_buffer                     = texture; break;
+        };
+    }
+    
+    
+    uint32_t context_mng::get_binded_texture(enum_t target) const noexcept
+    {
+        switch (target) {
+            case AMGL_TEXTURE_1D:                           return m_context.tex_bindings.texture1d;
+            case AMGL_PROXY_TEXTURE_1D:                     return m_context.tex_bindings.proxy_texture1d;
+            case AMGL_TEXTURE_2D:                           return m_context.tex_bindings.texture2d;
+            case AMGL_PROXY_TEXTURE_2D:                     return m_context.tex_bindings.proxy_texture2d;
+            case AMGL_TEXTURE_3D:                           return m_context.tex_bindings.texture3d;
+            case AMGL_PROXY_TEXTURE_3D:                     return m_context.tex_bindings.proxy_texture3d;
+            case AMGL_TEXTURE_RECTANGLE:                    return m_context.tex_bindings.texture_rect;
+            case AMGL_PROXY_TEXTURE_RECTANGLE:              return m_context.tex_bindings.proxy_texture_rect;
+            case AMGL_TEXTURE_1D_ARRAY:                     return m_context.tex_bindings.texture1d_array;
+            case AMGL_PROXY_TEXTURE_1D_ARRAY:               return m_context.tex_bindings.proxy_texture1d_array;
+            case AMGL_TEXTURE_2D_ARRAY:                     return m_context.tex_bindings.texture2d_array;
+            case AMGL_PROXY_TEXTURE_2D_ARRAY:               return m_context.tex_bindings.proxy_texture2d_array;
+            case AMGL_TEXTURE_CUBE_MAP:                     return m_context.tex_bindings.texture_cubemap;
+            case AMGL_PROXY_TEXTURE_CUBE_MAP:               return m_context.tex_bindings.proxy_texture_cubemap;
+            case AMGL_TEXTURE_CUBE_MAP_ARRAY:               return m_context.tex_bindings.texture_cubemap_array;
+            case AMGL_PROXY_TEXTURE_CUBE_MAP_ARRAY:         return m_context.tex_bindings.proxy_texture_cubemap_array;
+            case AMGL_TEXTURE_2D_MULTISAMPLE:               return m_context.tex_bindings.texture_2d_multisample;
+            case AMGL_PROXY_TEXTURE_2D_MULTISAMPLE:         return m_context.tex_bindings.proxy_texture_2d_multisample;
+            case AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY:         return m_context.tex_bindings.texture_2d_multisample_array;
+            case AMGL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY:   return m_context.tex_bindings.proxy_texture_2d_multisample_array;
+            case AMGL_TEXTURE_BUFFER:                       return m_context.tex_bindings.texture_buffer;
+            default:                                        return AM_DEFAULT_KERNEL_ID;
         };
     }
 }

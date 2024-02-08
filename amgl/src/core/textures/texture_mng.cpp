@@ -48,13 +48,10 @@ namespace amgl
             AMGL_RG,                                                                        \
             AMGL_RGB,                                                                       \
             AMGL_RGBA,                                                                      \
-            AMGL_BGR,                                                                       \
             AMGL_RED_INTEGER,                                                               \
             AMGL_RG_INTEGER,                                                                \
             AMGL_RGB_INTEGER,                                                               \
-            AMGL_BGR_INTEGER,                                                               \
             AMGL_RGBA_INTEGER,                                                              \
-            AMGL_BGRA_INTEGER,                                                              \
             AMGL_STENCIL_INDEX,                                                             \
             AMGL_DEPTH_COMPONENT,                                                           \
             AMGL_DEPTH_STENCIL), error_flag, gs_context_mng, __VA_ARGS__)

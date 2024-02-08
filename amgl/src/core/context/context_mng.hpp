@@ -56,6 +56,9 @@ namespace amgl
         // NOTE: Doesn't check 'target', and 'texture' validity
         void bind_target_texture(enum_t target, uint32_t texture) noexcept;
 
+        // RETURNS: ID in kernel range [0, UINT32_MAX - 1] if there is any binding of target, otherwise AM_DEFAULT_KERNEL_ID
+        uint32_t get_binded_texture(enum_t target) const noexcept;
+
     private:
         context_mng() = default;
 
