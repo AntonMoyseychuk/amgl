@@ -22,3 +22,16 @@ void amglGenTextures(size_t n, uint32_t* textures)
 {
     gs_texture_mng.gen_textures(n, textures);
 }
+
+
+bool amglIsTexture(uint32_t texture)
+{
+    return gs_texture_mng.is_texture(texture);
+}
+
+
+void amglTexImage1D(enum_t target, uint32_t level, enum_t internal_format, size_t width, uint32_t border, 
+    enum_t format, enum_t type, const void* data)
+{
+    gs_texture_mng.tex_image_1d(target, level, internal_format, width, border, format, type, data);
+}

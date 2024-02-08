@@ -1,8 +1,16 @@
 #pragma once
 #include "amgl/amgl.hpp"
 
+// #include "core/utils/util_func.hpp"
+#include <cmath>
+
 namespace amgl
 {
+    struct binded_buffer
+    {
+        uint32_t buffer = AM_DEFAULT_KERNEL_ID;
+    };
+
     struct buffer_range
     {
         size_t offset = 0u;
@@ -30,8 +38,10 @@ namespace amgl
         static constexpr size_t MAX_ATOMIC_COUNTER_BUFFER_BINDINGS          = 1u;
         static constexpr size_t MAX_TRANSFORM_FEEDBACK_BUFFER_BINDINGS      = 4u;
         
-        static constexpr size_t MAX_UNIFORM_LOCATIONS                       = 1024u;
         static constexpr size_t MAX_TEXTURE_IMAGE_UNITS                     = 16u;
+        static constexpr size_t MAX_UNIFORM_LOCATIONS                       = 1024u;
+
+        static constexpr size_t MAX_TEXTURE_SIZE                            = SIZE_MAX;
 
     private:
         // struct depth_range_t
@@ -66,7 +76,7 @@ namespace amgl
 
         struct buffer_bindings
         {
-            template<size_t SIZE> using binding_points = std::array<uint32_t, SIZE>;
+            template<size_t SIZE> using binding_points = std::array<binded_buffer, SIZE>;
             template<size_t SIZE> using bp_ranges = std::array<buffer_range, SIZE>;
 
             bp_ranges<MAX_UNIFORM_BUFFER_BINDINGS>                  ubo_ranges;    // uniform buffer object binding point ranges   

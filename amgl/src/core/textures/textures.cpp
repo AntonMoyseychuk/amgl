@@ -12,17 +12,13 @@ namespace amgl
     
     uint32_t textures::create_texture() noexcept
     {
-        const size_t storages_size  = m_memory_blocks.size();
-        const size_t widths_size    = m_widths.size();
-        const size_t heights_size   = m_heights.size();
-        const size_t depths_size    = m_depths.size();
-        const size_t targets_size   = m_targets.size();
+        const size_t size  = m_memory_blocks.size();
 
-        AM_ASSERT(detail::are_equal(storages_size, widths_size, heights_size, depths_size, targets_size));
+        AM_ASSERT(detail::are_equal(size, m_widths.size(), m_heights.size(), m_depths.size(), m_targets.size()));
 
         const uint32_t id = m_id_pool.generate_id();
-        if (id >= storages_size) {
-            resize(static_cast<size_t>(storages_size * 1.5f) + 1u);
+        if (id >= size) {
+            resize(static_cast<size_t>(size * 1.5f) + 1u);
         }
         return id;
     }
@@ -30,6 +26,13 @@ namespace amgl
     
     void textures::free_texture(uint32_t id) noexcept
     {
+        m_targets[id] = AMGL_NONE;
+        m_widths[id]  = 0u;
+        m_heights[id] = 0u;
+        m_depths[id]  = 0u;
+        
+        // deallocate memory
+
         m_id_pool.free_id(id);
     }
 
@@ -43,9 +46,11 @@ namespace amgl
     void textures::resize(size_t size) noexcept
     {
         m_memory_blocks.resize(size);
-        m_widths.resize(size);
-        m_heights.resize(size);
-        m_depths.resize(size);
-        m_targets.resize(size);
+        m_widths.resize(size, 0u);
+        m_heights.resize(size, 1u);
+        m_depths.resize(size, 1u);
+        m_formats.resize(size, AMGL_NONE);
+        m_types.resize(size, AMGL_NONE);
+        m_targets.resize(size, AMGL_NONE);
     }
 }

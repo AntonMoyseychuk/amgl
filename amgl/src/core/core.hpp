@@ -7,9 +7,9 @@
 #define AM_IS_DEFAULT_ID_KERNEL_SPACE(id)  (id == AM_DEFAULT_KERNEL_ID)
 
 // Converts id from kernel [0, UINT32_MAX - 1] to user [1, UINT32_MAX] range
-#define CONV_KERNEL_TO_USER_RANGE(id) ((uint32_t)id + (uint32_t)1)
+#define CONV_KERNEL_TO_USER_SPACE(id) ((uint32_t)id + (uint32_t)1)
 // Converts id from user [1, UINT32_MAX] to kernel [0, UINT32_MAX - 1] range
-#define CONV_USER_TO_KERNEL_RANGE(id) ((uint32_t)id - (uint32_t)1)
+#define CONV_USER_TO_KERNEL_SPACE(id) ((uint32_t)id - (uint32_t)1)
 
 #if AM_BUILD_DEBUG || AM_BUILD_RELEASE_WITH_DEBUG_INFO
     #include "debugbreak/debugbreak.h"

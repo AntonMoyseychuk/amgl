@@ -80,14 +80,14 @@ namespace amgl
         AM_RETURN_IF(!buffers);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            buffers[i] = CONV_KERNEL_TO_USER_RANGE(m_buffers.create_buffer());
+            buffers[i] = CONV_KERNEL_TO_USER_SPACE(m_buffers.create_buffer());
         }
     }
 
     
     void buffer_mng::invalidate_buffer_data(uint32_t buffer) noexcept
     {
-        const uint32_t kernel_id = CONV_USER_TO_KERNEL_RANGE(buffer);
+        const uint32_t kernel_id = CONV_USER_TO_KERNEL_SPACE(buffer);
         CHECK_BUFFER_VALIDITY(kernel_id, AMGL_INVALID_VALUE);
         CHECK_BUFFER_NOT_MAPPED(kernel_id, AMGL_INVALID_OPERATION);
             
@@ -100,7 +100,7 @@ namespace amgl
         AM_RETURN_IF(!buffers);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            const uint32_t kernel_id = CONV_USER_TO_KERNEL_RANGE(buffers[i]);
+            const uint32_t kernel_id = CONV_USER_TO_KERNEL_SPACE(buffers[i]);
             AM_CONTINUE_IF(AM_IS_DEFAULT_ID_KERNEL_SPACE(kernel_id) || !m_buffers.is_buffer_exist(kernel_id));
             
             m_buffers.unmap_buffer(kernel_id);
@@ -113,7 +113,7 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
         
-        const uint32_t kernel_buf_id = CONV_USER_TO_KERNEL_RANGE(buffer);
+        const uint32_t kernel_buf_id = CONV_USER_TO_KERNEL_SPACE(buffer);
         CHECK_BUFFER_VALIDITY(kernel_buf_id, AMGL_INVALID_VALUE);
 
         gs_context_mng.bind_target_buffer(target, kernel_buf_id, 0);
@@ -145,7 +145,7 @@ namespace amgl
         AM_SET_ERROR_FLAG_IF(!detail::is_one_of(target, AMGL_ATOMIC_COUNTER_BUFFER, AMGL_SHADER_STORAGE_BUFFER,
             AMGL_TRANSFORM_FEEDBACK_BUFFER, AMGL_UNIFORM_BUFFER), AMGL_INVALID_ENUM, gs_context_mng);
         
-        const uint32_t kernel_buf_id = CONV_USER_TO_KERNEL_RANGE(buffer);
+        const uint32_t kernel_buf_id = CONV_USER_TO_KERNEL_SPACE(buffer);
         CHECK_BUFFER_VALIDITY(kernel_buf_id, AMGL_INVALID_OPERATION);
 
         buffer_range range;
@@ -187,7 +187,7 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
     
-        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_binded_buffer(target, 0));
+        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_SPACE(gs_context_mng.get_binded_buffer(target, 0));
         named_buffer_data(user_buf_id, size, data, usage);
     }
 
@@ -196,7 +196,7 @@ namespace amgl
     {
         CHECK_BUFFER_USAGE_VALIDITY(usage, AMGL_INVALID_ENUM);
 
-        const uint32_t kernel_id = CONV_USER_TO_KERNEL_RANGE(buffer);
+        const uint32_t kernel_id = CONV_USER_TO_KERNEL_SPACE(buffer);
         CHECK_BUFFER_VALIDITY(kernel_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_DEFAULT(kernel_id, AMGL_INVALID_OPERATION);
 
@@ -213,14 +213,14 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
 
-        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_binded_buffer(target, 0));
+        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_SPACE(gs_context_mng.get_binded_buffer(target, 0));
         named_buffer_sub_data(user_buf_id, offset, size, data);
     }
 
 
     void buffer_mng::named_buffer_sub_data(uint32_t buffer, size_t offset, size_t size, const void *data) noexcept
     {
-        const uint32_t kernel_id = CONV_USER_TO_KERNEL_RANGE(buffer);
+        const uint32_t kernel_id = CONV_USER_TO_KERNEL_SPACE(buffer);
         CHECK_BUFFER_VALIDITY(kernel_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_DEFAULT(kernel_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_MAPPED(kernel_id, AMGL_INVALID_OPERATION);
@@ -242,20 +242,20 @@ namespace amgl
         CHECK_BUFFER_TARGET_VALIDITY(read_target, AMGL_INVALID_ENUM);
         CHECK_BUFFER_TARGET_VALIDITY(write_target, AMGL_INVALID_ENUM);
 
-        const uint32_t user_read_buffer_id = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_binded_buffer(read_target, 0));
-        const uint32_t user_write_buffer_id = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_binded_buffer(write_target, 0));
+        const uint32_t user_read_buffer_id = CONV_KERNEL_TO_USER_SPACE(gs_context_mng.get_binded_buffer(read_target, 0));
+        const uint32_t user_write_buffer_id = CONV_KERNEL_TO_USER_SPACE(gs_context_mng.get_binded_buffer(write_target, 0));
         copy_named_buffer_sub_data(user_read_buffer_id, user_write_buffer_id, read_offset, write_offset, size);
     }
 
     
     void buffer_mng::copy_named_buffer_sub_data(uint32_t read_buffer, uint32_t write_buffer, size_t read_offset, size_t write_offset, size_t size) noexcept
     {
-        const uint32_t kernel_read_id = CONV_USER_TO_KERNEL_RANGE(read_buffer);
+        const uint32_t kernel_read_id = CONV_USER_TO_KERNEL_SPACE(read_buffer);
         CHECK_BUFFER_VALIDITY(kernel_read_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_DEFAULT(kernel_read_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_MAPPED(kernel_read_id, AMGL_INVALID_OPERATION);
 
-        const uint32_t kernel_write_id = CONV_USER_TO_KERNEL_RANGE(write_buffer);
+        const uint32_t kernel_write_id = CONV_USER_TO_KERNEL_SPACE(write_buffer);
         CHECK_BUFFER_VALIDITY(kernel_write_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_DEFAULT(kernel_write_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_MAPPED(kernel_write_id, AMGL_INVALID_OPERATION);
@@ -276,14 +276,14 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
 
-        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_binded_buffer(target, 0));
+        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_SPACE(gs_context_mng.get_binded_buffer(target, 0));
         get_named_buffer_sub_data(user_buf_id, offset, size, data);
     }
 
     
     void buffer_mng::get_named_buffer_sub_data(uint32_t buffer, size_t offset, size_t size, void *data) noexcept
     {
-        const uint32_t kernel_id = CONV_USER_TO_KERNEL_RANGE(buffer);
+        const uint32_t kernel_id = CONV_USER_TO_KERNEL_SPACE(buffer);
         CHECK_BUFFER_VALIDITY(kernel_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_DEFAULT(kernel_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_MAPPED(kernel_id, AMGL_INVALID_OPERATION);
@@ -302,14 +302,14 @@ namespace amgl
     
     void buffer_mng::set_vertex_attrib_array_state(uint32_t index, bool enabled) noexcept
     {
-        const uint32_t vao_user_range = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_context().buf_bindings.vao);
+        const uint32_t vao_user_range = CONV_KERNEL_TO_USER_SPACE(gs_context_mng.get_context().buf_bindings.vao);
         set_vertex_array_attrib_state(vao_user_range, index, enabled);
     }
 
     
     void buffer_mng::set_vertex_array_attrib_state(uint32_t vaobj, uint32_t index, bool enabled) noexcept
     {
-        const uint32_t kernel_id = CONV_USER_TO_KERNEL_RANGE(vaobj);
+        const uint32_t kernel_id = CONV_USER_TO_KERNEL_SPACE(vaobj);
 
         CHECK_VAO_VALIDITY(kernel_id, AMGL_INVALID_OPERATION);
         CHECK_VAO_NOT_DEFAULT(kernel_id, AMGL_INVALID_OPERATION);
@@ -325,14 +325,14 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM, nullptr);
         
-        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_binded_buffer(target, 0));
+        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_SPACE(gs_context_mng.get_binded_buffer(target, 0));
         return map_named_buffer(user_buf_id, access);
     }
 
     
     void *buffer_mng::map_named_buffer(uint32_t buffer, enum_t access) noexcept
     {
-        const uint32_t kernel_id = CONV_USER_TO_KERNEL_RANGE(buffer);
+        const uint32_t kernel_id = CONV_USER_TO_KERNEL_SPACE(buffer);
         CHECK_BUFFER_VALIDITY(kernel_id, AMGL_INVALID_OPERATION, nullptr);
         CHECK_BUFFER_NOT_DEFAULT(kernel_id, AMGL_INVALID_OPERATION, nullptr);
         
@@ -346,14 +346,14 @@ namespace amgl
     {
         CHECK_BUFFER_TARGET_VALIDITY(target, AMGL_INVALID_ENUM);
         
-        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_RANGE(gs_context_mng.get_binded_buffer(target, 0));
+        const uint32_t user_buf_id = CONV_KERNEL_TO_USER_SPACE(gs_context_mng.get_binded_buffer(target, 0));
         unmap_named_buffer(user_buf_id);
     }
 
     
     void buffer_mng::unmap_named_buffer(uint32_t buffer) noexcept
     {
-        const uint32_t kernel_id = CONV_USER_TO_KERNEL_RANGE(buffer);
+        const uint32_t kernel_id = CONV_USER_TO_KERNEL_SPACE(buffer);
         CHECK_BUFFER_VALIDITY(kernel_id, AMGL_INVALID_OPERATION);
         CHECK_BUFFER_NOT_DEFAULT(kernel_id, AMGL_INVALID_OPERATION);
 
@@ -367,13 +367,13 @@ namespace amgl
     {
         AM_RETURN_IF(AM_IS_DEFAULT_ID_USER_SPACE(buffer), false);
 
-        return m_buffers.is_buffer_exist(CONV_USER_TO_KERNEL_RANGE(buffer));
+        return m_buffers.is_buffer_exist(CONV_USER_TO_KERNEL_SPACE(buffer));
     }
     
     
     void buffer_mng::bind_vertex_array(uint32_t array) noexcept
     {
-        const uint32_t kernel_vao_id = CONV_USER_TO_KERNEL_RANGE(array);
+        const uint32_t kernel_vao_id = CONV_USER_TO_KERNEL_SPACE(array);
         CHECK_VAO_VALIDITY(kernel_vao_id, AMGL_INVALID_OPERATION);
 
         const uint32_t kernel_vbo_id = m_vertex_arrays.m_vbo_ids[kernel_vao_id];
@@ -387,7 +387,7 @@ namespace amgl
         AM_RETURN_IF(!arrays);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            const uint32_t kernel_vao_id = CONV_USER_TO_KERNEL_RANGE(arrays[i]);
+            const uint32_t kernel_vao_id = CONV_USER_TO_KERNEL_SPACE(arrays[i]);
             AM_CONTINUE_IF(AM_IS_DEFAULT_ID_KERNEL_SPACE(kernel_vao_id) || !m_vertex_arrays.is_vertex_array_exist(kernel_vao_id));
 
             if (gs_context_mng.get_binded_vertex_array() == kernel_vao_id) {
@@ -405,7 +405,7 @@ namespace amgl
         AM_RETURN_IF(!arrays);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            arrays[i] = CONV_KERNEL_TO_USER_RANGE(m_vertex_arrays.create_array());
+            arrays[i] = CONV_KERNEL_TO_USER_SPACE(m_vertex_arrays.create_array());
         }
     }
     
@@ -414,7 +414,7 @@ namespace amgl
     {
         AM_RETURN_IF(AM_IS_DEFAULT_ID_USER_SPACE(array), false);
 
-        return m_vertex_arrays.is_vertex_array_exist(CONV_USER_TO_KERNEL_RANGE(array));
+        return m_vertex_arrays.is_vertex_array_exist(CONV_USER_TO_KERNEL_SPACE(array));
     }
     
     

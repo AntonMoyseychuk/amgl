@@ -19,6 +19,14 @@ namespace amgl
         buffer_mng(const buffer_mng&) = delete;
         buffer_mng& operator=(const buffer_mng&) = delete;
 
+        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        // NOTE: Doesn't check buffer validity
+        inline bool is_buffer_mapped(uint32_t buffer) const noexcept { return m_buffers.is_buffer_mapped(CONV_USER_TO_KERNEL_SPACE(buffer)); }
+        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        // NOTE: Doesn't check buffer validity
+        inline size_t get_buffer_size(uint32_t buffer) const noexcept { return m_buffers.m_memory_blocks[CONV_USER_TO_KERNEL_SPACE(buffer)].size(); }
+
+
         void gen_buffers(uint32_t n, uint32_t* buffers) noexcept;
         // Clears memory allocated for 'buffer' but doesn't free buffer id
         // NOTE: Takes 'buffers' in the user range [1, UINT32_MAX]

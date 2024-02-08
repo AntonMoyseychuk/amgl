@@ -24,6 +24,12 @@ namespace amgl
 
         // NOTE: Takes 'texture' in the user range [1, UINT32_MAX]
         void bind_texture(enum_t target, uint32_t texture) noexcept;
+
+        // NOTE: Takes 'texture' in the user range [1, UINT32_MAX]
+        bool is_texture(uint32_t texture) noexcept;
+
+        void tex_image_1d(enum_t target, uint32_t level, enum_t internal_format, size_t width, uint32_t border, 
+            enum_t format, enum_t type, const void* data) noexcept;
         
 
     private:

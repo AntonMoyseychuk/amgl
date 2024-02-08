@@ -4,18 +4,17 @@
 #include <ratio>
 #include <stdio.h>
 
-#include <cassert>
-
-#define CLOCK_NOW() std::chrono::steady_clock::now()
-#define DURATION(begin, end) std::chrono::duration<float, std::milli>((end) - (begin)).count()
-
-
 template<typename Func, typename... Args>
 inline void benchmark(size_t test_count, const Func& func, const Args&... args)
 {
-    puts("Benchmarking...\n");
+    if(test_count == 0) {
+        puts("test_count must be greater than 0\n");
+        return;
+    }
 
-    assert(test_count > 0 && "test_count must be greater than 0");
+    using namespace std::chrono;
+
+    puts("Benchmarking...\n");
 
     #if !defined(NDEBUG) || defined(_DEBUG) || defined(DEBUG)
         const char* build_type = "debug";
@@ -25,11 +24,11 @@ inline void benchmark(size_t test_count, const Func& func, const Args&... args)
 
     float total_time = 0.0f;
     for (size_t i = 0; i < test_count; ++i) {
-        const auto start = CLOCK_NOW();
+        const auto start = steady_clock::now();
         func(std::forward<Args>(args)...);
-        const auto end = CLOCK_NOW();
+        const auto end = steady_clock::now();
 
-        const float test_duration = DURATION(start, end);
+        const float test_duration = duration<float, std::milli>(end - start).count();
 
         printf_s("Benchmark %zu time (%s): %f ms\n", i, build_type, test_duration);
 
