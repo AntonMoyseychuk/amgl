@@ -35,7 +35,7 @@ namespace amgl
         std::vector<uint32_t> m_widths;
         std::vector<uint32_t> m_heights;
         std::vector<uint32_t> m_depths;
-        std::vector<enum_t> m_formats;
+        std::vector<enum_t> m_internal_formats;
         std::vector<enum_t> m_types;
         
         // Textures cannot be attached to another target if they have already been attached before. 

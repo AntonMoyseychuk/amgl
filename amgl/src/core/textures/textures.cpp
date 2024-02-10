@@ -26,10 +26,12 @@ namespace amgl
     
     void textures::free_texture(uint32_t id) noexcept
     {
-        m_targets[id] = AMGL_NONE;
         m_widths[id]  = 0u;
         m_heights[id] = 0u;
         m_depths[id]  = 0u;
+        m_internal_formats[id] = AMGL_NONE;
+        m_types[id] = AMGL_NONE;
+        m_targets[id] = AMGL_NONE;
         
         // deallocate memory
 
@@ -47,9 +49,9 @@ namespace amgl
     {
         m_memory_blocks.resize(size);
         m_widths.resize(size, 0u);
-        m_heights.resize(size, 1u);
-        m_depths.resize(size, 1u);
-        m_formats.resize(size, AMGL_NONE);
+        m_heights.resize(size, 0u);
+        m_depths.resize(size, 0u);
+        m_internal_formats.resize(size, AMGL_NONE);
         m_types.resize(size, AMGL_NONE);
         m_targets.resize(size, AMGL_NONE);
     }

@@ -105,10 +105,10 @@ namespace amgl
             AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, context_mng);
             AM_SET_ERROR_FLAG_IF(!detail::is_one_of(type, type0, std::forward<enum_t>(types)...), AMGL_INVALID_ENUM, context_mng);
 
-            AM_SET_ERROR_FLAG_IF(detail::is_one_of(type, AMGL_INT_2_10_10_10_REV, AMGL_UNSIGNED_INT_2_10_10_10_REV) && size != 4, 
-                AMGL_INVALID_OPERATION, context_mng);
-            AM_SET_ERROR_FLAG_IF(type == AMGL_UNSIGNED_INT_10F_11F_11F_REV && size != 3, 
-                AMGL_INVALID_OPERATION, context_mng);
+            // AM_SET_ERROR_FLAG_IF(detail::is_one_of(type, AMGL_INT_2_10_10_10_REV, AMGL_UNSIGNED_INT_2_10_10_10_REV) && size != 4, 
+            //     AMGL_INVALID_OPERATION, context_mng);
+            // AM_SET_ERROR_FLAG_IF(type == AMGL_UNSIGNED_INT_10F_11F_11F_REV && size != 3, 
+            //     AMGL_INVALID_OPERATION, context_mng);
             
             const uint32_t vao_kernel_id = context_mng.get_binded_vertex_array();
             // TODO: think about having an attribute layout as binding in context or something like that

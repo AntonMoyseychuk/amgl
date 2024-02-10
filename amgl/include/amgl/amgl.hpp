@@ -9,29 +9,21 @@ enum AMGLConstant : enum_t
 {
     AMGL_NONE                               = 0,
 
-    AMGL_BYTE                               = 0x1400,
-    AMGL_UNSIGNED_BYTE                      = 0x1401,
-    AMGL_SHORT                              = 0x1402,
-    AMGL_UNSIGNED_SHORT                     = 0x1403,
-    AMGL_INT                                = 0x1404,
-    AMGL_UNSIGNED_INT                       = 0x1405,
-    AMGL_FLOAT                              = 0x1406,
-    AMGL_DOUBLE                             = 0x140A,
-    AMGL_INT_2_10_10_10_REV                 = 0x8D9F,
-    AMGL_UNSIGNED_INT_2_10_10_10_REV        = 0x8368,
-    AMGL_UNSIGNED_INT_10F_11F_11F_REV       = 0x8C3B,
+    AMGL_STREAM_DRAW                        = 0x88E0,
+    AMGL_STREAM_READ                        = 0x88E1,
+    AMGL_STREAM_COPY                        = 0x88E2,
+    AMGL_STATIC_DRAW                        = 0x88E4,
+    AMGL_STATIC_READ                        = 0x88E5,
+    AMGL_STATIC_COPY                        = 0x88E6,
+    AMGL_DYNAMIC_DRAW                       = 0x88E8,
+    AMGL_DYNAMIC_READ                       = 0x88E9,
+    AMGL_DYNAMIC_COPY                       = 0x88EA,
 
-    AMGL_UNSIGNED_BYTE_3_3_2                = 0x8032,
-    AMGL_UNSIGNED_BYTE_2_3_3_REV            = 0x8362,
-    AMGL_UNSIGNED_SHORT_5_6_5               = 0x8363,
-    AMGL_UNSIGNED_SHORT_5_6_5_REV           = 0x8364,
-    AMGL_UNSIGNED_SHORT_4_4_4_4             = 0x8033,
-    AMGL_UNSIGNED_SHORT_4_4_4_4_REV         = 0x8365,
-    AMGL_UNSIGNED_SHORT_5_5_5_1             = 0x8034,
-    AMGL_UNSIGNED_SHORT_1_5_5_5_REV         = 0x8366,
-    AMGL_UNSIGNED_INT_8_8_8_8               = 0x8035,
-    AMGL_UNSIGNED_INT_8_8_8_8_REV           = 0x8367,
-    AMGL_UNSIGNED_INT_10_10_10_2            = 0x8036,
+    AMGL_READ_ONLY                          = 0x88B8,
+    AMGL_WRITE_ONLY                         = 0x88B9,
+    AMGL_READ_WRITE                         = 0x88BA,
+
+    /*------------------- Errors -------------------*/
 
     AMGL_NO_ERROR                           = 0,
     AMGL_INVALID_ENUM                       = 0x0500,
@@ -41,6 +33,8 @@ enum AMGLConstant : enum_t
     AMGL_STACK_UNDERFLOW                    = 0x0504,
     AMGL_OUT_OF_MEMORY                      = 0x0505,
     AMGL_INVALID_FRAMEBUFFER_OPERATION      = 0x0506,
+
+    /*------------------- Buffer Targets -------------------*/
 
     AMGL_ARRAY_BUFFER                       = 0x8892,
     AMGL_ATOMIC_COUNTER_BUFFER              = 0x92C0,
@@ -57,19 +51,33 @@ enum AMGLConstant : enum_t
     AMGL_TRANSFORM_FEEDBACK_BUFFER          = 0x8C8E,
     AMGL_UNIFORM_BUFFER                     = 0x8A11,
 
-    AMGL_STREAM_DRAW                        = 0x88E0,
-    AMGL_STREAM_READ                        = 0x88E1,
-    AMGL_STREAM_COPY                        = 0x88E2,
-    AMGL_STATIC_DRAW                        = 0x88E4,
-    AMGL_STATIC_READ                        = 0x88E5,
-    AMGL_STATIC_COPY                        = 0x88E6,
-    AMGL_DYNAMIC_DRAW                       = 0x88E8,
-    AMGL_DYNAMIC_READ                       = 0x88E9,
-    AMGL_DYNAMIC_COPY                       = 0x88EA,
+    /*------------------- Types -------------------*/
 
-    AMGL_READ_ONLY                          = 0x88B8,
-    AMGL_WRITE_ONLY                         = 0x88B9,
-    AMGL_READ_WRITE                         = 0x88BA,
+    AMGL_BYTE                               = 0x1400,
+    AMGL_UNSIGNED_BYTE                      = 0x1401,
+    AMGL_SHORT                              = 0x1402,
+    AMGL_UNSIGNED_SHORT                     = 0x1403,
+    AMGL_INT                                = 0x1404,
+    AMGL_UNSIGNED_INT                       = 0x1405,
+    AMGL_FLOAT                              = 0x1406,
+    AMGL_DOUBLE                             = 0x140A,
+
+    // AMGL_INT_2_10_10_10_REV                 = 0x8D9F,
+    // AMGL_UNSIGNED_INT_2_10_10_10_REV        = 0x8368,
+    // AMGL_UNSIGNED_INT_10F_11F_11F_REV       = 0x8C3B,
+    // AMGL_UNSIGNED_BYTE_2_3_3_REV            = 0x8362,
+    // AMGL_UNSIGNED_SHORT_5_6_5_REV           = 0x8364,
+    // AMGL_UNSIGNED_SHORT_4_4_4_4_REV         = 0x8365,
+    // AMGL_UNSIGNED_SHORT_1_5_5_5_REV         = 0x8366,
+    // AMGL_UNSIGNED_INT_8_8_8_8_REV           = 0x8367,
+    AMGL_UNSIGNED_BYTE_3_3_2                = 0x8032,
+    AMGL_UNSIGNED_SHORT_5_6_5               = 0x8363,
+    AMGL_UNSIGNED_SHORT_4_4_4_4             = 0x8033,
+    AMGL_UNSIGNED_SHORT_5_5_5_1             = 0x8034,
+    AMGL_UNSIGNED_INT_8_8_8_8               = 0x8035,
+    AMGL_UNSIGNED_INT_10_10_10_2            = 0x8036,
+
+    /*------------------- Texture Targets -------------------*/
 
     AMGL_TEXTURE_1D                         = 0x0DE0,
     AMGL_PROXY_TEXTURE_1D                   = 0x8063,
@@ -92,6 +100,8 @@ enum AMGLConstant : enum_t
     AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY       = 0x9102,
     AMGL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY = 0x9103,
 
+    /*------------------- Texture Formats (Internal too) -------------------*/
+
     AMGL_RED                                = 0x1903,
     AMGL_RG                                 = 0x8227,
     AMGL_RGB                                = 0x1907,
@@ -100,6 +110,10 @@ enum AMGLConstant : enum_t
     AMGL_RG_INTEGER                         = 0x8228,
     AMGL_RGB_INTEGER                        = 0x8D98,
     AMGL_RGBA_INTEGER                       = 0x8D99,
+    // AMGL_BGR                                = 0x80E0,
+    // AMGL_BGRA                               = 0x80E1,
+    // AMGL_BGR_INTEGER                        = 0x8D9A,
+    // AMGL_BGRA_INTEGER                       = 0x8D9B,
     AMGL_STENCIL_INDEX                      = 0x1901,
     AMGL_DEPTH_COMPONENT                    = 0x1902,
     AMGL_DEPTH_COMPONENT16                  = 0x81A5,
@@ -132,7 +146,9 @@ enum AMGLConstant : enum_t
     AMGL_RGB10_A2UI                         = 0x906F,
     AMGL_RGBA12                             = 0x805A,
     AMGL_RGBA16                             = 0x805B,
+    AMGL_SRGB                               = 0x8C40,
     AMGL_SRGB8                              = 0x8C41,
+    AMGL_SRGB_ALPHA                         = 0x8C42,
     AMGL_SRGB8_ALPHA8                       = 0x8C43,
     AMGL_R16F                               = 0x822D,
     AMGL_RG16F                              = 0x822F,

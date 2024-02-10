@@ -59,6 +59,12 @@ namespace amgl
 
     #define CHECK_TEXTURE_TYPE_VALIDITY(type, error_flag, ...)                              \
         AM_SET_ERROR_FLAG_IF(!detail::is_one_of(type,                                       \
+            /*AMGL_UNSIGNED_BYTE_2_3_3_REV,                                                   \
+            AMGL_UNSIGNED_SHORT_5_6_5_REV,                                                  \
+            AMGL_UNSIGNED_SHORT_4_4_4_4_REV,                                                \
+            AMGL_UNSIGNED_SHORT_1_5_5_5_REV,                                                \
+            AMGL_UNSIGNED_INT_8_8_8_8_REV,                                                  \
+            AMGL_UNSIGNED_INT_2_10_10_10_REV,*/                                               \
             AMGL_UNSIGNED_BYTE,                                                             \
             AMGL_BYTE,                                                                      \
             AMGL_UNSIGNED_SHORT,                                                            \
@@ -67,17 +73,11 @@ namespace amgl
             AMGL_INT,                                                                       \
             AMGL_FLOAT,                                                                     \
             AMGL_UNSIGNED_BYTE_3_3_2,                                                       \
-            AMGL_UNSIGNED_BYTE_2_3_3_REV,                                                   \
             AMGL_UNSIGNED_SHORT_5_6_5,                                                      \
-            AMGL_UNSIGNED_SHORT_5_6_5_REV,                                                  \
             AMGL_UNSIGNED_SHORT_4_4_4_4,                                                    \
-            AMGL_UNSIGNED_SHORT_4_4_4_4_REV,                                                \
             AMGL_UNSIGNED_SHORT_5_5_5_1,                                                    \
-            AMGL_UNSIGNED_SHORT_1_5_5_5_REV,                                                \
             AMGL_UNSIGNED_INT_8_8_8_8,                                                      \
-            AMGL_UNSIGNED_INT_8_8_8_8_REV,                                                  \
-            AMGL_UNSIGNED_INT_10_10_10_2,                                                   \
-            AMGL_UNSIGNED_INT_2_10_10_10_REV), error_flag, gs_context_mng, __VA_ARGS__)
+            AMGL_UNSIGNED_INT_10_10_10_2), error_flag, gs_context_mng, __VA_ARGS__)
 
 
     #define CHECK_TEXTURE_INTERNAL_FORMAT_VALIDITY(internal_format, error_flag, ...)        \
@@ -113,7 +113,9 @@ namespace amgl
             AMGL_RGB10_A2UI,                                                                \
             AMGL_RGBA12,                                                                    \
             AMGL_RGBA16,                                                                    \
+            AMGL_SRGB,                                                                      \
             AMGL_SRGB8,                                                                     \
+            AMGL_SRGB_ALPHA,                                                                \
             AMGL_SRGB8_ALPHA8,                                                              \
             AMGL_R16F,                                                                      \
             AMGL_RG16F,                                                                     \
@@ -173,30 +175,114 @@ namespace amgl
 
     // Doesn't check 'type' validity
     // Returns 0 if 'type' is invalid
-    static inline uint32_t texture_type_in_bytes(enum_t type) noexcept
+    static inline size_t get_bytes_per_component(enum_t type) noexcept
     {
         switch (type) {
-            case AMGL_UNSIGNED_BYTE:                    return 1u;
-            case AMGL_BYTE:                             return 1u;
-            case AMGL_UNSIGNED_SHORT:                   return 2u;
-            case AMGL_SHORT:                            return 2u;
-            case AMGL_UNSIGNED_INT:                     return 4u;
-            case AMGL_INT:                              return 4u;
-            case AMGL_FLOAT:                            return 4u;
-            case AMGL_UNSIGNED_BYTE_3_3_2:              return 1u;
-            case AMGL_UNSIGNED_BYTE_2_3_3_REV:          return 1u;
-            case AMGL_UNSIGNED_SHORT_5_6_5:             return 2u;
-            case AMGL_UNSIGNED_SHORT_5_6_5_REV:         return 2u;
-            case AMGL_UNSIGNED_SHORT_4_4_4_4:           return 2u;
-            case AMGL_UNSIGNED_SHORT_4_4_4_4_REV:       return 2u;
-            case AMGL_UNSIGNED_SHORT_5_5_5_1:           return 2u;
-            case AMGL_UNSIGNED_SHORT_1_5_5_5_REV:       return 2u;
-            case AMGL_UNSIGNED_INT_8_8_8_8:             return 4u;
-            case AMGL_UNSIGNED_INT_8_8_8_8_REV:         return 4u;
-            case AMGL_UNSIGNED_INT_10_10_10_2:          return 4u;
-            case AMGL_UNSIGNED_INT_2_10_10_10_REV:      return 4u;
-            default:                                    return 0u;
+            // case AMGL_UNSIGNED_BYTE:
+            // case AMGL_BYTE:
+            // case AMGL_UNSIGNED_BYTE_3_3_2:
+            // case AMGL_UNSIGNED_BYTE_2_3_3_REV:
+            //     return 1u;
+
+            // case AMGL_UNSIGNED_SHORT:
+            // case AMGL_SHORT:
+            // case AMGL_UNSIGNED_SHORT_5_6_5:
+            // case AMGL_UNSIGNED_SHORT_5_6_5_REV:
+            // case AMGL_UNSIGNED_SHORT_4_4_4_4:
+            // case AMGL_UNSIGNED_SHORT_4_4_4_4_REV:
+            // case AMGL_UNSIGNED_SHORT_5_5_5_1:
+            // case AMGL_UNSIGNED_SHORT_1_5_5_5_REV:
+            //     return 2u;
+
+            // case AMGL_UNSIGNED_INT:
+            // case AMGL_INT:
+            // case AMGL_FLOAT:
+            // case AMGL_UNSIGNED_INT_8_8_8_8:
+            // case AMGL_UNSIGNED_INT_8_8_8_8_REV:
+            // case AMGL_UNSIGNED_INT_10_10_10_2:
+            // case AMGL_UNSIGNED_INT_2_10_10_10_REV:
+            //     return 4u;
+
+            default:
+                return 0u;
         }
+    }
+
+
+    // Doesn't check 'format' validity
+    // Returns 0 if 'format' is invalid
+    static inline size_t get_components_count(enum_t format) noexcept
+    {
+        switch (format) {
+            // case AMGL_RED:
+            // case AMGL_DEPTH_COMPONENT:
+            // case AMGL_DEPTH_STENCIL:
+            // case AMGL_STENCIL_INDEX:
+            //     return 1u;
+
+            // case AMGL_RG:
+            //     return 2u;
+
+            // case AMGL_RGB:
+            //     return 3u;
+                
+            // case AMGL_RGBA:
+            //     return 4u;
+                
+            // case AMGL_RGB5_A1:
+            // case AMGL_RGBA4:
+            // case AMGL_RGBA8:
+            // case AMGL_RGB10_A2:
+            // case AMGL_RGB10_A2UI:
+            // case AMGL_RGBA12:
+            // case AMGL_RGBA16:
+            // case AMGL_SRGB_ALPHA:
+            // case AMGL_SRGB8_ALPHA8:
+            // case AMGL_RGB8:
+            // case AMGL_RGBA16F:
+            // case AMGL_RGBA32F:
+            // case AMGL_RGBA8UI:
+            // case AMGL_RGBA32UI:
+            // case AMGL_RGB16F:
+            // case AMGL_RGB32F:
+            // case AMGL_RGB8UI:
+            // case AMGL_RGB32UI:
+            //     return 4u;
+
+            default:
+                return 0u;
+        }
+    }
+
+
+    // Doesn't check 'format' and 'type' validity
+    // Returns 0 if 'format' or 'type' is invalid
+    static inline size_t get_bytes_per_pixel(enum_t format, enum_t type) noexcept
+    {
+        // const size_t bytes_per_component = get_bytes_per_component(type);
+        
+        // if (detail::is_one_of(type, 
+        //     AMGL_INT_2_10_10_10_REV, 
+        //     AMGL_UNSIGNED_INT_2_10_10_10_REV, 
+        //     AMGL_UNSIGNED_INT_10F_11F_11F_REV,
+        //     AMGL_UNSIGNED_BYTE_3_3_2,
+        //     AMGL_UNSIGNED_BYTE_2_3_3_REV,
+        //     AMGL_UNSIGNED_SHORT_5_6_5,
+        //     AMGL_UNSIGNED_SHORT_5_6_5_REV,
+        //     AMGL_UNSIGNED_SHORT_4_4_4_4,
+        //     AMGL_UNSIGNED_SHORT_4_4_4_4_REV,
+        //     AMGL_UNSIGNED_SHORT_5_5_5_1,
+        //     AMGL_UNSIGNED_SHORT_1_5_5_5_REV,
+        //     AMGL_UNSIGNED_INT_8_8_8_8,
+        //     AMGL_UNSIGNED_INT_8_8_8_8_REV,
+        //     AMGL_UNSIGNED_INT_10_10_10_2)
+        // ) {
+        //     return bytes_per_component;
+        // } else {
+        //     return bytes_per_component * get_components_count(format);
+        // }
+
+        return 0u;
     }
 
 
@@ -272,30 +358,30 @@ namespace amgl
             AMGL_DEPTH_COMPONENT24,
             AMGL_DEPTH_COMPONENT32) && format != AMGL_DEPTH_COMPONENT, AMGL_INVALID_OPERATION , gs_context_mng);
 
-        AM_SET_ERROR_FLAG_IF(format != AMGL_RGB && detail::is_one_of(
-            type, 
-            AMGL_UNSIGNED_BYTE_3_3_2, 
-            AMGL_UNSIGNED_BYTE_2_3_3_REV, 
-            AMGL_UNSIGNED_SHORT_5_6_5, 
-            AMGL_UNSIGNED_SHORT_5_6_5_REV), AMGL_INVALID_OPERATION, gs_context_mng);
+        // AM_SET_ERROR_FLAG_IF(format != AMGL_RGB && detail::is_one_of(
+        //     type, 
+        //     AMGL_UNSIGNED_BYTE_3_3_2, 
+        //     AMGL_UNSIGNED_BYTE_2_3_3_REV, 
+        //     AMGL_UNSIGNED_SHORT_5_6_5, 
+        //     AMGL_UNSIGNED_SHORT_5_6_5_REV), AMGL_INVALID_OPERATION, gs_context_mng);
 
         AM_SET_ERROR_FLAG_IF(!detail::is_one_of(format, AMGL_RGBA) && detail::is_one_of(
             type, 
+            // AMGL_UNSIGNED_SHORT_4_4_4_4_REV,
+            // AMGL_UNSIGNED_SHORT_1_5_5_5_REV,
+            // AMGL_UNSIGNED_INT_8_8_8_8_REV,
+            // AMGL_UNSIGNED_INT_2_10_10_10_REV,
             AMGL_UNSIGNED_SHORT_4_4_4_4,
-            AMGL_UNSIGNED_SHORT_4_4_4_4_REV,
             AMGL_UNSIGNED_SHORT_5_5_5_1,
-            AMGL_UNSIGNED_SHORT_1_5_5_5_REV,
             AMGL_UNSIGNED_INT_8_8_8_8,
-            AMGL_UNSIGNED_INT_8_8_8_8_REV,
-            AMGL_UNSIGNED_INT_10_10_10_2,
-            AMGL_UNSIGNED_INT_2_10_10_10_REV), AMGL_INVALID_OPERATION , gs_context_mng);
+            AMGL_UNSIGNED_INT_10_10_10_2), AMGL_INVALID_OPERATION, gs_context_mng);
 
         static context& cont = gs_context_mng.get_context();
         const uint32_t binded_pubo_user_range = CONV_KERNEL_TO_USER_SPACE(cont.buf_bindings.pubo[0].buffer);
         if (!AM_IS_DEFAULT_ID_USER_SPACE(binded_pubo_user_range)) {
             AM_SET_ERROR_FLAG_IF(gs_buffer_mng.is_buffer_mapped(binded_pubo_user_range), AMGL_INVALID_OPERATION , gs_context_mng);
             
-            const uint32_t type_size_in_bytes = texture_type_in_bytes(type);
+            const uint32_t type_size_in_bytes = get_bytes_per_component(type);
             const size_t pubo_size = gs_buffer_mng.get_buffer_size(binded_pubo_user_range);
             AM_SET_ERROR_FLAG_IF(pubo_size % type_size_in_bytes != 0, AMGL_INVALID_OPERATION, gs_context_mng);
         }
