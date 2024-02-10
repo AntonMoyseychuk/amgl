@@ -39,7 +39,8 @@ namespace amgl
             AMGL_TEXTURE_2D_MULTISAMPLE,                                                    \
             AMGL_PROXY_TEXTURE_2D_MULTISAMPLE,                                              \
             AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY,                                              \
-            AMGL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY), error_flag, gs_context_mng, __VA_ARGS__)
+            AMGL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY                                         \
+        ), error_flag, gs_context_mng, __VA_ARGS__)
 
 
     #define CHECK_TEXTURE_FORMAT_VALIDITY(format, error_flag, ...)                          \
@@ -47,24 +48,23 @@ namespace amgl
             AMGL_RED,                                                                       \
             AMGL_RG,                                                                        \
             AMGL_RGB,                                                                       \
+            AMGL_BGR,                                                                       \
             AMGL_RGBA,                                                                      \
+            AMGL_BGRA,                                                                      \
             AMGL_RED_INTEGER,                                                               \
             AMGL_RG_INTEGER,                                                                \
             AMGL_RGB_INTEGER,                                                               \
+            AMGL_BGR_INTEGER,                                                               \
             AMGL_RGBA_INTEGER,                                                              \
+            AMGL_BGRA_INTEGER,                                                              \
             AMGL_STENCIL_INDEX,                                                             \
             AMGL_DEPTH_COMPONENT,                                                           \
-            AMGL_DEPTH_STENCIL), error_flag, gs_context_mng, __VA_ARGS__)
+            AMGL_DEPTH_STENCIL                                                              \
+        ), error_flag, gs_context_mng, __VA_ARGS__)
 
 
     #define CHECK_TEXTURE_TYPE_VALIDITY(type, error_flag, ...)                              \
         AM_SET_ERROR_FLAG_IF(!detail::is_one_of(type,                                       \
-            /*AMGL_UNSIGNED_BYTE_2_3_3_REV,                                                   \
-            AMGL_UNSIGNED_SHORT_5_6_5_REV,                                                  \
-            AMGL_UNSIGNED_SHORT_4_4_4_4_REV,                                                \
-            AMGL_UNSIGNED_SHORT_1_5_5_5_REV,                                                \
-            AMGL_UNSIGNED_INT_8_8_8_8_REV,                                                  \
-            AMGL_UNSIGNED_INT_2_10_10_10_REV,*/                                               \
             AMGL_UNSIGNED_BYTE,                                                             \
             AMGL_BYTE,                                                                      \
             AMGL_UNSIGNED_SHORT,                                                            \
@@ -73,11 +73,18 @@ namespace amgl
             AMGL_INT,                                                                       \
             AMGL_FLOAT,                                                                     \
             AMGL_UNSIGNED_BYTE_3_3_2,                                                       \
+            AMGL_UNSIGNED_BYTE_2_3_3_REV,                                                   \
             AMGL_UNSIGNED_SHORT_5_6_5,                                                      \
+            AMGL_UNSIGNED_SHORT_5_6_5_REV,                                                  \
             AMGL_UNSIGNED_SHORT_4_4_4_4,                                                    \
+            AMGL_UNSIGNED_SHORT_4_4_4_4_REV,                                                \
             AMGL_UNSIGNED_SHORT_5_5_5_1,                                                    \
+            AMGL_UNSIGNED_SHORT_1_5_5_5_REV,                                                \
             AMGL_UNSIGNED_INT_8_8_8_8,                                                      \
-            AMGL_UNSIGNED_INT_10_10_10_2), error_flag, gs_context_mng, __VA_ARGS__)
+            AMGL_UNSIGNED_INT_8_8_8_8_REV,                                                  \
+            AMGL_UNSIGNED_INT_10_10_10_2,                                                   \
+            AMGL_UNSIGNED_INT_2_10_10_10_REV                                                \
+        ), error_flag, gs_context_mng, __VA_ARGS__)
 
 
     #define CHECK_TEXTURE_INTERNAL_FORMAT_VALIDITY(internal_format, error_flag, ...)        \
@@ -150,7 +157,8 @@ namespace amgl
             AMGL_RGBA16I,                                                                   \
             AMGL_RGBA16UI,                                                                  \
             AMGL_RGBA32I,                                                                   \
-            AMGL_RGBA32UI), error_flag, gs_context_mng, __VA_ARGS__)
+            AMGL_RGBA32UI                                                                   \
+        ), error_flag, gs_context_mng, __VA_ARGS__)
 
 
     // Takes 'texture' in the kernel range [0, UINT32_MAX - 1]

@@ -99,17 +99,26 @@ namespace amgl
         template <enum_t type0, enum_t... types>
         void vertex_attrib_pointer_impl(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept
         {
+            using namespace detail;
+
             static context_mng& context_mng = context_mng::instance();
 
             AM_SET_ERROR_FLAG_IF(index >= context::MAX_VERTEX_ATTRIB_BINDINGS, AMGL_INVALID_VALUE, context_mng);    
-            AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, context_mng);
-            AM_SET_ERROR_FLAG_IF(!detail::is_one_of(type, type0, std::forward<enum_t>(types)...), AMGL_INVALID_ENUM, context_mng);
+            AM_SET_ERROR_FLAG_IF(!is_one_of(type, type0, std::forward<enum_t>(types)...), AMGL_INVALID_ENUM, context_mng);
 
-            // AM_SET_ERROR_FLAG_IF(detail::is_one_of(type, AMGL_INT_2_10_10_10_REV, AMGL_UNSIGNED_INT_2_10_10_10_REV) && size != 4, 
-            //     AMGL_INVALID_OPERATION, context_mng);
-            // AM_SET_ERROR_FLAG_IF(type == AMGL_UNSIGNED_INT_10F_11F_11F_REV && size != 3, 
-            //     AMGL_INVALID_OPERATION, context_mng);
+            AM_SET_ERROR_FLAG_IF(size == AMGL_BGRA && !is_one_of(
+                type, 
+                AMGL_UNSIGNED_BYTE, 
+                AMGL_INT_2_10_10_10_REV, 
+                AMGL_UNSIGNED_INT_2_10_10_10_REV), AMGL_INVALID_OPERATION, context_mng);
+
+            AM_SET_ERROR_FLAG_IF(is_one_of(type, AMGL_INT_2_10_10_10_REV, AMGL_UNSIGNED_INT_2_10_10_10_REV) 
+                && !is_one_of(size, 4, AMGL_BGRA), AMGL_INVALID_OPERATION, context_mng);
+
+            AM_SET_ERROR_FLAG_IF(type == AMGL_UNSIGNED_INT_10F_11F_11F_REV && size != 3, 
+                AMGL_INVALID_OPERATION, context_mng);
             
+
             const uint32_t vao_kernel_id = context_mng.get_binded_vertex_array();
             // TODO: think about having an attribute layout as binding in context or something like that
             AM_SET_ERROR_FLAG_IF(AM_IS_DEFAULT_ID_KERNEL_SPACE(vao_kernel_id), AMGL_INVALID_VALUE, context_mng);

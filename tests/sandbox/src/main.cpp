@@ -71,7 +71,7 @@ void test() noexcept
         amglBindBuffer(AMGL_ARRAY_BUFFER, vbo);
         amglBufferData(AMGL_ARRAY_BUFFER, sizeof(vbo_data), vbo_data, AMGL_STATIC_DRAW);
 
-        amglVertexAttribPointer(0, 3, AMGL_FLOAT, false, sizeof(vertex), (void*)offsetof(vertex, position));
+        amglVertexAttribPointer(0, AMGL_BGRA, AMGL_UNSIGNED_BYTE, true, sizeof(vertex), (void*)offsetof(vertex, position));
         amglEnableVertexAttribArray(0);
 
         amglVertexAttribPointer(1, 3, AMGL_FLOAT, false, sizeof(vertex), (void*)offsetof(vertex, normal));

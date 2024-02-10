@@ -420,10 +420,13 @@ namespace amgl
     
     void buffer_mng::vertex_attrib_pointer(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void *pointer) noexcept
     {
+        AM_SET_ERROR_FLAG_IF(size == AMGL_BGRA && normalized == false, AMGL_INVALID_OPERATION, gs_context_mng);
+        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4, AMGL_BGRA), AMGL_INVALID_VALUE, gs_context_mng);
+
         vertex_attrib_pointer_impl<
-            // AMGL_INT_2_10_10_10_REV, 
-            // AMGL_UNSIGNED_INT_2_10_10_10_REV, 
-            // AMGL_UNSIGNED_INT_10F_11F_11F_REV,
+            AMGL_INT_2_10_10_10_REV, 
+            AMGL_UNSIGNED_INT_2_10_10_10_REV, 
+            AMGL_UNSIGNED_INT_10F_11F_11F_REV,
             AMGL_BYTE, 
             AMGL_UNSIGNED_BYTE, 
             AMGL_SHORT, 
@@ -437,6 +440,8 @@ namespace amgl
     
     void buffer_mng::vertex_attrib_I_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void *pointer) noexcept
     {
+        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, gs_context_mng);
+
         vertex_attrib_pointer_impl<AMGL_BYTE, AMGL_UNSIGNED_BYTE, AMGL_SHORT, AMGL_UNSIGNED_SHORT, 
             AMGL_INT, AMGL_UNSIGNED_INT>(index, size, type, false, stride, pointer);
     }
@@ -444,6 +449,8 @@ namespace amgl
     
     void buffer_mng::vertex_attrib_L_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void *pointer) noexcept
     {
+        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, gs_context_mng);
+
         vertex_attrib_pointer_impl<AMGL_DOUBLE>(index, size, type, false, stride, pointer);
     }
 }
