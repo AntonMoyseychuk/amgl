@@ -47,21 +47,6 @@ namespace amgl
         // NOTE: Takes 'vertex_array' in the kernel range [0, UINT32_MAX - 1]
         // NOTE: Doesn't check 'vertex_array', 'index', 'size', 'type', 'stride' and 'pointer' validity
         void set_attribute_desc(uint32_t vertex_array, uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept;
-        // NOTE: Takes 'vertex_array' in the kernel range [0, UINT32_MAX - 1]
-        // NOTE: Doesn't check 'size' validity
-        void set_attribute_size(uint32_t vertex_array, uint32_t index, size_t size) noexcept;
-        // NOTE: Takes 'vertex_array' in the kernel range [0, UINT32_MAX - 1]
-        // NOTE: Doesn't check 'vertex_array', 'index' and 'stride' validity
-        void set_attribute_stride(uint32_t vertex_array, uint32_t index, size_t stride) noexcept;
-        // NOTE: Takes 'vertex_array' in the kernel range [0, UINT32_MAX - 1]
-        // NOTE: Doesn't check 'vertex_array', 'index' and 'pointer' validity
-        void set_attribute_pointer(uint32_t vertex_array, uint32_t index, const void* pointer) noexcept;
-        // NOTE: Takes 'vertex_array' in the kernel range [0, UINT32_MAX - 1]
-        // NOTE: Doesn't check 'vertex_array', 'index' and 'type' validity
-        void set_attribute_type(uint32_t vertex_array, uint32_t index, enum_t type) noexcept;
-        // NOTE: Takes 'vertex_array' in the kernel range [0, UINT32_MAX - 1]
-        // NOTE: Doesn't check 'vertex_array', 'index' and 'normalized' validity
-        void set_attribute_normalized(uint32_t vertex_array, uint32_t index, bool normalized) noexcept;
 
     private:
         void resize(size_t size) noexcept;

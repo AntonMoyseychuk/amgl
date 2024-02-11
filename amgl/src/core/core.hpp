@@ -11,6 +11,14 @@
 // Converts id from user [1, UINT32_MAX] to kernel [0, UINT32_MAX - 1] range
 #define CONV_USER_TO_KERNEL_SPACE(id) ((uint32_t)id - (uint32_t)1)
 
+#ifdef _MSC_VER
+    #define AM_FORCEINLINE __forceinline
+#elif defined(__GNUC__) || defined(__clang__)
+    #define AM_FORCEINLINE inline __attribute__((always_inline))
+#else
+    #define AM_FORCEINLINE inline
+#endif
+
 #if AM_BUILD_DEBUG || AM_BUILD_RELEASE_WITH_DEBUG_INFO
     #include "debugbreak/debugbreak.h"
     #include <cstdio>

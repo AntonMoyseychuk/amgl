@@ -58,36 +58,6 @@ namespace amgl
     }
 
     
-    void vertex_arrays::set_attribute_size(uint32_t vertex_array, uint32_t index, size_t size) noexcept
-    {
-        m_attributes[vertex_array].layout_descs[index].size = size;
-    }
-
-
-    void vertex_arrays::set_attribute_stride(uint32_t vertex_array, uint32_t index, size_t stride) noexcept
-    {
-        m_attributes[vertex_array].layout_descs[index].stride = stride;
-    }
-
-    
-    void vertex_arrays::set_attribute_pointer(uint32_t vertex_array, uint32_t index, const void *pointer) noexcept
-    {
-        m_attributes[vertex_array].layout_descs[index].pointer = (uintptr_t)pointer;
-    }
-
-    
-    void vertex_arrays::set_attribute_type(uint32_t vertex_array, uint32_t index, enum_t type) noexcept
-    {
-        m_attributes[vertex_array].layout_descs[index].type = type;
-    }
-
-    
-    void vertex_arrays::set_attribute_normalized(uint32_t vertex_array, uint32_t index, bool normalized) noexcept
-    {
-        m_attributes[vertex_array].layout_descs[index].normalized = normalized;
-    }
-
-    
     void vertex_arrays::resize(size_t size) noexcept
     {
         m_attributes.resize(size);
