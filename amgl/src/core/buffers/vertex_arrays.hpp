@@ -32,21 +32,36 @@ namespace amgl
         vertex_arrays() = default;
         vertex_arrays(uint32_t size);
 
-        // RETURNS: Vertex array ID in the kernel range [0, UINT32_MAX - 1]
+        /// @brief 
+        /// @return Vertex array ID in the kernel range [0, UINT32_MAX - 1]
         uint32_t create_array() noexcept;
-        // NOTE: Takes 'id' in the kernel range [0, UINT32_MAX - 1]
+
+        /// @brief 
+        /// @param id Vertex array object in the kernel range [0, UINT32_MAX - 1]
         void free_array(uint32_t id) noexcept;
 
-        // NOTE: Takes 'id' in the kernel range [0, UINT32_MAX - 1]
+        /// @brief 
+        /// @param id Vertex array object in the kernel range [0, UINT32_MAX - 1]
         bool is_vertex_array_exist(uint32_t id) const noexcept;
 
-        // NOTE: Takes 'vertex_array' and 'buffer' in the kernel range [0, UINT32_MAX - 1]
-        // NOTE: Doesn't check 'target', 'buffer' and 'vertex_array' validity
+        /// @brief 
+        /// @param vertex_array Vertex array object in the kernel range [0, UINT32_MAX - 1]
+        /// @param target Buffer target
+        /// @param buffer Buffer object in the kernel range [0, UINT32_MAX - 1]
+        /// @note Doesn't check 'vertex_array', 'target' and 'buffer' validity 
         void bind_buffer(uint32_t vertex_array, enum_t target, uint32_t buffer) noexcept;
 
-        // NOTE: Takes 'vertex_array' in the kernel range [0, UINT32_MAX - 1]
-        // NOTE: Doesn't check 'vertex_array', 'index', 'size', 'type', 'stride' and 'pointer' validity
-        void set_attribute_desc(uint32_t vertex_array, uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept;
+        /// @brief 
+        /// @param vertex_array Vertex array object in the kernel range [0, UINT32_MAX - 1]
+        /// @param index Attribute index
+        /// @param size Componets count
+        /// @param type Type of component
+        /// @param normalized Normalize flag
+        /// @param stride Stride to same component
+        /// @param pointer Stride to first component
+        /// @note Doesn't check 'vertex_array', 'index', 'size', 'type', 'stride' and 'pointer' validity
+        void set_attribute_desc(uint32_t vertex_array, uint32_t index, size_t size, enum_t type, 
+            bool normalized, size_t stride, const void* pointer) noexcept;
 
     private:
         void resize(size_t size) noexcept;

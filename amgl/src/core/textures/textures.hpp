@@ -18,12 +18,18 @@ namespace amgl
         textures() = default;
         textures(size_t size);
 
-        // RETURNS: ID in the kernel range [0, UINT32_MAX - 1]
+        /// @brief 
+        /// @return Texture object in the kernel range [0, UINT32_MAX - 1]
         uint32_t create_texture() noexcept;
-        // NOTE: Takes 'id' in the kernel range [0, UINT32_MAX - 1]
-        void free_texture(uint32_t id) noexcept;
 
-        // NOTE: Takes 'id' in the kernel range [0, UINT32_MAX - 1]
+        /// @brief 
+        /// @param id texture object name
+        /// @note Takes 'id' in the kernel range [0, UINT32_MAX - 1]
+        void free_texture(uint32_t id) noexcept;
+        
+        /// @brief 
+        /// @param id texture object name
+        /// @note Takes 'id' in the kernel range [0, UINT32_MAX - 1]
         bool is_texture_exist(uint32_t id) const noexcept;
 
 

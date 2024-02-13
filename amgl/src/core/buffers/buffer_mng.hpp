@@ -19,73 +19,140 @@ namespace amgl
         buffer_mng(const buffer_mng&) = delete;
         buffer_mng& operator=(const buffer_mng&) = delete;
 
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
-        // NOTE: Doesn't check buffer validity
+        /// @brief 
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
+        /// @note Doesn't check buffer validity
         inline bool is_buffer_mapped(uint32_t buffer) const noexcept { return m_buffers.is_buffer_mapped(CONV_USER_TO_KERNEL_SPACE(buffer)); }
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
-        // NOTE: Doesn't check buffer validity
+        
+        /// @brief 
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
+        /// @note Doesn't check buffer validity
         inline size_t get_buffer_size(uint32_t buffer) const noexcept { return m_buffers.m_memory_blocks[CONV_USER_TO_KERNEL_SPACE(buffer)].size(); }
 
 
         void gen_buffers(uint32_t n, uint32_t* buffers) noexcept;
-        // Clears memory allocated for 'buffer' but doesn't free buffer id
-        // NOTE: Takes 'buffers' in the user range [1, UINT32_MAX]
+        
+        /// @brief Clears memory allocated for 'buffer' but doesn't free buffer id
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
+        
         void invalidate_buffer_data(uint32_t buffer) noexcept;
-        // Clears memory allocated for 'buffers' and buffers ids
-        // NOTE: Takes 'buffers' in the user range [1, UINT32_MAX]
+        
+        /// @brief Clears memory allocated for 'buffers' and buffers ids
+        /// @param n Buffer object count
+        /// @param buffers Buffer objects in the user range [1, UINT32_MAX]
         void delete_buffers(uint32_t n, const uint32_t* buffers) noexcept;
 
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        /// @brief 
+        /// @param target Buffer target
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
         void bind_buffer(enum_t target, uint32_t buffer) noexcept;
 
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        /// @brief 
+        /// @param target Buffer target
+        /// @param index Binding point
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
         void bind_buffer_base(enum_t target, uint32_t index, uint32_t buffer) noexcept;
-        // NOTE: Takes 'buffers' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param target Buffer target
+        /// @param first First binding point
+        /// @param count Count of binding points
+        /// @param buffers Buffer objects in the user range [1, UINT32_MAX]
         void bind_buffers_base(enum_t target, uint32_t first, size_t count, const uint32_t* buffers) noexcept;
 
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
-        // NOTE: If 'offset' or 'size' are nullptr than 'offset' is considered to be zero and 'size' is the size of buffer
+        /// @brief 
+        /// @param target Buffer target
+        /// @param index Binding point
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
+        /// @param offset Range ofset
+        /// @param size Range size
+        /// @note If 'offset' or 'size' are nullptr than 'offset' is considered to be zero and 'size' is the size of buffer
         void bind_buffer_range(enum_t target, uint32_t index, uint32_t buffer, const size_t* offset, const size_t* size) noexcept;
-        // NOTE: Takes 'buffers' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param target Buffer target
+        /// @param first First binding point
+        /// @param count Count of binding points
+        /// @param buffers Buffer objects in the user range [1, UINT32_MAX]
+        /// @param offsets Range ofsets
+        /// @param sizes Range sizes
         void bind_buffers_range(enum_t target, uint32_t first, size_t count, 
             const uint32_t *buffers, const size_t *offsets, const size_t *sizes) noexcept;
 
         void buffer_data(enum_t target, size_t size, const void *data, enum_t usage /* unused */) noexcept;
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
+        /// @param size Size of buffer
+        /// @param data Input data
+        /// @param usage Unused
         void named_buffer_data(uint32_t buffer, size_t size, const void *data, enum_t usage /* unused */) noexcept;
 
         void buffer_sub_data(enum_t target, size_t offset, size_t size, const void *data) noexcept;
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
+        /// @param offset Buffer offset
+        /// @param size Subdata offset
+        /// @param data Input data
         void named_buffer_sub_data(uint32_t buffer, size_t offset, size_t size, const void *data) noexcept;
 
         void copy_buffer_sub_data(enum_t read_target, enum_t write_target, size_t read_offset, size_t write_offset, size_t size) noexcept;
-        // NOTE: Takes 'read_buffer' and 'write_buffer' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param read_buffer Buffer read from in the user range [1, UINT32_MAX]
+        /// @param write_buffer Buffer write to in the user range [1, UINT32_MAX]
+        /// @param read_offset Read buffer offset
+        /// @param write_offset Write buffer offset
+        /// @param size Size of writing data
         void copy_named_buffer_sub_data(uint32_t read_buffer, uint32_t write_buffer, size_t read_offset, size_t write_offset, size_t size) noexcept;
 
         void get_buffer_sub_data(enum_t target, size_t offset, size_t size, void* data) noexcept;
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
+        /// @param offset Buffer offset
+        /// @param size Size of writing data
+        /// @param data Input data
         void get_named_buffer_sub_data(uint32_t buffer, size_t offset, size_t size, void* data) noexcept;
 
         void set_vertex_attrib_array_state(uint32_t index, bool enabled) noexcept;
-        // NOTE: Takes 'vaobj' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param vaobj Vertex buffer object in the user range [1, UINT32_MAX]
+        /// @param index Binding point
+        /// @param enabled Enable flag
         void set_vertex_array_attrib_state(uint32_t vaobj, uint32_t index, bool enabled) noexcept;
 
         void* map_buffer(enum_t target, enum_t access /* unused */) noexcept;
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
+        /// @param access Unused
         void* map_named_buffer(uint32_t buffer, enum_t access /* unused */) noexcept;
         void unmap_buffer(enum_t target) noexcept;
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+
+        /// @brief 
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
         void unmap_named_buffer(uint32_t buffer) noexcept;
 
-        // NOTE: Takes 'buffer' in the user range [1, UINT32_MAX]
+        /// @brief 
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
         bool is_buffer(uint32_t buffer) noexcept;
 
         void gen_vertex_arrays(size_t n, uint32_t* arrays) noexcept;
-        // NOTE: Takes 'array' in the user range [1, UINT32_MAX]
+
+        /// @brief 
+        /// @param array Vertex array object in the user range [1, UINT32_MAX]
         void bind_vertex_array(uint32_t array) noexcept;
-        // NOTE: Takes 'arrays' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param n Vertex array objects count
+        /// @param arrays Vertex array objects in the user range [1, UINT32_MAX]
         void delete_vertex_arrays(size_t n, const uint32_t* arrays) noexcept;
-        // NOTE: Takes 'array' in the user range [1, UINT32_MAX]
+        
+        /// @brief 
+        /// @param array Vertex array object in the user range [1, UINT32_MAX]
         bool is_vertex_array(uint32_t array) noexcept;
 
         void vertex_attrib_pointer(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept;
