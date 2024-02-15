@@ -1,11 +1,13 @@
 #include "pch.hpp"
 #include "texture_mng.hpp"
+#include "texture_formats.hpp"
 
 #include "core/core.hpp"
 #include "core/utils/util_func.hpp"
 
 #include "core/context/context_mng.hpp"
 #include "core/buffers/buffer_mng.hpp"
+
 
 
 static_assert(AM_INIT_TEX_COUNT > 0, "AM_INIT_TEXTURE_COUNT must be greater than 0");
@@ -41,9 +43,19 @@ namespace amgl
         AMGL_FLOAT
 
     #define TEXTURE_BASE_INTERNAL_FORMATS                                               \
-        AMGL_RED, AMGL_RG, AMGL_RGB, AMGL_RGBA, AMGL_DEPTH_COMPONENT, AMGL_DEPTH_STENCIL
+        AMGL_RED,                                                                       \
+        AMGL_RG,                                                                        \
+        AMGL_RGB,                                                                       \
+        AMGL_RGBA,                                                                      \
+        AMGL_DEPTH_COMPONENT,                                                           \
+        AMGL_DEPTH_STENCIL,                                                             \
+        AMGL_SRGB,                                                                      \
+        AMGL_SRGB_ALPHA
 
     #define TEXTURE_SIZED_INTERNAL_FORMATS                                              \
+        AMGL_DEPTH_COMPONENT16,                                                         \
+        AMGL_DEPTH_COMPONENT24,                                                         \
+        AMGL_DEPTH_COMPONENT32,                                                         \
         AMGL_R8,                                                                        \
         AMGL_R8_SNORM,                                                                  \
         AMGL_R16,                                                                       \
@@ -54,14 +66,14 @@ namespace amgl
         AMGL_RG16_SNORM,                                                                \
         AMGL_R3_G3_B2,                                                                  \
         /*AMGL_RGB4,                                                                      \
-        AMGL_RGB5,                                                                      \
+        AMGL_RGB5,*/                                                                      \
         AMGL_RGB8,                                                                      \
         AMGL_RGB8_SNORM,                                                                \
         AMGL_RGB10,                                                                     \
-        AMGL_RGB12,                                                                     \
+        AMGL_RGB16,                                                                     \
         AMGL_RGB16_SNORM,                                                               \
         AMGL_RGBA2,                                                                     \
-        AMGL_RGBA4,*/                                                                     \
+        AMGL_RGBA4,                                                                     \
         AMGL_RGB5_A1,                                                                   \
         AMGL_RGBA8,                                                                     \
         AMGL_RGBA8_SNORM,                                                               \
@@ -69,13 +81,11 @@ namespace amgl
         AMGL_RGB10_A2UI,                                                                \
         AMGL_RGBA12,                                                                    \
         AMGL_RGBA16,                                                                    \
-        AMGL_SRGB,                                                                      \
-        /*AMGL_SRGB8,*/                                                                     \
-        AMGL_SRGB_ALPHA,                                                                \
+        AMGL_SRGB8,                                                                     \
         AMGL_SRGB8_ALPHA8,                                                              \
         AMGL_R16F,                                                                      \
         AMGL_RG16F,                                                                     \
-        /*AMGL_RGB16F,*/                                                                    \
+        AMGL_RGB16F,                                                                    \
         AMGL_RGBA16F,                                                                   \
         AMGL_R32F,                                                                      \
         AMGL_RG32F,                                                                     \
@@ -229,10 +239,10 @@ namespace amgl
 
 
     /// @brief 
-    /// @return Components count or 0 if 'internal_format' is invalid
-    static constexpr inline size_t get_components_count(enum_t internal_format) noexcept
+    /// @return Components count or 0 if 'format' is invalid
+    static constexpr inline size_t get_components_count(enum_t format) noexcept
     {
-        switch (internal_format) {
+        switch (format) {
             case AMGL_RED:
             case AMGL_DEPTH_COMPONENT:
             case AMGL_DEPTH_STENCIL:
@@ -272,8 +282,8 @@ namespace amgl
                 return 2u;
 
             case AMGL_RGB:
-            // case AMGL_RGB8:
-            // case AMGL_RGB16F:
+            case AMGL_RGB8:
+            case AMGL_RGB16F:
             case AMGL_RGB32F:
             case AMGL_RGB8UI:
             case AMGL_RGB32UI:
@@ -283,13 +293,12 @@ namespace amgl
             case AMGL_R3_G3_B2:
             // case AMGL_RGB4:
             // case AMGL_RGB5:
-            // case AMGL_RGB8_SNORM:
-            // case AMGL_RGB10:
-            // case AMGL_RGB12:
-            // case AMGL_RGB16_SNORM:
-            // case AMGL_RGBA2:
+            case AMGL_RGB8_SNORM:
+            case AMGL_RGB10:
+            case AMGL_RGB16_SNORM:
+            case AMGL_RGBA2:
             case AMGL_SRGB:
-            // case AMGL_SRGB8:
+            case AMGL_SRGB8:
             case AMGL_R11F_G11F_B10F:
             case AMGL_RGB8I:
             case AMGL_RGB16I:
@@ -299,7 +308,7 @@ namespace amgl
                 
             case AMGL_RGBA:
             case AMGL_RGB5_A1:
-            // case AMGL_RGBA4:
+            case AMGL_RGBA4:
             case AMGL_RGBA8:
             case AMGL_RGB10_A2:
             case AMGL_RGB10_A2UI:
@@ -328,14 +337,92 @@ namespace amgl
 
 
     /// @brief  
-    /// @return Pixel size in bytes or 0 if 'internal_format' or 'type' is invalid
-    static constexpr inline size_t get_bytes_per_pixel(enum_t internal_format, enum_t type) noexcept
+    /// @return Pixel size in bytes or 0 if 'internal_format'
+    static constexpr inline size_t get_bytes_per_pixel(enum_t internal_format) noexcept
     {
         using namespace detail;
 
-        if (is_one_of(internal_format, TEXTURE_BASE_INTERNAL_FORMATS) && is_one_of(type, TEXTURE_PRIMITIVE_TYPES)) {
-            return get_components_count(internal_format) * get_type_size(type);
-        }
+        const size_t pixel_component_count = get_components_count(internal_format);
+
+        // switch(internal_format) {
+        //     case AMGL_RED:
+        //     case AMGL_RG:
+        //     case AMGL_RGB:
+        //     case AMGL_RGBA:
+        //     case AMGL_RED_INTEGER:
+        //     case AMGL_RG_INTEGER:
+        //     case AMGL_RGB_INTEGER:
+        //     case AMGL_RGBA_INTEGER:
+        //     case AMGL_BGR:
+        //     case AMGL_BGRA:
+        //     case AMGL_BGR_INTEGER:
+        //     case AMGL_BGRA_INTEGER:
+        //     case AMGL_STENCIL_INDEX:
+        //     case AMGL_DEPTH_COMPONENT:
+        //     case AMGL_DEPTH_STENCIL:
+        //     case AMGL_SRGB:
+        //     case AMGL_SRGB_ALPHA:
+        //     case AMGL_DEPTH_COMPONENT16:
+        //     case AMGL_DEPTH_COMPONENT24:
+        //     case AMGL_DEPTH_COMPONENT32:
+        //     case AMGL_R8:
+        //     case AMGL_R8_SNORM:
+        //     case AMGL_R16:
+        //     case AMGL_R16_SNORM:
+        //     case AMGL_RG8:
+        //     case AMGL_RG8_SNORM:
+        //     case AMGL_RG16:
+        //     case AMGL_RG16_SNORM:
+        //     case AMGL_R3_G3_B2:
+        //     case AMGL_RGB8:
+        //     case AMGL_RGB8_SNORM:
+        //     case AMGL_RGB16:
+        //     case AMGL_RGB16_SNORM:
+        //     case AMGL_RGBA2:
+        //     case AMGL_RGBA4:
+        //     case AMGL_RGB5_A1:
+        //     case AMGL_RGBA8:
+        //     case AMGL_RGBA8_SNORM:
+        //     case AMGL_RGB10_A2:
+        //     case AMGL_RGB10_A2UI:
+        //     case AMGL_RGBA12:
+        //     case AMGL_RGBA16:
+        //     case AMGL_SRGB8:
+        //     case AMGL_SRGB8_ALPHA8:
+        //     case AMGL_R16F:
+        //     case AMGL_RG16F:
+        //     case AMGL_RGB16F:
+        //     case AMGL_RGBA16F:
+        //     case AMGL_R32F:
+        //     case AMGL_RG32F:
+        //     case AMGL_RGB32F:
+        //     case AMGL_RGBA32F:
+        //     case AMGL_R11F_G11F_B10F:
+        //     case AMGL_R8I:
+        //     case AMGL_R8UI:
+        //     case AMGL_R16I:
+        //     case AMGL_R16UI:
+        //     case AMGL_R32I:
+        //     case AMGL_R32UI:
+        //     case AMGL_RG8I:
+        //     case AMGL_RG8UI:
+        //     case AMGL_RG16I:
+        //     case AMGL_RG16UI:
+        //     case AMGL_RG32I:
+        //     case AMGL_RG32UI:
+        //     case AMGL_RGB8I:
+        //     case AMGL_RGB8UI:
+        //     case AMGL_RGB16I:
+        //     case AMGL_RGB16UI:
+        //     case AMGL_RGB32I:
+        //     case AMGL_RGB32UI:
+        //     case AMGL_RGBA8I:
+        //     case AMGL_RGBA8UI:
+        //     case AMGL_RGBA16I:
+        //     case AMGL_RGBA16UI:
+        //     case AMGL_RGBA32I:
+        //     case AMGL_RGBA32UI:
+        // };
 
         return 0u;
     }
@@ -457,7 +544,7 @@ namespace amgl
             const uint32_t tex_kernel_range = gs_context_mng.get_binded_texture(target);
             
             if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel_range)) {
-                initialize_memory(tex_kernel_range, internal_format, format, type, data);
+                initialize_memory(tex_kernel_range, internal_format, format, type, width, data);
 
                 m_textures.m_widths[tex_kernel_range]           = width;
                 m_textures.m_heights[tex_kernel_range]          = 1u;
@@ -476,12 +563,17 @@ namespace amgl
     }
 
     
-    void texture_mng::initialize_memory(uint32_t texture, enum_t internal_format, enum_t in_format, enum_t in_type, const void *data)
+    void texture_mng::initialize_memory(uint32_t texture, enum_t internal_format, 
+        enum_t in_format, enum_t in_type, size_t pixel_count, const void *data)
     {
+        using namespace detail;
 
+        size_t tex_buffer_size = pixel_count * get_bytes_per_pixel(internal_format);
+        
+        
     }
 
-    
+
     void texture_mng::initialize_memory(uint32_t texture, size_t size, const void *data)
     {
         textures::memory_block& mem_block = m_textures.m_memory_blocks[texture];
