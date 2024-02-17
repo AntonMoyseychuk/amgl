@@ -19,6 +19,7 @@ target_include_directories(${PROJECT_NAME}
     
     PRIVATE ${AMGL_DIR}/src
     PRIVATE ${AMGL_DIR}/thirdparty/debugbreak
+    PRIVATE ${AMGL_DIR}/thirdparty/half
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${AMGL_DIR}/src/pch.hpp)

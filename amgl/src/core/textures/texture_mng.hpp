@@ -52,14 +52,6 @@ namespace amgl
         /// @note Copy 'data' in allocted buffer if it is not nullptr
         void initialize_memory(uint32_t texture, enum_t internal_format, enum_t in_format, enum_t in_type, size_t pixel_count, const void* data);
 
-        /// @brief Allocates memory based on passed params
-        /// @param texture Texture object in the kernel range [0, UINT32_MAX - 1]
-        /// @param size Size of 'data' in bytes
-        /// @param data Input buffer
-        /// @note Doesn't check 'texture' validity
-        /// @note Copy 'data' in allocted buffer if it is not nullptr
-        void initialize_memory(uint32_t texture, size_t size, const void* data);
-
         void resize(size_t size) noexcept;
 
     private:

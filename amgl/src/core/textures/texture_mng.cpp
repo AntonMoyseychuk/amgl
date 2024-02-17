@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include "texture_mng.hpp"
 #include "texture_formats.hpp"
+#include "texture_types.hpp"
 
 #include "core/core.hpp"
 #include "core/utils/util_func.hpp"
@@ -52,7 +53,7 @@ namespace amgl
         AMGL_SRGB,                                                                      \
         AMGL_SRGB_ALPHA
 
-    #define TEXTURE_SIZED_INTERNAL_FORMATS                                              \
+    #define TEXTURE_SIZED_INTEGRAL_INTERNAL_FORMATS                                     \
         AMGL_DEPTH_COMPONENT16,                                                         \
         AMGL_DEPTH_COMPONENT24,                                                         \
         AMGL_DEPTH_COMPONENT32,                                                         \
@@ -65,8 +66,6 @@ namespace amgl
         AMGL_RG16,                                                                      \
         AMGL_RG16_SNORM,                                                                \
         AMGL_R3_G3_B2,                                                                  \
-        /*AMGL_RGB4,                                                                      \
-        AMGL_RGB5,*/                                                                      \
         AMGL_RGB8,                                                                      \
         AMGL_RGB8_SNORM,                                                                \
         AMGL_RGB10,                                                                     \
@@ -83,15 +82,6 @@ namespace amgl
         AMGL_RGBA16,                                                                    \
         AMGL_SRGB8,                                                                     \
         AMGL_SRGB8_ALPHA8,                                                              \
-        AMGL_R16F,                                                                      \
-        AMGL_RG16F,                                                                     \
-        AMGL_RGB16F,                                                                    \
-        AMGL_RGBA16F,                                                                   \
-        AMGL_R32F,                                                                      \
-        AMGL_RG32F,                                                                     \
-        AMGL_RGB32F,                                                                    \
-        AMGL_RGBA32F,                                                                   \
-        AMGL_R11F_G11F_B10F,                                                            \
         AMGL_R8I,                                                                       \
         AMGL_R8UI,                                                                      \
         AMGL_R16I,                                                                      \
@@ -116,6 +106,22 @@ namespace amgl
         AMGL_RGBA16UI,                                                                  \
         AMGL_RGBA32I,                                                                   \
         AMGL_RGBA32UI
+    
+    #define TEXTURE_SIZED_FLOATING_POINT_INTERNAL_FORMATS                               \
+        AMGL_R16F,                                                                      \
+        AMGL_RG16F,                                                                     \
+        AMGL_RGB16F,                                                                    \
+        AMGL_RGBA16F,                                                                   \
+        AMGL_R32F,                                                                      \
+        AMGL_RG32F,                                                                     \
+        AMGL_RGB32F,                                                                    \
+        AMGL_RGBA32F,                                                                   \
+        AMGL_R11F_G11F_B10F
+
+    #define TEXTURE_SIZED_INTERNAL_FORMATS                                              \
+        TEXTURE_SIZED_INTEGRAL_INTERNAL_FORMATS,                                        \
+        TEXTURE_SIZED_FLOATING_POINT_INTERNAL_FORMATS
+        
 
     #define TEXTURE_TARGETS                                                             \
         AMGL_TEXTURE_BUFFER,                                                            \
@@ -200,232 +206,6 @@ namespace amgl
 
     #define CHECK_TEXTURE_LOD_VALIDITY(level, max_level, error_flag, ...) \
         AM_SET_ERROR_FLAG_IF(level > max_level, error_flag, gs_context_mng, __VA_ARGS__)
-
-
-    /// @brief 
-    /// @return Size in bytes or 0 if 'type' is invalid
-    static constexpr inline size_t get_type_size(enum_t type) noexcept
-    {
-        switch (type) {
-            case AMGL_UNSIGNED_BYTE:
-            case AMGL_BYTE:
-            case AMGL_UNSIGNED_BYTE_3_3_2:
-            case AMGL_UNSIGNED_BYTE_2_3_3_REV:
-                return 1u;
-
-            case AMGL_UNSIGNED_SHORT:
-            case AMGL_SHORT:
-            case AMGL_UNSIGNED_SHORT_5_6_5:
-            case AMGL_UNSIGNED_SHORT_5_6_5_REV:
-            case AMGL_UNSIGNED_SHORT_4_4_4_4:
-            case AMGL_UNSIGNED_SHORT_4_4_4_4_REV:
-            case AMGL_UNSIGNED_SHORT_5_5_5_1:
-            case AMGL_UNSIGNED_SHORT_1_5_5_5_REV:
-                return 2u;
-
-            case AMGL_UNSIGNED_INT:
-            case AMGL_INT:
-            case AMGL_FLOAT:
-            case AMGL_UNSIGNED_INT_8_8_8_8:
-            case AMGL_UNSIGNED_INT_8_8_8_8_REV:
-            case AMGL_UNSIGNED_INT_10_10_10_2:
-            case AMGL_UNSIGNED_INT_2_10_10_10_REV:
-                return 4u;
-
-            default:
-                return 0u;
-        }
-    }
-
-
-    /// @brief 
-    /// @return Components count or 0 if 'format' is invalid
-    static constexpr inline size_t get_components_count(enum_t format) noexcept
-    {
-        switch (format) {
-            case AMGL_RED:
-            case AMGL_DEPTH_COMPONENT:
-            case AMGL_DEPTH_STENCIL:
-            case AMGL_STENCIL_INDEX:
-            case AMGL_RED_INTEGER:
-            case AMGL_DEPTH_COMPONENT16:
-            case AMGL_DEPTH_COMPONENT24:
-            case AMGL_DEPTH_COMPONENT32:
-            case AMGL_R8:
-            case AMGL_R8_SNORM:
-            case AMGL_R16:
-            case AMGL_R16_SNORM:
-            case AMGL_R16F:
-            case AMGL_R32F:
-            case AMGL_R8I:
-            case AMGL_R8UI:
-            case AMGL_R16I:
-            case AMGL_R16UI:
-            case AMGL_R32I:
-            case AMGL_R32UI:
-                return 1u;
-
-            case AMGL_RG:
-            case AMGL_RG_INTEGER:
-            case AMGL_RG8:
-            case AMGL_RG8_SNORM:
-            case AMGL_RG16:
-            case AMGL_RG16_SNORM:
-            case AMGL_RG16F:
-            case AMGL_RG32F:
-            case AMGL_RG8I:
-            case AMGL_RG8UI:
-            case AMGL_RG16I:
-            case AMGL_RG16UI:
-            case AMGL_RG32I:
-            case AMGL_RG32UI:
-                return 2u;
-
-            case AMGL_RGB:
-            case AMGL_RGB8:
-            case AMGL_RGB16F:
-            case AMGL_RGB32F:
-            case AMGL_RGB8UI:
-            case AMGL_RGB32UI:
-            case AMGL_RGB_INTEGER:
-            case AMGL_BGR:
-            case AMGL_BGR_INTEGER:
-            case AMGL_R3_G3_B2:
-            // case AMGL_RGB4:
-            // case AMGL_RGB5:
-            case AMGL_RGB8_SNORM:
-            case AMGL_RGB10:
-            case AMGL_RGB16_SNORM:
-            case AMGL_RGBA2:
-            case AMGL_SRGB:
-            case AMGL_SRGB8:
-            case AMGL_R11F_G11F_B10F:
-            case AMGL_RGB8I:
-            case AMGL_RGB16I:
-            case AMGL_RGB16UI:
-            case AMGL_RGB32I:
-                return 3u;
-                
-            case AMGL_RGBA:
-            case AMGL_RGB5_A1:
-            case AMGL_RGBA4:
-            case AMGL_RGBA8:
-            case AMGL_RGB10_A2:
-            case AMGL_RGB10_A2UI:
-            case AMGL_RGBA12:
-            case AMGL_RGBA16:
-            case AMGL_SRGB_ALPHA:
-            case AMGL_SRGB8_ALPHA8:
-            case AMGL_RGBA16F:
-            case AMGL_RGBA32F:
-            case AMGL_RGBA8UI:
-            case AMGL_RGBA32UI:
-            case AMGL_RGBA_INTEGER:
-            case AMGL_BGRA:
-            case AMGL_BGRA_INTEGER:
-            case AMGL_RGBA8_SNORM:
-            case AMGL_RGBA8I:
-            case AMGL_RGBA16I:
-            case AMGL_RGBA16UI:
-            case AMGL_RGBA32I:
-                return 4u;
-
-            default:
-                return 0u;
-        }
-    }
-
-
-    /// @brief  
-    /// @return Pixel size in bytes or 0 if 'internal_format'
-    static constexpr inline size_t get_bytes_per_pixel(enum_t internal_format) noexcept
-    {
-        using namespace detail;
-
-        const size_t pixel_component_count = get_components_count(internal_format);
-
-        // switch(internal_format) {
-        //     case AMGL_RED:
-        //     case AMGL_RG:
-        //     case AMGL_RGB:
-        //     case AMGL_RGBA:
-        //     case AMGL_RED_INTEGER:
-        //     case AMGL_RG_INTEGER:
-        //     case AMGL_RGB_INTEGER:
-        //     case AMGL_RGBA_INTEGER:
-        //     case AMGL_BGR:
-        //     case AMGL_BGRA:
-        //     case AMGL_BGR_INTEGER:
-        //     case AMGL_BGRA_INTEGER:
-        //     case AMGL_STENCIL_INDEX:
-        //     case AMGL_DEPTH_COMPONENT:
-        //     case AMGL_DEPTH_STENCIL:
-        //     case AMGL_SRGB:
-        //     case AMGL_SRGB_ALPHA:
-        //     case AMGL_DEPTH_COMPONENT16:
-        //     case AMGL_DEPTH_COMPONENT24:
-        //     case AMGL_DEPTH_COMPONENT32:
-        //     case AMGL_R8:
-        //     case AMGL_R8_SNORM:
-        //     case AMGL_R16:
-        //     case AMGL_R16_SNORM:
-        //     case AMGL_RG8:
-        //     case AMGL_RG8_SNORM:
-        //     case AMGL_RG16:
-        //     case AMGL_RG16_SNORM:
-        //     case AMGL_R3_G3_B2:
-        //     case AMGL_RGB8:
-        //     case AMGL_RGB8_SNORM:
-        //     case AMGL_RGB16:
-        //     case AMGL_RGB16_SNORM:
-        //     case AMGL_RGBA2:
-        //     case AMGL_RGBA4:
-        //     case AMGL_RGB5_A1:
-        //     case AMGL_RGBA8:
-        //     case AMGL_RGBA8_SNORM:
-        //     case AMGL_RGB10_A2:
-        //     case AMGL_RGB10_A2UI:
-        //     case AMGL_RGBA12:
-        //     case AMGL_RGBA16:
-        //     case AMGL_SRGB8:
-        //     case AMGL_SRGB8_ALPHA8:
-        //     case AMGL_R16F:
-        //     case AMGL_RG16F:
-        //     case AMGL_RGB16F:
-        //     case AMGL_RGBA16F:
-        //     case AMGL_R32F:
-        //     case AMGL_RG32F:
-        //     case AMGL_RGB32F:
-        //     case AMGL_RGBA32F:
-        //     case AMGL_R11F_G11F_B10F:
-        //     case AMGL_R8I:
-        //     case AMGL_R8UI:
-        //     case AMGL_R16I:
-        //     case AMGL_R16UI:
-        //     case AMGL_R32I:
-        //     case AMGL_R32UI:
-        //     case AMGL_RG8I:
-        //     case AMGL_RG8UI:
-        //     case AMGL_RG16I:
-        //     case AMGL_RG16UI:
-        //     case AMGL_RG32I:
-        //     case AMGL_RG32UI:
-        //     case AMGL_RGB8I:
-        //     case AMGL_RGB8UI:
-        //     case AMGL_RGB16I:
-        //     case AMGL_RGB16UI:
-        //     case AMGL_RGB32I:
-        //     case AMGL_RGB32UI:
-        //     case AMGL_RGBA8I:
-        //     case AMGL_RGBA8UI:
-        //     case AMGL_RGBA16I:
-        //     case AMGL_RGBA16UI:
-        //     case AMGL_RGBA32I:
-        //     case AMGL_RGBA32UI:
-        // };
-
-        return 0u;
-    }
 
 
     void texture_mng::gen_textures(size_t n, uint32_t* textures) noexcept
@@ -568,20 +348,35 @@ namespace amgl
     {
         using namespace detail;
 
-        size_t tex_buffer_size = pixel_count * get_bytes_per_pixel(internal_format);
-        
-        
-    }
+        const size_t type_size                  = get_type_size(in_type);
+        const size_t data_component_count       = get_components_count(in_format);
 
+        const size_t internal_pixel_size        = get_bytes_per_pixel(internal_format);
+        const size_t internal_component_count   = get_components_count(internal_format);
 
-    void texture_mng::initialize_memory(uint32_t texture, size_t size, const void *data)
-    {
         textures::memory_block& mem_block = m_textures.m_memory_blocks[texture];
-        
-        mem_block.resize(size);
-        if (data) {
-            memcpy_s(mem_block.data(), size, data, size);
+        textures::memory_block::value_type* mem_block_data_ptr = mem_block.data();
+
+        const size_t tex_buffer_size = pixel_count * internal_pixel_size;
+
+        mem_block.resize(tex_buffer_size);
+
+        for (size_t pixel = 0u; pixel < pixel_count; ++pixel) {
+            
         }
+
+        // const size_t tex_buffer_size = pixel_count * get_bytes_per_pixel(internal_format);
+        // const size_t in_data_size = pixel_count * type_size;
+        
+        // textures::memory_block& mem_block = m_textures.m_memory_blocks[texture];
+        // textures::memory_block::value_type* mem_block_data_ptr = mem_block.data();
+
+        // mem_block.resize(tex_buffer_size);
+
+        // switch ()
+        // for (size_t i = 0; i < pixel_count; ++i) {
+        //     mem_block_data_ptr[i * ]
+        // }
     }
 
     

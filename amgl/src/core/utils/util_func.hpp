@@ -71,5 +71,15 @@ namespace amgl
         {
             return a > b ? a : b;
         }
+
+        template <typename type, typename = std::enable_if_t<std::is_arithmetic_v<type>>>
+        inline constexpr type pow(type value, size_t power) noexcept
+        {
+            type result = static_cast<type>(1);
+            for (size_t i = 0; i < power; ++i) {
+                result *= value;
+            }
+            return result;
+        }
     }
 }

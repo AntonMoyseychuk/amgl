@@ -62,20 +62,20 @@ enum AMGLConstant : enum_t
     AMGL_FLOAT                              = 0x1406,
     AMGL_DOUBLE                             = 0x140A,
 
-    AMGL_INT_2_10_10_10_REV                 = 0x8D9F,
     AMGL_UNSIGNED_INT_10F_11F_11F_REV       = 0x8C3B,
+    AMGL_INT_2_10_10_10_REV                 = 0x8D9F,
+    AMGL_UNSIGNED_INT_10_10_10_2            = 0x8036,
+    AMGL_UNSIGNED_INT_2_10_10_10_REV        = 0x8368,
+    AMGL_UNSIGNED_BYTE_3_3_2                = 0x8032,
     AMGL_UNSIGNED_BYTE_2_3_3_REV            = 0x8362,
     AMGL_UNSIGNED_SHORT_5_6_5               = 0x8363,
     AMGL_UNSIGNED_SHORT_5_6_5_REV           = 0x8364,
-    AMGL_UNSIGNED_SHORT_4_4_4_4_REV         = 0x8365,
-    AMGL_UNSIGNED_SHORT_1_5_5_5_REV         = 0x8366,
-    AMGL_UNSIGNED_INT_8_8_8_8_REV           = 0x8367,
-    AMGL_UNSIGNED_INT_2_10_10_10_REV        = 0x8368,
-    AMGL_UNSIGNED_BYTE_3_3_2                = 0x8032,
     AMGL_UNSIGNED_SHORT_4_4_4_4             = 0x8033,
+    AMGL_UNSIGNED_SHORT_4_4_4_4_REV         = 0x8365,
     AMGL_UNSIGNED_SHORT_5_5_5_1             = 0x8034,
+    AMGL_UNSIGNED_SHORT_1_5_5_5_REV         = 0x8366,
     AMGL_UNSIGNED_INT_8_8_8_8               = 0x8035,
-    AMGL_UNSIGNED_INT_10_10_10_2            = 0x8036,
+    AMGL_UNSIGNED_INT_8_8_8_8_REV           = 0x8367,
 
     /*------------------- Texture Targets -------------------*/
 

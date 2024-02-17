@@ -9,5 +9,6 @@
 #include <bitset>
 
 #include "core/core.hpp"
+#include "half/half.hpp"
 
 #include "core/utils/util_func.hpp"

@@ -1,3 +1,6 @@
 [submodule "amgl/thirdparty/debugbreak/debugbreak"]
 	path = amgl/thirdparty/debugbreak/debugbreak
 	url = https://github.com/scottt/debugbreak.git
+[submodule "amgl/thirdparty/half"]
+	path = amgl/thirdparty/half
+	url = https://github.com/melowntech/half.git
