@@ -8,7 +8,10 @@
 #include <unordered_set>
 #include <bitset>
 
+#include <type_traits>
+
 #include "core/core.hpp"
 #include "half/half.hpp"
 
 #include "core/utils/util_func.hpp"
+#include "core/math/common.hpp"

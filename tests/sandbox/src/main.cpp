@@ -55,6 +55,10 @@ uint32_t ebo_data[] = {
 
 float ssbo_data[1024u];
 
+uint16_t texture_data[400];
+
+#define ARRAY_SIZE(array) sizeof(array) / sizeof(array[0])
+
 void test() noexcept
 {
     constexpr float ssbo_sub_data[] = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -101,7 +105,7 @@ void test() noexcept
         uint32_t texture;
         amglGenTextures(1, &texture);
         amglBindTexture(AMGL_TEXTURE_1D, texture);
-        amglTexImage1D(AMGL_TEXTURE_1D, 0, AMGL_RGBA32F, 100, 0, AMGL_RGBA, AMGL_FLOAT, nullptr);
+        amglTexImage1D(AMGL_TEXTURE_1D, 0, AMGL_RED, 400, 0, AMGL_RED, AMGL_UNSIGNED_SHORT, texture_data);
         amglBindTexture(AMGL_TEXTURE_1D, 0);
 
         const bool is_texture = amglIsTexture(texture);
@@ -117,8 +121,12 @@ void test() noexcept
 
 int main(int argc, char* argv[]) 
 {
-    for (size_t i = 0; i < sizeof(ssbo_data) / sizeof(ssbo_data[0]); ++i) {
+    for (size_t i = 0; i < ARRAY_SIZE(ssbo_data); ++i) {
         ssbo_data[i] = (float)i;
+    }
+
+    for (size_t i = 0; i < ARRAY_SIZE(texture_data); ++i) {
+        texture_data[i] = i;
     }
 
     #if !defined(NDEBUG) || defined(_DEBUG) || defined(DEBUG)

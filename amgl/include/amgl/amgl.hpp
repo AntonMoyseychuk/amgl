@@ -62,7 +62,6 @@ enum AMGLConstant : enum_t
     AMGL_FLOAT                              = 0x1406,
     AMGL_DOUBLE                             = 0x140A,
 
-    AMGL_UNSIGNED_INT_10F_11F_11F_REV       = 0x8C3B,
     AMGL_INT_2_10_10_10_REV                 = 0x8D9F,
     AMGL_UNSIGNED_INT_10_10_10_2            = 0x8036,
     AMGL_UNSIGNED_INT_2_10_10_10_REV        = 0x8368,
@@ -117,6 +116,7 @@ enum AMGLConstant : enum_t
     AMGL_STENCIL_INDEX                      = 0x1901,
     AMGL_DEPTH_COMPONENT                    = 0x1902,
     AMGL_DEPTH_STENCIL                      = 0x84F9,
+    
     AMGL_SRGB                               = 0x8C40,
     AMGL_SRGB_ALPHA                         = 0x8C42,
 

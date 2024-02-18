@@ -425,8 +425,7 @@ namespace amgl
 
         vertex_attrib_pointer_impl<
             AMGL_INT_2_10_10_10_REV, 
-            AMGL_UNSIGNED_INT_2_10_10_10_REV, 
-            AMGL_UNSIGNED_INT_10F_11F_11F_REV,
+            AMGL_UNSIGNED_INT_2_10_10_10_REV,
             AMGL_BYTE, 
             AMGL_UNSIGNED_BYTE, 
             AMGL_SHORT, 

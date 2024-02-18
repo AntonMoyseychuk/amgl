@@ -1,7 +1,6 @@
 #include "pch.hpp"
 #include "texture_mng.hpp"
-#include "texture_formats.hpp"
-#include "texture_types.hpp"
+#include "texture_data_converting/texture_data_converting.hpp"
 
 #include "core/core.hpp"
 #include "core/utils/util_func.hpp"
@@ -18,110 +17,7 @@ namespace amgl
 {
     static context_mng& gs_context_mng = context_mng::instance();
     static buffer_mng& gs_buffer_mng = buffer_mng::instance();
-
-
-    #define TEXTURE_PACKED_TYPES                                                        \
-        AMGL_UNSIGNED_BYTE_3_3_2,                                                       \
-        AMGL_UNSIGNED_BYTE_2_3_3_REV,                                                   \
-        AMGL_UNSIGNED_SHORT_5_6_5,                                                      \
-        AMGL_UNSIGNED_SHORT_5_6_5_REV,                                                  \
-        AMGL_UNSIGNED_SHORT_4_4_4_4,                                                    \
-        AMGL_UNSIGNED_SHORT_4_4_4_4_REV,                                                \
-        AMGL_UNSIGNED_SHORT_5_5_5_1,                                                    \
-        AMGL_UNSIGNED_SHORT_1_5_5_5_REV,                                                \
-        AMGL_UNSIGNED_INT_8_8_8_8,                                                      \
-        AMGL_UNSIGNED_INT_8_8_8_8_REV,                                                  \
-        AMGL_UNSIGNED_INT_10_10_10_2,                                                   \
-        AMGL_UNSIGNED_INT_2_10_10_10_REV
-
-    #define TEXTURE_PRIMITIVE_TYPES                                                     \
-        AMGL_UNSIGNED_BYTE,                                                             \
-        AMGL_BYTE,                                                                      \
-        AMGL_UNSIGNED_SHORT,                                                            \
-        AMGL_SHORT,                                                                     \
-        AMGL_UNSIGNED_INT,                                                              \
-        AMGL_INT,                                                                       \
-        AMGL_FLOAT
-
-    #define TEXTURE_BASE_INTERNAL_FORMATS                                               \
-        AMGL_RED,                                                                       \
-        AMGL_RG,                                                                        \
-        AMGL_RGB,                                                                       \
-        AMGL_RGBA,                                                                      \
-        AMGL_DEPTH_COMPONENT,                                                           \
-        AMGL_DEPTH_STENCIL,                                                             \
-        AMGL_SRGB,                                                                      \
-        AMGL_SRGB_ALPHA
-
-    #define TEXTURE_SIZED_INTEGRAL_INTERNAL_FORMATS                                     \
-        AMGL_DEPTH_COMPONENT16,                                                         \
-        AMGL_DEPTH_COMPONENT24,                                                         \
-        AMGL_DEPTH_COMPONENT32,                                                         \
-        AMGL_R8,                                                                        \
-        AMGL_R8_SNORM,                                                                  \
-        AMGL_R16,                                                                       \
-        AMGL_R16_SNORM,                                                                 \
-        AMGL_RG8,                                                                       \
-        AMGL_RG8_SNORM,                                                                 \
-        AMGL_RG16,                                                                      \
-        AMGL_RG16_SNORM,                                                                \
-        AMGL_R3_G3_B2,                                                                  \
-        AMGL_RGB8,                                                                      \
-        AMGL_RGB8_SNORM,                                                                \
-        AMGL_RGB10,                                                                     \
-        AMGL_RGB16,                                                                     \
-        AMGL_RGB16_SNORM,                                                               \
-        AMGL_RGBA2,                                                                     \
-        AMGL_RGBA4,                                                                     \
-        AMGL_RGB5_A1,                                                                   \
-        AMGL_RGBA8,                                                                     \
-        AMGL_RGBA8_SNORM,                                                               \
-        AMGL_RGB10_A2,                                                                  \
-        AMGL_RGB10_A2UI,                                                                \
-        AMGL_RGBA12,                                                                    \
-        AMGL_RGBA16,                                                                    \
-        AMGL_SRGB8,                                                                     \
-        AMGL_SRGB8_ALPHA8,                                                              \
-        AMGL_R8I,                                                                       \
-        AMGL_R8UI,                                                                      \
-        AMGL_R16I,                                                                      \
-        AMGL_R16UI,                                                                     \
-        AMGL_R32I,                                                                      \
-        AMGL_R32UI,                                                                     \
-        AMGL_RG8I,                                                                      \
-        AMGL_RG8UI,                                                                     \
-        AMGL_RG16I,                                                                     \
-        AMGL_RG16UI,                                                                    \
-        AMGL_RG32I,                                                                     \
-        AMGL_RG32UI,                                                                    \
-        AMGL_RGB8I,                                                                     \
-        AMGL_RGB8UI,                                                                    \
-        AMGL_RGB16I,                                                                    \
-        AMGL_RGB16UI,                                                                   \
-        AMGL_RGB32I,                                                                    \
-        AMGL_RGB32UI,                                                                   \
-        AMGL_RGBA8I,                                                                    \
-        AMGL_RGBA8UI,                                                                   \
-        AMGL_RGBA16I,                                                                   \
-        AMGL_RGBA16UI,                                                                  \
-        AMGL_RGBA32I,                                                                   \
-        AMGL_RGBA32UI
     
-    #define TEXTURE_SIZED_FLOATING_POINT_INTERNAL_FORMATS                               \
-        AMGL_R16F,                                                                      \
-        AMGL_RG16F,                                                                     \
-        AMGL_RGB16F,                                                                    \
-        AMGL_RGBA16F,                                                                   \
-        AMGL_R32F,                                                                      \
-        AMGL_RG32F,                                                                     \
-        AMGL_RGB32F,                                                                    \
-        AMGL_RGBA32F,                                                                   \
-        AMGL_R11F_G11F_B10F
-
-    #define TEXTURE_SIZED_INTERNAL_FORMATS                                              \
-        TEXTURE_SIZED_INTEGRAL_INTERNAL_FORMATS,                                        \
-        TEXTURE_SIZED_FLOATING_POINT_INTERNAL_FORMATS
-        
 
     #define TEXTURE_TARGETS                                                             \
         AMGL_TEXTURE_BUFFER,                                                            \
@@ -145,23 +41,6 @@ namespace amgl
         AMGL_PROXY_TEXTURE_2D_MULTISAMPLE,                                              \
         AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY,                                              \
         AMGL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY
-
-    #define TEXTURE_FORMATS                                                             \
-        AMGL_RED,                                                                       \
-        AMGL_RG,                                                                        \
-        AMGL_RGB,                                                                       \
-        AMGL_BGR,                                                                       \
-        AMGL_RGBA,                                                                      \
-        AMGL_BGRA,                                                                      \
-        AMGL_RED_INTEGER,                                                               \
-        AMGL_RG_INTEGER,                                                                \
-        AMGL_RGB_INTEGER,                                                               \
-        AMGL_BGR_INTEGER,                                                               \
-        AMGL_RGBA_INTEGER,                                                              \
-        AMGL_BGRA_INTEGER,                                                              \
-        AMGL_STENCIL_INDEX,                                                             \
-        AMGL_DEPTH_COMPONENT,                                                           \
-        AMGL_DEPTH_STENCIL                                                              \
 
 
     #define CHECK_TEXTURE_TARGET_VALIDITY(target, error_flag, ...)                      \
@@ -310,7 +189,7 @@ namespace amgl
         
         const uint32_t binded_pubo_user_range = CONV_KERNEL_TO_USER_SPACE(contxt.buf_bindings.pubo[0].buffer);
         if (!AM_IS_DEFAULT_ID_USER_SPACE(binded_pubo_user_range)) {
-            AM_ASSERT_MSG(false, "Not impemented yet");
+            AM_NOT_IMPLEMENTED;
 
             // AM_SET_ERROR_FLAG_IF(gs_buffer_mng.is_buffer_mapped(binded_pubo_user_range), AMGL_INVALID_OPERATION , gs_context_mng);
             
@@ -321,17 +200,12 @@ namespace amgl
             // const uint32_t type_size_in_bytes = get_type_size(type);
             // AM_SET_ERROR_FLAG_IF(pubo_size % type_size_in_bytes != 0, AMGL_INVALID_OPERATION, gs_context_mng);
         } else {
-            const uint32_t tex_kernel_range = gs_context_mng.get_binded_texture(target);
+            const uint32_t tex_kernel = gs_context_mng.get_binded_texture(target);
             
-            if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel_range)) {
-                initialize_memory(tex_kernel_range, internal_format, format, type, width, data);
+            if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel)) {
+                m_textures.set(tex_kernel, target, width, 1u, 1u, internal_format);
 
-                m_textures.m_widths[tex_kernel_range]           = width;
-                m_textures.m_heights[tex_kernel_range]          = 1u;
-                m_textures.m_depths[tex_kernel_range]           = 1u;
-                m_textures.m_internal_formats[tex_kernel_range] = internal_format;
-                m_textures.m_types[tex_kernel_range]            = type;
-                m_textures.m_targets[tex_kernel_range]          = target;
+                initialize_memory(tex_kernel, internal_format, format, type, width, data);
             }
         }
     }
@@ -348,34 +222,32 @@ namespace amgl
     {
         using namespace detail;
 
-        const size_t type_size                  = get_type_size(in_type);
-        const size_t data_component_count       = get_components_count(in_format);
+        static const texture_data_converter converter;
 
-        const size_t internal_pixel_size        = get_bytes_per_pixel(internal_format);
-        const size_t internal_component_count   = get_components_count(internal_format);
+        const size_t type_size            = get_type_size(in_type);
+        const size_t data_component_count = get_components_count(in_format);
+        const size_t data_pixel_size      = type_size * (detail::is_one_of(TEXTURE_PACKED_TYPES) ? 1u : data_component_count);
+
+        const size_t internal_pixel_size  = get_bytes_per_pixel(internal_format);
 
         textures::memory_block& mem_block = m_textures.m_memory_blocks[texture];
-        textures::memory_block::value_type* mem_block_data_ptr = mem_block.data();
+        mem_block.resize(pixel_count * internal_pixel_size);
 
-        const size_t tex_buffer_size = pixel_count * internal_pixel_size;
-
-        mem_block.resize(tex_buffer_size);
-
-        for (size_t pixel = 0u; pixel < pixel_count; ++pixel) {
-            
+        ubyte_t* mem_block_data_ptr = mem_block.data();
+        for (size_t i = 0u; i < pixel_count; ++i) {
+            converter(internal_format, &mem_block_data_ptr[i * internal_pixel_size], in_format, in_type, &((uint8_t*)data)[i * data_pixel_size]);
         }
 
-        // const size_t tex_buffer_size = pixel_count * get_bytes_per_pixel(internal_format);
-        // const size_t in_data_size = pixel_count * type_size;
-        
-        // textures::memory_block& mem_block = m_textures.m_memory_blocks[texture];
-        // textures::memory_block::value_type* mem_block_data_ptr = mem_block.data();
-
-        // mem_block.resize(tex_buffer_size);
-
-        // switch ()
-        // for (size_t i = 0; i < pixel_count; ++i) {
-        //     mem_block_data_ptr[i * ]
+        // if (internal_format == AMGL_RGBA && in_format == AMGL_RGBA && in_type == AMGL_UNSIGNED_BYTE) {
+        //     // texture_data_converter<AMGL_RGBA, AMGL_RGBA, AMGL_UNSIGNED_BYTE> converter;
+        //
+        //     // fmt_rgba* converted_buf = (fmt_rgba*)mem_block_data_ptr;
+        //     // fmt_rgba* converted_data = (fmt_rgba*)data;
+        //     // for (size_t pixel = 0u; pixel < pixel_count; ++pixel) {
+        //     //     converted_buf[pixel] = converted_data[pixel];
+        //     // }
+        // } else {
+        //     AM_NOT_IMPLEMENTED;
         // }
     }
 

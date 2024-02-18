@@ -181,9 +181,6 @@ namespace amgl
 
             AM_SET_ERROR_FLAG_IF(is_one_of(type, AMGL_INT_2_10_10_10_REV, AMGL_UNSIGNED_INT_2_10_10_10_REV) 
                 && !is_one_of(size, 4, AMGL_BGRA), AMGL_INVALID_OPERATION, context_mng);
-
-            AM_SET_ERROR_FLAG_IF(type == AMGL_UNSIGNED_INT_10F_11F_11F_REV && size != 3, 
-                AMGL_INVALID_OPERATION, context_mng);
             
 
             const uint32_t vao_kernel_id = context_mng.get_binded_vertex_array();

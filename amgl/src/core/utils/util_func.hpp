@@ -48,38 +48,5 @@ namespace amgl
             return is_in_range(uintptr_t(region0), uintptr_t(region1), uintptr_t(region1) + size1) ||
                 is_in_range(uintptr_t(region1), uintptr_t(region0), uintptr_t(region0) + size0);
         }
-
-
-        #if defined(min) || defined(MIN)
-            #undef min
-            #undef MIN
-        #endif
-
-        #if defined(max) || defined(MAX)
-            #undef max
-            #undef MAX
-        #endif
-
-        template <typename type>
-        inline constexpr const type& min(const type& a, const type& b) noexcept
-        {
-            return a < b ? a : b;
-        }
-
-        template <typename type>
-        inline constexpr const type& max(const type& a, const type& b) noexcept
-        {
-            return a > b ? a : b;
-        }
-
-        template <typename type, typename = std::enable_if_t<std::is_arithmetic_v<type>>>
-        inline constexpr type pow(type value, size_t power) noexcept
-        {
-            type result = static_cast<type>(1);
-            for (size_t i = 0; i < power; ++i) {
-                result *= value;
-            }
-            return result;
-        }
     }
 }

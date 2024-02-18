@@ -2,13 +2,116 @@
 #include "core/core.hpp"
 #include "half/half.hpp"
 
-#include "core/utils/util_func.hpp"
+#include "core/math/common.hpp"
 
 #include <cstdint>
 #include <type_traits>
 
 namespace amgl
 {
+    #define TEXTURE_BASE_INTERNAL_FORMATS                                               \
+        AMGL_RED,                                                                       \
+        AMGL_RG,                                                                        \
+        AMGL_RGB,                                                                       \
+        AMGL_RGBA,                                                                      \
+        AMGL_DEPTH_COMPONENT,                                                           \
+        AMGL_DEPTH_STENCIL,                                                             \
+        AMGL_SRGB,                                                                      \
+        AMGL_SRGB_ALPHA
+
+    #define TEXTURE_SIZED_INTEGRAL_INTERNAL_FORMATS                                     \
+        AMGL_DEPTH_COMPONENT16,                                                         \
+        AMGL_DEPTH_COMPONENT24,                                                         \
+        AMGL_DEPTH_COMPONENT32,                                                         \
+        AMGL_R8,                                                                        \
+        AMGL_R8_SNORM,                                                                  \
+        AMGL_R16,                                                                       \
+        AMGL_R16_SNORM,                                                                 \
+        AMGL_RG8,                                                                       \
+        AMGL_RG8_SNORM,                                                                 \
+        AMGL_RG16,                                                                      \
+        AMGL_RG16_SNORM,                                                                \
+        AMGL_R3_G3_B2,                                                                  \
+        AMGL_RGB8,                                                                      \
+        AMGL_RGB8_SNORM,                                                                \
+        AMGL_RGB10,                                                                     \
+        AMGL_RGB16,                                                                     \
+        AMGL_RGB16_SNORM,                                                               \
+        AMGL_RGBA2,                                                                     \
+        AMGL_RGBA4,                                                                     \
+        AMGL_RGB5_A1,                                                                   \
+        AMGL_RGBA8,                                                                     \
+        AMGL_RGBA8_SNORM,                                                               \
+        AMGL_RGB10_A2,                                                                  \
+        AMGL_RGB10_A2UI,                                                                \
+        AMGL_RGBA12,                                                                    \
+        AMGL_RGBA16,                                                                    \
+        AMGL_SRGB8,                                                                     \
+        AMGL_SRGB8_ALPHA8,                                                              \
+        AMGL_R8I,                                                                       \
+        AMGL_R8UI,                                                                      \
+        AMGL_R16I,                                                                      \
+        AMGL_R16UI,                                                                     \
+        AMGL_R32I,                                                                      \
+        AMGL_R32UI,                                                                     \
+        AMGL_RG8I,                                                                      \
+        AMGL_RG8UI,                                                                     \
+        AMGL_RG16I,                                                                     \
+        AMGL_RG16UI,                                                                    \
+        AMGL_RG32I,                                                                     \
+        AMGL_RG32UI,                                                                    \
+        AMGL_RGB8I,                                                                     \
+        AMGL_RGB8UI,                                                                    \
+        AMGL_RGB16I,                                                                    \
+        AMGL_RGB16UI,                                                                   \
+        AMGL_RGB32I,                                                                    \
+        AMGL_RGB32UI,                                                                   \
+        AMGL_RGBA8I,                                                                    \
+        AMGL_RGBA8UI,                                                                   \
+        AMGL_RGBA16I,                                                                   \
+        AMGL_RGBA16UI,                                                                  \
+        AMGL_RGBA32I,                                                                   \
+        AMGL_RGBA32UI,                                                                  \
+        AMGL_R11F_G11F_B10F
+    
+    #define TEXTURE_SIZED_FLOATING_POINT_INTERNAL_FORMATS                               \
+        AMGL_R16F,                                                                      \
+        AMGL_RG16F,                                                                     \
+        AMGL_RGB16F,                                                                    \
+        AMGL_RGBA16F,                                                                   \
+        AMGL_R32F,                                                                      \
+        AMGL_RG32F,                                                                     \
+        AMGL_RGB32F,                                                                    \
+        AMGL_RGBA32F
+        
+
+    #define TEXTURE_SIZED_INTERNAL_FORMATS                                              \
+        TEXTURE_SIZED_INTEGRAL_INTERNAL_FORMATS,                                        \
+        TEXTURE_SIZED_FLOATING_POINT_INTERNAL_FORMATS
+
+
+    #define TEXTURE_INTERNAL_FORMATS                                                    \
+        TEXTURE_BASE_INTERNAL_FORMATS, TEXTURE_SIZED_INTERNAL_FORMATS
+
+
+    #define TEXTURE_FORMATS                                                             \
+        AMGL_RED,                                                                       \
+        AMGL_RG,                                                                        \
+        AMGL_RGB,                                                                       \
+        AMGL_BGR,                                                                       \
+        AMGL_RGBA,                                                                      \
+        AMGL_BGRA,                                                                      \
+        AMGL_RED_INTEGER,                                                               \
+        AMGL_RG_INTEGER,                                                                \
+        AMGL_RGB_INTEGER,                                                               \
+        AMGL_BGR_INTEGER,                                                               \
+        AMGL_RGBA_INTEGER,                                                              \
+        AMGL_BGRA_INTEGER,                                                              \
+        AMGL_STENCIL_INDEX,                                                             \
+        AMGL_DEPTH_COMPONENT,                                                           \
+        AMGL_DEPTH_STENCIL
+
+
     template <typename type, size_t r_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct fmt_r_t
     {
@@ -17,7 +120,7 @@ namespace amgl
 
         static constexpr size_t R_BITS_COUNT = r_bits;
 
-        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(detail::pow(2, r_bits)) - 1u; }
+        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(math::pow(2, r_bits)) - 1u; }
         static inline constexpr size_t r_min() noexcept { return std::numeric_limits<type>::lowest(); }
 
         type r : r_bits;
@@ -33,8 +136,8 @@ namespace amgl
         static constexpr size_t R_BITS_COUNT = r_bits;
         static constexpr size_t G_BITS_COUNT = g_bits;
 
-        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(detail::pow(2, r_bits)) - 1u; }
-        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(detail::pow(2, g_bits)) - 1u; }
+        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(math::pow(2, r_bits)) - 1u; }
+        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(math::pow(2, g_bits)) - 1u; }
         static inline constexpr size_t r_min() noexcept { return std::numeric_limits<type>::lowest(); }
         static inline constexpr size_t g_min() noexcept { return std::numeric_limits<type>::lowest(); }
 
@@ -54,9 +157,9 @@ namespace amgl
         static constexpr size_t B_BITS_COUNT = b_bits;
         static constexpr size_t DUMMY_BITS_COUNT = dummy_bits;
     
-        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(detail::pow(2, r_bits)) - 1u; }
-        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(detail::pow(2, g_bits)) - 1u; }
-        static inline constexpr size_t b_max() noexcept { return static_cast<size_t>(detail::pow(2, b_bits)) - 1u; }
+        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(math::pow(2, r_bits)) - 1u; }
+        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(math::pow(2, g_bits)) - 1u; }
+        static inline constexpr size_t b_max() noexcept { return static_cast<size_t>(math::pow(2, b_bits)) - 1u; }
         static inline constexpr size_t r_min() noexcept { return std::numeric_limits<type>::lowest(); }
         static inline constexpr size_t g_min() noexcept { return std::numeric_limits<type>::lowest(); }
         static inline constexpr size_t b_min() noexcept { return std::numeric_limits<type>::lowest(); }
@@ -79,9 +182,9 @@ namespace amgl
         static constexpr size_t B_BITS_COUNT        = b_bits;
         static constexpr size_t DUMMY_BITS_COUNT    = dummy_bits;
     
-        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(detail::pow(2, r_bits)) - 1u; }
-        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(detail::pow(2, g_bits)) - 1u; }
-        static inline constexpr size_t b_max() noexcept { return static_cast<size_t>(detail::pow(2, b_bits)) - 1u; }
+        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(math::pow(2, r_bits)) - 1u; }
+        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(math::pow(2, g_bits)) - 1u; }
+        static inline constexpr size_t b_max() noexcept { return static_cast<size_t>(math::pow(2, b_bits)) - 1u; }
         static inline constexpr size_t r_min() noexcept { return std::numeric_limits<type>::lowest(); }
         static inline constexpr size_t g_min() noexcept { return std::numeric_limits<type>::lowest(); }
         static inline constexpr size_t b_min() noexcept { return std::numeric_limits<type>::lowest(); }
@@ -104,10 +207,10 @@ namespace amgl
         static constexpr size_t B_BITS_COUNT = b_bits;
         static constexpr size_t A_BITS_COUNT = a_bits;
 
-        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(detail::pow(2, r_bits)) - 1u; }
-        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(detail::pow(2, g_bits)) - 1u; }
-        static inline constexpr size_t b_max() noexcept { return static_cast<size_t>(detail::pow(2, b_bits)) - 1u; }
-        static inline constexpr size_t a_max() noexcept { return static_cast<size_t>(detail::pow(2, a_bits)) - 1u; }
+        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(math::pow(2, r_bits)) - 1u; }
+        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(math::pow(2, g_bits)) - 1u; }
+        static inline constexpr size_t b_max() noexcept { return static_cast<size_t>(math::pow(2, b_bits)) - 1u; }
+        static inline constexpr size_t a_max() noexcept { return static_cast<size_t>(math::pow(2, a_bits)) - 1u; }
         static inline constexpr size_t r_min() noexcept { return std::numeric_limits<type>::lowest(); }
         static inline constexpr size_t g_min() noexcept { return std::numeric_limits<type>::lowest(); }
         static inline constexpr size_t b_min() noexcept { return std::numeric_limits<type>::lowest(); }
@@ -131,10 +234,10 @@ namespace amgl
         static constexpr size_t B_BITS_COUNT = b_bits;
         static constexpr size_t A_BITS_COUNT = a_bits;
 
-        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(detail::pow(2, r_bits)) - 1u; }
-        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(detail::pow(2, g_bits)) - 1u; }
-        static inline constexpr size_t b_max() noexcept { return static_cast<size_t>(detail::pow(2, b_bits)) - 1u; }
-        static inline constexpr size_t a_max() noexcept { return static_cast<size_t>(detail::pow(2, a_bits)) - 1u; }
+        static inline constexpr size_t r_max() noexcept { return static_cast<size_t>(math::pow(2, r_bits)) - 1u; }
+        static inline constexpr size_t g_max() noexcept { return static_cast<size_t>(math::pow(2, g_bits)) - 1u; }
+        static inline constexpr size_t b_max() noexcept { return static_cast<size_t>(math::pow(2, b_bits)) - 1u; }
+        static inline constexpr size_t a_max() noexcept { return static_cast<size_t>(math::pow(2, a_bits)) - 1u; }
         static inline constexpr size_t r_min() noexcept { return std::numeric_limits<type>::lowest(); }
         static inline constexpr size_t g_min() noexcept { return std::numeric_limits<type>::lowest(); }
         static inline constexpr size_t b_min() noexcept { return std::numeric_limits<type>::lowest(); }
@@ -155,7 +258,7 @@ namespace amgl
 
         static constexpr size_t STENCIL_BITS_COUNT = stencil_bits;
 
-        static inline constexpr size_t stencil_max() noexcept { return static_cast<size_t>(detail::pow(2, stencil_bits)) - 1u; }
+        static inline constexpr size_t stencil_max() noexcept { return static_cast<size_t>(math::pow(2, stencil_bits)) - 1u; }
         static inline constexpr size_t stencil_min() noexcept { return std::numeric_limits<type>::lowest(); }
 
         type stencil : stencil_bits;
@@ -170,7 +273,7 @@ namespace amgl
 
         static constexpr size_t DEPTH_BITS_COUNT = depth_bits;
 
-        static inline constexpr size_t depth_max() noexcept { return static_cast<size_t>(detail::pow(2, depth_bits)) - 1u; }
+        static inline constexpr size_t depth_max() noexcept { return static_cast<size_t>(math::pow(2, depth_bits)) - 1u; }
         static inline constexpr size_t depth_min() noexcept { return std::numeric_limits<type>::lowest(); }
 
         type depth : depth_bits;

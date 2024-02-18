@@ -38,10 +38,10 @@
     #include "debugbreak/debugbreak.h"
     #include <cstdio>
     
-    #define AM_ASSERT_MSG(expr, ...)                         \
+    #define AM_ASSERT_MSG(expr, format, ...)                 \
         {                                                    \
             if(!(expr)) {                                    \
-                printf_s(__VA_ARGS__);                       \
+                printf_s(format, __VA_ARGS__);               \
                 printf_s("\n" __FILE__ " (%d)\n", __LINE__); \
                 debug_break();                               \
             }                                                \
@@ -53,6 +53,9 @@
 #else
     #error invalid build type
 #endif
+
+
+#define AM_NOT_IMPLEMENTED AM_ASSERT_MSG(false, "Not implemented yet")
 
 
 #if AM_DISABLE_ERROR_FLAGS
@@ -76,3 +79,13 @@
     if (condition) {                    \
         continue;                       \
     }
+
+
+#define TYPE_MIN(type)                  std::numeric_limits<type>::lowest()
+#define TYPE_MAX(type)                  std::numeric_limits<type>::max()
+
+#define MAX_SIGNED_BIT_VALUE(bits)      (math::pow(2, bits - 1) - 1)
+#define MIN_SIGNED_BIT_VALUE(bits)      -math::pow(2, bits - 1)
+
+#define MAX_UNSIGNED_BIT_VALUE(bits)    (math::pow(2, bits) - 1)
+#define MIN_UNSIGNED_BIT_VALUE(bits)    0

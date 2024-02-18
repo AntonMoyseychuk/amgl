@@ -23,14 +23,21 @@ namespace amgl
         uint32_t create_texture() noexcept;
 
         /// @brief 
-        /// @param id texture object name
-        /// @note Takes 'id' in the kernel range [0, UINT32_MAX - 1]
+        /// @param id Texture object in the kernel range [0, UINT32_MAX - 1]
         void free_texture(uint32_t id) noexcept;
         
         /// @brief 
-        /// @param id texture object name
-        /// @note Takes 'id' in the kernel range [0, UINT32_MAX - 1]
+        /// @param id Texture object in the kernel range [0, UINT32_MAX - 1]
         bool is_texture_exist(uint32_t id) const noexcept;
+
+        /// @param id Texture object in the kernel range [0, UINT32_MAX - 1]
+        /// @param target Texture object target
+        /// @param width Texture width
+        /// @param height Texture height
+        /// @param depth Texture depth
+        /// @param internal_format Texture object internal format
+        /// @note Doesn't check params validity
+        void set(uint32_t id, enum_t target, uint32_t width, uint32_t height, uint32_t depth, enum_t internal_format) noexcept;
 
 
     private:
@@ -42,7 +49,6 @@ namespace amgl
         std::vector<uint32_t> m_heights;
         std::vector<uint32_t> m_depths;
         std::vector<enum_t> m_internal_formats;
-        std::vector<enum_t> m_types;
         
         // Textures cannot be attached to another target if they have already been attached before. 
         // Therefore, we need to keep their original targets
