@@ -11,7 +11,7 @@ namespace amgl
 
 
     #define CHECK_BUFFER_TARGET_VALIDITY(target, error_flag, ...)           \
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(target,                     \
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(target,                     \
             AMGL_ARRAY_BUFFER,                                              \
             AMGL_ATOMIC_COUNTER_BUFFER,                                     \
             AMGL_COPY_READ_BUFFER,                                          \
@@ -29,7 +29,7 @@ namespace amgl
 
 
     #define CHECK_BUFFER_USAGE_VALIDITY(usage, error_flag, ...)             \
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(usage,                      \
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(usage,                      \
             AMGL_STREAM_DRAW,                                               \
             AMGL_STREAM_READ,                                               \
             AMGL_STREAM_COPY,                                               \
@@ -42,7 +42,7 @@ namespace amgl
 
 
     #define CHECK_BUFFER_ACCESS_VALIDITY(access, error_flag, ...)           \
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(access,                     \
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(access,                     \
             AMGL_READ_ONLY,                                                 \
             AMGL_WRITE_ONLY,                                                \
             AMGL_READ_WRITE), error_flag, gs_context_mng, __VA_ARGS__)
@@ -142,7 +142,7 @@ namespace amgl
     
     void buffer_mng::bind_buffer_range(enum_t target, uint32_t index, uint32_t buffer, const size_t* offset, const size_t* size) noexcept
     {
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(target, AMGL_ATOMIC_COUNTER_BUFFER, AMGL_SHADER_STORAGE_BUFFER,
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(target, AMGL_ATOMIC_COUNTER_BUFFER, AMGL_SHADER_STORAGE_BUFFER,
             AMGL_TRANSFORM_FEEDBACK_BUFFER, AMGL_UNIFORM_BUFFER), AMGL_INVALID_ENUM, gs_context_mng);
         
         const uint32_t kernel_buf_id = CONV_USER_TO_KERNEL_SPACE(buffer);
@@ -421,7 +421,7 @@ namespace amgl
     void buffer_mng::vertex_attrib_pointer(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void *pointer) noexcept
     {
         AM_SET_ERROR_FLAG_IF(size == AMGL_BGRA && normalized == false, AMGL_INVALID_OPERATION, gs_context_mng);
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4, AMGL_BGRA), AMGL_INVALID_VALUE, gs_context_mng);
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(size, 1, 2, 3, 4, AMGL_BGRA), AMGL_INVALID_VALUE, gs_context_mng);
 
         vertex_attrib_pointer_impl<
             AMGL_INT_2_10_10_10_REV, 
@@ -439,7 +439,7 @@ namespace amgl
     
     void buffer_mng::vertex_attrib_I_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void *pointer) noexcept
     {
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, gs_context_mng);
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, gs_context_mng);
 
         vertex_attrib_pointer_impl<AMGL_BYTE, AMGL_UNSIGNED_BYTE, AMGL_SHORT, AMGL_UNSIGNED_SHORT, 
             AMGL_INT, AMGL_UNSIGNED_INT>(index, size, type, false, stride, pointer);
@@ -448,7 +448,7 @@ namespace amgl
     
     void buffer_mng::vertex_attrib_L_pointer(uint32_t index, size_t size, enum_t type, size_t stride, const void *pointer) noexcept
     {
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, gs_context_mng);
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(size, 1, 2, 3, 4), AMGL_INVALID_VALUE, gs_context_mng);
 
         vertex_attrib_pointer_impl<AMGL_DOUBLE>(index, size, type, false, stride, pointer);
     }

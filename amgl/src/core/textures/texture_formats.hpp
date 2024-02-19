@@ -115,6 +115,8 @@ namespace amgl
     template <typename type, size_t r_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct fmt_r_t
     {
+        using value_type = type;
+
         constexpr fmt_r_t() : r(0) {}
         constexpr explicit fmt_r_t(type r) : r(r) {}
 
@@ -130,6 +132,8 @@ namespace amgl
     template <typename type, size_t r_bits, size_t g_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct fmt_rg_t
     {
+        using value_type = type;
+
         constexpr fmt_rg_t() : r(0), g(0) {}
         constexpr fmt_rg_t(type r, type g) : r(r), g(g) {}
 
@@ -149,6 +153,8 @@ namespace amgl
     template <typename type, size_t r_bits, size_t g_bits, size_t b_bits, size_t dummy_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct fmt_rgb_t
     {
+        using value_type = type;
+
         constexpr fmt_rgb_t() : r(0), g(0), b(0) {}
         constexpr fmt_rgb_t(type r, type g, type b) : r(r), g(g), b(b) {}
     
@@ -174,6 +180,8 @@ namespace amgl
     template <typename type, size_t b_bits, size_t g_bits, size_t r_bits, size_t dummy_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct fmt_bgr_t
     {
+        using value_type = type;
+
         constexpr fmt_bgr_t() : b(0), g(0), r(0) {}
         constexpr fmt_bgr_t(type b, type g, type r) : b(b), g(g), r(r) {}
     
@@ -199,6 +207,8 @@ namespace amgl
     template <typename type, size_t r_bits, size_t g_bits, size_t b_bits, size_t a_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct fmt_rgba_t
     {
+        using value_type = type;
+
         constexpr fmt_rgba_t() : r(0), g(0), b(0), a(0) {}
         constexpr fmt_rgba_t(type r, type g, type b, type a) : r(r), g(g), b(b), a(a) {}
 
@@ -226,6 +236,8 @@ namespace amgl
     template <typename type, size_t b_bits, size_t g_bits, size_t r_bits, size_t a_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct fmt_bgra_t
     {
+        using value_type = type;
+
         constexpr fmt_bgra_t() : b(0), g(0), r(0), a(0) {}
         constexpr fmt_bgra_t(type b, type g, type r, type a) : b(b), g(g), r(r), a(a) {}
 
@@ -253,6 +265,8 @@ namespace amgl
     template <typename type, size_t stencil_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct fmt_stencil_index_t
     {
+        using value_type = type;
+
         constexpr fmt_stencil_index_t() : stencil(0) {}
         constexpr fmt_stencil_index_t(type stencil) : stencil(stencil) {}
 
@@ -268,6 +282,8 @@ namespace amgl
     template <typename type, size_t depth_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct fmt_depth_component_t
     {
+        using value_type = type;
+
         constexpr fmt_depth_component_t() : depth(0) {}
         constexpr fmt_depth_component_t(type depth) : depth(depth) {}
 
@@ -280,10 +296,24 @@ namespace amgl
     } AM_PACKED_STRUCT_END;
 
 
-    template <typename depth_type, size_t depth_bits, typename stencil_type, size_t stencil_bits, 
-        typename = std::enable_if_t<std::is_integral_v<depth_type> && std::is_integral_v<stencil_type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_depth_stencil_t : fmt_depth_component_t<depth_type, depth_bits>, fmt_stencil_index_t<stencil_type, stencil_bits>
+    template <typename type, size_t depth_bits, size_t stencil_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
+    AM_PACKED_STRUCT_BEGIN struct fmt_depth_stencil_t
     {
+        using value_type = type;
+
+        constexpr fmt_depth_stencil_t() : depth(0), stencil(0) {}
+        constexpr fmt_depth_stencil_t(type depth, type stencil) : depth(depth), stencil(stencil) {}
+
+        static constexpr size_t DEPTH_BITS_COUNT = depth_bits;
+        static constexpr size_t STENCIL_BITS_COUNT = stencil_bits;
+
+        static inline constexpr size_t depth_max() noexcept { return static_cast<size_t>(math::pow(2, depth_bits)) - 1u; }
+        static inline constexpr size_t depth_min() noexcept { return std::numeric_limits<type>::lowest(); }
+        static inline constexpr size_t stencil_max() noexcept { return static_cast<size_t>(math::pow(2, stencil_bits)) - 1u; }
+        static inline constexpr size_t stencil_min() noexcept { return std::numeric_limits<type>::lowest(); }
+
+        type depth : depth_bits;
+        type stencil : stencil_bits;
     } AM_PACKED_STRUCT_END;
 
     struct fmt_r16f_t
@@ -414,7 +444,7 @@ namespace amgl
     using fmt_depth_component24 = fmt_depth_component_t<uint32_t, 24>;
     using fmt_depth_component32 = fmt_depth_component_t<uint32_t, 32>;
     
-    using fmt_depth_stencil     = fmt_depth_stencil_t<uint8_t, 8, uint8_t, 8>;
+    using fmt_depth_stencil     = fmt_depth_stencil_t<uint8_t, 8, 8>;
 
     using fmt_srgb              = fmt_rgb;
     using fmt_srgb_alpha        = fmt_rgba;

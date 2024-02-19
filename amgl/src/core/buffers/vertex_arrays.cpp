@@ -11,7 +11,7 @@ namespace amgl
     
     uint32_t vertex_arrays::create_array() noexcept
     {
-        AM_ASSERT(detail::are_equal(m_attributes.size(), m_vbo_ids.size(), m_ebo_ids.size()));
+        AM_ASSERT(math::are_equal(m_attributes.size(), m_vbo_ids.size(), m_ebo_ids.size()));
         const size_t buffer_size = m_vbo_ids.size();
 
         const uint32_t id = m_id_pool.generate_id();

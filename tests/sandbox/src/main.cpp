@@ -55,7 +55,7 @@ uint32_t ebo_data[] = {
 
 float ssbo_data[1024u];
 
-uint16_t texture_data[400];
+uint16_t texture_data[400 * 4];
 
 #define ARRAY_SIZE(array) sizeof(array) / sizeof(array[0])
 
@@ -105,7 +105,7 @@ void test() noexcept
         uint32_t texture;
         amglGenTextures(1, &texture);
         amglBindTexture(AMGL_TEXTURE_1D, texture);
-        amglTexImage1D(AMGL_TEXTURE_1D, 0, AMGL_RED, 400, 0, AMGL_RED, AMGL_UNSIGNED_SHORT, texture_data);
+        amglTexImage1D(AMGL_TEXTURE_1D, 0, AMGL_RGBA, 400, 0, AMGL_RGBA, AMGL_UNSIGNED_SHORT, texture_data);
         amglBindTexture(AMGL_TEXTURE_1D, 0);
 
         const bool is_texture = amglIsTexture(texture);

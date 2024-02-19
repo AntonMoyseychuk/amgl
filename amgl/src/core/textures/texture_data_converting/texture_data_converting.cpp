@@ -3,7 +3,8 @@
 
 #include "core/core.hpp"
 
-#include "internal/red.hpp"
+#include "internal_formats/red.hpp"
+#include "internal_formats/rgba.hpp"
 
 namespace amgl
 {
@@ -13,7 +14,7 @@ namespace amgl
             case AMGL_RED:                      detail::format_type_to_red(dst, format, type, src);
             // case AMGL_RG:
             // case AMGL_RGB:
-            // case AMGL_RGBA:
+            case AMGL_RGBA:                     detail::format_type_to_rgba(dst, format, type, src);
             // case AMGL_RED_INTEGER:
             // case AMGL_RG_INTEGER:
             // case AMGL_RGB_INTEGER:

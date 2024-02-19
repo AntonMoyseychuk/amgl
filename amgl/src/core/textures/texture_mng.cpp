@@ -44,24 +44,24 @@ namespace amgl
 
 
     #define CHECK_TEXTURE_TARGET_VALIDITY(target, error_flag, ...)                      \
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(target, TEXTURE_TARGETS),               \
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(target, TEXTURE_TARGETS),               \
             error_flag, gs_context_mng, __VA_ARGS__)
 
 
     #define CHECK_TEXTURE_FORMAT_VALIDITY(format, error_flag, ...)                      \
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(format, TEXTURE_FORMATS),               \
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(format, TEXTURE_FORMATS),               \
             error_flag, gs_context_mng, __VA_ARGS__)
 
 
     #define CHECK_TEXTURE_TYPE_VALIDITY(type, error_flag, ...)                          \
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(type,                                   \
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(type,                                   \
             TEXTURE_PRIMITIVE_TYPES,                                                    \
             TEXTURE_PACKED_TYPES                                                        \
         ), error_flag, gs_context_mng, __VA_ARGS__)
 
 
     #define CHECK_TEXTURE_INTERNAL_FORMAT_VALIDITY(internal_format, error_flag, ...)    \
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(internal_format,                        \
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(internal_format,                        \
             TEXTURE_BASE_INTERNAL_FORMATS,                                              \
             TEXTURE_SIZED_INTERNAL_FORMATS                                              \
         ), error_flag, gs_context_mng, __VA_ARGS__)
@@ -139,7 +139,7 @@ namespace amgl
     {
         static context& contxt = gs_context_mng.get_context();
 
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(target, AMGL_TEXTURE_1D, AMGL_PROXY_TEXTURE_1D), AMGL_INVALID_ENUM, gs_context_mng);
+        AM_SET_ERROR_FLAG_IF(!math::is_one_of(target, AMGL_TEXTURE_1D, AMGL_PROXY_TEXTURE_1D), AMGL_INVALID_ENUM, gs_context_mng);
         
         CHECK_TEXTURE_FORMAT_VALIDITY(format, AMGL_INVALID_ENUM);
         
@@ -154,14 +154,14 @@ namespace amgl
         
         AM_SET_ERROR_FLAG_IF(border != 0, AMGL_INVALID_VALUE, gs_context_mng);
 
-        AM_SET_ERROR_FLAG_IF(detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(math::is_one_of(
             type, 
             AMGL_UNSIGNED_BYTE_3_3_2, 
             AMGL_UNSIGNED_BYTE_2_3_3_REV, 
             AMGL_UNSIGNED_SHORT_5_6_5, 
             AMGL_UNSIGNED_SHORT_5_6_5_REV) && format != AMGL_RGB, AMGL_INVALID_OPERATION, gs_context_mng);
 
-        AM_SET_ERROR_FLAG_IF(detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(math::is_one_of(
             type, 
             AMGL_UNSIGNED_SHORT_4_4_4_4_REV,
             AMGL_UNSIGNED_SHORT_1_5_5_5_REV,
@@ -170,16 +170,16 @@ namespace amgl
             AMGL_UNSIGNED_SHORT_4_4_4_4,
             AMGL_UNSIGNED_SHORT_5_5_5_1,
             AMGL_UNSIGNED_INT_8_8_8_8,
-            AMGL_UNSIGNED_INT_10_10_10_2) && !detail::is_one_of(format, AMGL_RGBA, AMGL_BGRA), AMGL_INVALID_OPERATION, gs_context_mng);
+            AMGL_UNSIGNED_INT_10_10_10_2) && !math::is_one_of(format, AMGL_RGBA, AMGL_BGRA), AMGL_INVALID_OPERATION, gs_context_mng);
 
-        AM_SET_ERROR_FLAG_IF(format == AMGL_DEPTH_COMPONENT && !detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(format == AMGL_DEPTH_COMPONENT && !math::is_one_of(
             internal_format, 
             AMGL_DEPTH_COMPONENT,
             AMGL_DEPTH_COMPONENT16,
             AMGL_DEPTH_COMPONENT24,
             AMGL_DEPTH_COMPONENT32), AMGL_INVALID_OPERATION , gs_context_mng);
 
-        AM_SET_ERROR_FLAG_IF(detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(math::is_one_of(
             internal_format, 
             AMGL_DEPTH_COMPONENT,
             AMGL_DEPTH_COMPONENT16,
@@ -220,13 +220,11 @@ namespace amgl
     void texture_mng::initialize_memory(uint32_t texture, enum_t internal_format, 
         enum_t in_format, enum_t in_type, size_t pixel_count, const void *data)
     {
-        using namespace detail;
-
         static const texture_data_converter converter;
 
         const size_t type_size            = get_type_size(in_type);
         const size_t data_component_count = get_components_count(in_format);
-        const size_t data_pixel_size      = type_size * (detail::is_one_of(TEXTURE_PACKED_TYPES) ? 1u : data_component_count);
+        const size_t data_pixel_size      = type_size * (math::is_one_of(in_type, TEXTURE_PACKED_TYPES) ? 1u : data_component_count);
 
         const size_t internal_pixel_size  = get_bytes_per_pixel(internal_format);
 
@@ -235,20 +233,9 @@ namespace amgl
 
         ubyte_t* mem_block_data_ptr = mem_block.data();
         for (size_t i = 0u; i < pixel_count; ++i) {
-            converter(internal_format, &mem_block_data_ptr[i * internal_pixel_size], in_format, in_type, &((uint8_t*)data)[i * data_pixel_size]);
+            const void* _data = (void*)((uintptr_t)data + i * data_pixel_size);
+            converter(internal_format, &mem_block_data_ptr[i * internal_pixel_size], in_format, in_type, _data);
         }
-
-        // if (internal_format == AMGL_RGBA && in_format == AMGL_RGBA && in_type == AMGL_UNSIGNED_BYTE) {
-        //     // texture_data_converter<AMGL_RGBA, AMGL_RGBA, AMGL_UNSIGNED_BYTE> converter;
-        //
-        //     // fmt_rgba* converted_buf = (fmt_rgba*)mem_block_data_ptr;
-        //     // fmt_rgba* converted_data = (fmt_rgba*)data;
-        //     // for (size_t pixel = 0u; pixel < pixel_count; ++pixel) {
-        //     //     converted_buf[pixel] = converted_data[pixel];
-        //     // }
-        // } else {
-        //     AM_NOT_IMPLEMENTED;
-        // }
     }
 
     

@@ -79,13 +79,3 @@
     if (condition) {                    \
         continue;                       \
     }
-
-
-#define TYPE_MIN(type)                  std::numeric_limits<type>::lowest()
-#define TYPE_MAX(type)                  std::numeric_limits<type>::max()
-
-#define MAX_SIGNED_BIT_VALUE(bits)      (math::pow(2, bits - 1) - 1)
-#define MIN_SIGNED_BIT_VALUE(bits)      -math::pow(2, bits - 1)
-
-#define MAX_UNSIGNED_BIT_VALUE(bits)    (math::pow(2, bits) - 1)
-#define MIN_UNSIGNED_BIT_VALUE(bits)    0

@@ -38,6 +38,8 @@ namespace amgl
         typename = std::enable_if_t<std::is_arithmetic_v<type>>>
     AM_PACKED_STRUCT_BEGIN struct type_abgr_t
     {
+        using value_type = type;
+
         constexpr type_abgr_t() : a(0), b(0), g(0), r(0) {}
         constexpr type_abgr_t(type r, type g, type b, type a) : a(a), b(b), g(g), r(r) {}
 
@@ -77,7 +79,7 @@ namespace amgl
 
     using type_ushort_5_6_5         = fmt_rgb_t<uint16_t, 5, 6, 5, 0>;
     using type_ushort_5_6_5_rev     = fmt_bgr_t<uint16_t, 5, 6, 5, 0>;
-    using type_ushort_4_4_4_4_rev   = fmt_bgr_t<uint16_t, 4, 4, 4, 4>;
+    using type_ushort_4_4_4_4_rev   = fmt_bgra_t<uint16_t, 4, 4, 4, 4>;
     using type_ubyte_3_3_2          = fmt_bgr_t<uint8_t, 3, 3, 2, 0>;
     using type_ubyte_2_3_3_rev      = fmt_bgr_t<uint8_t, 2, 3, 3, 0>;
     using type_ushort_4_4_4_4       = fmt_rgba_t<uint16_t, 4, 4, 4, 4>;

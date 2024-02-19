@@ -14,7 +14,7 @@ namespace amgl
     {
         const size_t size  = m_memory_blocks.size();
 
-        AM_ASSERT(detail::are_equal(size, m_widths.size(), m_heights.size(), m_depths.size(), m_targets.size()));
+        AM_ASSERT(math::are_equal(size, m_widths.size(), m_heights.size(), m_depths.size(), m_targets.size()));
 
         const uint32_t id = m_id_pool.generate_id();
         if (id >= size) {
