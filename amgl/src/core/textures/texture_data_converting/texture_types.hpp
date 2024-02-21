@@ -36,7 +36,8 @@ namespace amgl
 
     template <typename type, size_t a_bits, size_t b_bits, size_t g_bits, size_t r_bits, 
         typename = std::enable_if_t<std::is_arithmetic_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct type_abgr_t
+    AM_PACKED_STRUCT_BEGIN
+    struct type_abgr_t
     {
         using value_type = type;
 
@@ -61,7 +62,8 @@ namespace amgl
         type b : b_bits;
         type g : g_bits;
         type r : r_bits;
-    } AM_PACKED_STRUCT_END;
+    }
+    AM_PACKED_STRUCT_END
 
     using type_byte                 = int8_t;
     using type_ubyte                = uint8_t;
@@ -110,7 +112,7 @@ namespace amgl
 
     /// @brief 
     /// @return Size in bytes or 0 if 'type' is invalid
-    static constexpr inline size_t get_type_size(enum_t type) noexcept
+    inline constexpr size_t get_type_size(enum_t type) noexcept
     {
         switch (type) {
             case AMGL_BYTE:                         return sizeof(type_byte);

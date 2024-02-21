@@ -25,10 +25,10 @@
 
 #if defined(_MSC_VER) && !defined(__clang__)
     #define AM_PACKED_STRUCT_BEGIN __pragma(pack(push,  1))
-    #define AM_PACKED_STRUCT_END __pragma(pack(pop))
+    #define AM_PACKED_STRUCT_END ; __pragma(pack(pop))
 #elif defined(__GNUC__) || defined(__clang__)
     #define AM_PACKED_STRUCT_BEGIN
-    #define AM_PACKED_STRUCT_END __attribute__((packed))
+    #define AM_PACKED_STRUCT_END __attribute__((packed));
 #else
     #error "Unknown compiler, cannot define PACKED_STRUCT"
 #endif

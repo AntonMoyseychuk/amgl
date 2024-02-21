@@ -166,7 +166,7 @@ namespace amgl
         template <enum_t type0, enum_t... types>
         void vertex_attrib_pointer_impl(uint32_t index, size_t size, enum_t type, bool normalized, size_t stride, const void* pointer) noexcept
         {
-            using namespace math;
+            using namespace detail;
 
             static context_mng& context_mng = context_mng::instance();
 

@@ -1,7 +1,7 @@
 #include "pch.hpp"
 #include "context_mng.hpp"
 
-#include "core/math/common.hpp"
+#include "core/utils/util_func.hpp"
 
 #include "amgl/amgl.hpp"
 
@@ -9,7 +9,7 @@
 namespace amgl
 {
     #define CHECK_BINDING_INDEX_VALIDITY(target, index, error_flag, ...) \
-        AM_SET_ERROR_FLAG_IF(!math::is_in_range((int32_t)index, (int32_t)0, get_target_bidning_points_count(target)), error_flag, *this, __VA_ARGS__)
+        AM_SET_ERROR_FLAG_IF(!detail::is_in_range((int32_t)index, (int32_t)0, get_target_bidning_points_count(target)), error_flag, *this, __VA_ARGS__)
 
     // Return -1 if target is not:
     // - AMGL_ARRAY_BUFFER
@@ -50,7 +50,7 @@ namespace amgl
 
     void context_mng::update_error_flag(enum_t error) const noexcept
     {
-        AM_ASSERT(math::is_one_of(error, AMGL_INVALID_ENUM, AMGL_INVALID_VALUE, AMGL_INVALID_OPERATION, 
+        AM_ASSERT(detail::is_one_of(error, AMGL_INVALID_ENUM, AMGL_INVALID_VALUE, AMGL_INVALID_OPERATION, 
             AMGL_STACK_OVERFLOW, AMGL_STACK_UNDERFLOW, AMGL_OUT_OF_MEMORY, AMGL_INVALID_FRAMEBUFFER_OPERATION));
 
         if (m_context.error_status == AMGL_NO_ERROR) {

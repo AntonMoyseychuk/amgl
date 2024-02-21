@@ -1,8 +1,8 @@
 #pragma once
 #include "amgl/amgl.hpp"
 
-#include "core/textures/texture_formats.hpp"
-#include "core/textures/texture_types.hpp"
+#include "texture_formats.hpp"
+#include "texture_types.hpp"
 
 namespace amgl
 {

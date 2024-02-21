@@ -1,4 +1,6 @@
 #pragma once
+#include "amgl/amgl.hpp"
+
 #include "core/core.hpp"
 #include "half/half.hpp"
 
@@ -9,6 +11,24 @@
 
 namespace amgl
 {
+    #define TEXTURE_FORMATS                                                             \
+        AMGL_RED,                                                                       \
+        AMGL_RG,                                                                        \
+        AMGL_RGB,                                                                       \
+        AMGL_BGR,                                                                       \
+        AMGL_RGBA,                                                                      \
+        AMGL_BGRA,                                                                      \
+        AMGL_RED_INTEGER,                                                               \
+        AMGL_RG_INTEGER,                                                                \
+        AMGL_RGB_INTEGER,                                                               \
+        AMGL_BGR_INTEGER,                                                               \
+        AMGL_RGBA_INTEGER,                                                              \
+        AMGL_BGRA_INTEGER,                                                              \
+        AMGL_STENCIL_INDEX,                                                             \
+        AMGL_DEPTH_COMPONENT,                                                           \
+        AMGL_DEPTH_STENCIL
+
+
     #define TEXTURE_BASE_INTERNAL_FORMATS                                               \
         AMGL_RED,                                                                       \
         AMGL_RG,                                                                        \
@@ -94,26 +114,9 @@ namespace amgl
         TEXTURE_BASE_INTERNAL_FORMATS, TEXTURE_SIZED_INTERNAL_FORMATS
 
 
-    #define TEXTURE_FORMATS                                                             \
-        AMGL_RED,                                                                       \
-        AMGL_RG,                                                                        \
-        AMGL_RGB,                                                                       \
-        AMGL_BGR,                                                                       \
-        AMGL_RGBA,                                                                      \
-        AMGL_BGRA,                                                                      \
-        AMGL_RED_INTEGER,                                                               \
-        AMGL_RG_INTEGER,                                                                \
-        AMGL_RGB_INTEGER,                                                               \
-        AMGL_BGR_INTEGER,                                                               \
-        AMGL_RGBA_INTEGER,                                                              \
-        AMGL_BGRA_INTEGER,                                                              \
-        AMGL_STENCIL_INDEX,                                                             \
-        AMGL_DEPTH_COMPONENT,                                                           \
-        AMGL_DEPTH_STENCIL
-
-
     template <typename type, size_t r_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_r_t
+    AM_PACKED_STRUCT_BEGIN
+    struct fmt_r_t
     {
         using value_type = type;
 
@@ -126,11 +129,13 @@ namespace amgl
         static inline constexpr size_t r_min() noexcept { return std::numeric_limits<type>::lowest(); }
 
         type r : r_bits;
-    } AM_PACKED_STRUCT_END;
+    }
+    AM_PACKED_STRUCT_END
 
 
     template <typename type, size_t r_bits, size_t g_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_rg_t
+    AM_PACKED_STRUCT_BEGIN 
+    struct fmt_rg_t
     {
         using value_type = type;
 
@@ -147,11 +152,13 @@ namespace amgl
 
         type r : r_bits;
         type g : g_bits;
-    } AM_PACKED_STRUCT_END;
+    }
+    AM_PACKED_STRUCT_END
 
 
     template <typename type, size_t r_bits, size_t g_bits, size_t b_bits, size_t dummy_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_rgb_t
+    AM_PACKED_STRUCT_BEGIN
+    struct fmt_rgb_t
     {
         using value_type = type;
 
@@ -174,11 +181,13 @@ namespace amgl
         type g      : g_bits;
         type b      : b_bits;
         type        : dummy_bits;
-    } AM_PACKED_STRUCT_END;
+    } 
+    AM_PACKED_STRUCT_END
 
 
     template <typename type, size_t b_bits, size_t g_bits, size_t r_bits, size_t dummy_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_bgr_t
+    AM_PACKED_STRUCT_BEGIN 
+    struct fmt_bgr_t
     {
         using value_type = type;
 
@@ -201,11 +210,13 @@ namespace amgl
         type g      : g_bits;
         type r      : r_bits;
         type        : dummy_bits;
-    } AM_PACKED_STRUCT_END;
+    }
+    AM_PACKED_STRUCT_END
 
 
     template <typename type, size_t r_bits, size_t g_bits, size_t b_bits, size_t a_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_rgba_t
+    AM_PACKED_STRUCT_BEGIN
+    struct fmt_rgba_t
     {
         using value_type = type;
 
@@ -230,11 +241,13 @@ namespace amgl
         type g : g_bits;
         type b : b_bits;
         type a : a_bits;
-    } AM_PACKED_STRUCT_END;
+    }
+    AM_PACKED_STRUCT_END
 
 
     template <typename type, size_t b_bits, size_t g_bits, size_t r_bits, size_t a_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_bgra_t
+    AM_PACKED_STRUCT_BEGIN
+    struct fmt_bgra_t
     {
         using value_type = type;
 
@@ -259,11 +272,13 @@ namespace amgl
         type g : g_bits;
         type r : r_bits;
         type a : a_bits;
-    } AM_PACKED_STRUCT_END;
+    }
+    AM_PACKED_STRUCT_END
 
 
     template <typename type, size_t stencil_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_stencil_index_t
+    AM_PACKED_STRUCT_BEGIN 
+    struct fmt_stencil_index_t
     {
         using value_type = type;
 
@@ -276,11 +291,13 @@ namespace amgl
         static inline constexpr size_t stencil_min() noexcept { return std::numeric_limits<type>::lowest(); }
 
         type stencil : stencil_bits;
-    } AM_PACKED_STRUCT_END;
+    }
+    AM_PACKED_STRUCT_END
 
 
     template <typename type, size_t depth_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_depth_component_t
+    AM_PACKED_STRUCT_BEGIN
+    struct fmt_depth_component_t
     {
         using value_type = type;
 
@@ -293,11 +310,13 @@ namespace amgl
         static inline constexpr size_t depth_min() noexcept { return std::numeric_limits<type>::lowest(); }
 
         type depth : depth_bits;
-    } AM_PACKED_STRUCT_END;
+    }
+    AM_PACKED_STRUCT_END
 
 
     template <typename type, size_t depth_bits, size_t stencil_bits, typename = std::enable_if_t<std::is_integral_v<type>>>
-    AM_PACKED_STRUCT_BEGIN struct fmt_depth_stencil_t
+    AM_PACKED_STRUCT_BEGIN
+    struct fmt_depth_stencil_t
     {
         using value_type = type;
 
@@ -314,14 +333,17 @@ namespace amgl
 
         type depth : depth_bits;
         type stencil : stencil_bits;
-    } AM_PACKED_STRUCT_END;
+    }
+    AM_PACKED_STRUCT_END
 
     struct fmt_r16f_t
     {
         fmt_r16f_t()
             : r(half_float::half_cast<half_float::half>(0.0f)) {}
+
         fmt_r16f_t(float r)
             : r(half_float::half_cast<half_float::half>(r)) {}
+
         fmt_r16f_t(half_float::half r)
             : r(r) {}
 
@@ -342,12 +364,12 @@ namespace amgl
 
     struct fmt_rg16f_t : fmt_r16f_t
     {
-        fmt_rg16f_t()
-            : fmt_r16f_t(), 
+        fmt_rg16f_t() : fmt_r16f_t(), 
             g(half_float::half_cast<half_float::half>(0.0f)) {}
-        fmt_rg16f_t(float r, float g)
-            : fmt_r16f_t(r), 
+
+        fmt_rg16f_t(float r, float g) : fmt_r16f_t(r), 
             g(half_float::half_cast<half_float::half>(g)) {}
+
         fmt_rg16f_t(half_float::half r, half_float::half g)
             : fmt_r16f_t(r), g(g) {}
 
@@ -360,13 +382,11 @@ namespace amgl
 
     struct fmt_rgba16f_t : fmt_rg16f_t
     {
-        fmt_rgba16f_t() 
-            : fmt_rg16f_t(0.0f, 0.0f),
+        fmt_rgba16f_t() : fmt_rg16f_t(0.0f, 0.0f),
             b(half_float::half_cast<half_float::half>(0.0f)),
             a(half_float::half_cast<half_float::half>(0.0f)) {}
 
-        fmt_rgba16f_t(float r, float g, float b, float a) 
-            : fmt_rg16f_t(r, g),
+        fmt_rgba16f_t(float r, float g, float b, float a) : fmt_rg16f_t(r, g),
             b(half_float::half_cast<half_float::half>(b)),
             a(half_float::half_cast<half_float::half>(a)) {}
         
@@ -409,11 +429,8 @@ namespace amgl
 
     struct fmt_rgba32f_t : fmt_rg32f_t
     {
-        constexpr fmt_rgba32f_t()
-            : fmt_rg32f_t(0.0f, 0.0f), b(0.0f), a(0.0f) {}
-
-        constexpr fmt_rgba32f_t(float r, float g, float b, float a)
-            : fmt_rg32f_t(0.0f, 0.0f), b(b), a(a) {}
+        constexpr fmt_rgba32f_t() : fmt_rg32f_t(0.0f, 0.0f), b(0.0f), a(0.0f) {}
+        constexpr fmt_rgba32f_t(float r, float g, float b, float a) : fmt_rg32f_t(0.0f, 0.0f), b(b), a(a) {}
 
         static inline constexpr float b_max() noexcept { return r_max(); }
         static inline constexpr float b_min() noexcept { return r_min(); }

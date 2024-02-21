@@ -2,40 +2,30 @@
 
 #include <chrono>
 #include <ratio>
-#include <stdio.h>
 
+/// @brief 
+/// @tparam Func Function type
+/// @tparam ...Args Function arg types
+/// @param test_count Count of tests
+/// @param func Function for benchmarking
+/// @param ...args Function args
+/// @return average time in milliseconds
 template<typename Func, typename... Args>
-inline void benchmark(size_t test_count, const Func& func, const Args&... args)
+inline float benchmark(size_t test_count, const Func& func, const Args&... args)
 {
     if(test_count == 0) {
         puts("test_count must be greater than 0\n");
-        return;
+        return -1.0f;
     }
-
-    using namespace std::chrono;
-
-    puts("Benchmarking...\n");
-
-    #if !defined(NDEBUG) || defined(_DEBUG) || defined(DEBUG)
-        const char* build_type = "debug";
-    #else
-        const char* build_type = "release";
-    #endif
 
     float total_time = 0.0f;
     for (size_t i = 0; i < test_count; ++i) {
-        const auto start = steady_clock::now();
+        const auto start = std::chrono::steady_clock::now();
         func(std::forward<Args>(args)...);
-        const auto end = steady_clock::now();
+        const auto end = std::chrono::steady_clock::now();
 
-        const float test_duration = duration<float, std::milli>(end - start).count();
-
-        printf_s("Benchmark %zu time (%s): %f ms\n", i, build_type, test_duration);
-
-        total_time += test_duration;
+        total_time += std::chrono::duration<float, std::milli>(end - start).count();
     }
 
-    const float average_time = total_time / test_count;
-
-    printf_s("Average time (%s): %f ms\n", build_type, average_time);
+    return total_time / test_count;
 }
