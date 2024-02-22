@@ -114,86 +114,17 @@ namespace amgl
         };
 
 
-        static void red_type_to_rgba32f(void *dst, enum_t type, const void *src) noexcept
+        template<typename... shift_types>
+        static void type_to_rgba32f(void *dst, enum_t type, const void *src, shift_types&&... shifts) noexcept
         {
             switch (type) {
-                case AMGL_UNSIGNED_BYTE:    convert_to_rgba32f<uint8_t>(dst, src, 0);     break;
-                case AMGL_BYTE:             convert_to_rgba32f<int8_t>(dst, src, 0);      break;
-                case AMGL_UNSIGNED_SHORT:   convert_to_rgba32f<uint16_t>(dst, src, 0);    break;
-                case AMGL_SHORT:            convert_to_rgba32f<int16_t>(dst, src, 0);     break;
-                case AMGL_UNSIGNED_INT:     convert_to_rgba32f<uint32_t>(dst, src, 0);    break;
-                case AMGL_INT:              convert_to_rgba32f<int32_t>(dst, src, 0);     break;
-                case AMGL_FLOAT:            convert_to_rgba32f<float>(dst, src, 0);       break;
-            }
-        }
-
-
-        static void rg_type_to_rgba32f(void *dst, enum_t type, const void *src) noexcept
-        {
-            switch (type) {
-                case AMGL_UNSIGNED_BYTE:    convert_to_rgba32f<uint8_t>(dst, src, 0, 1);     break;
-                case AMGL_BYTE:             convert_to_rgba32f<int8_t>(dst, src, 0, 1);      break;
-                case AMGL_UNSIGNED_SHORT:   convert_to_rgba32f<uint16_t>(dst, src, 0, 1);    break;
-                case AMGL_SHORT:            convert_to_rgba32f<int16_t>(dst, src, 0, 1);     break;
-                case AMGL_UNSIGNED_INT:     convert_to_rgba32f<uint32_t>(dst, src, 0, 1);    break;
-                case AMGL_INT:              convert_to_rgba32f<int32_t>(dst, src, 0, 1);     break;
-                case AMGL_FLOAT:            convert_to_rgba32f<float>(dst, src, 0, 1);       break;
-            }
-        }
-
-
-        static void rgb_type_to_rgba32f(void *dst, enum_t type, const void *src) noexcept
-        {
-            switch (type) {
-                case AMGL_UNSIGNED_BYTE:    convert_to_rgba32f<uint8_t>(dst, src, 0, 1, 2);     break;
-                case AMGL_BYTE:             convert_to_rgba32f<int8_t>(dst, src, 0, 1, 2);      break;
-                case AMGL_UNSIGNED_SHORT:   convert_to_rgba32f<uint16_t>(dst, src, 0, 1, 2);    break;
-                case AMGL_SHORT:            convert_to_rgba32f<int16_t>(dst, src, 0, 1, 2);     break;
-                case AMGL_UNSIGNED_INT:     convert_to_rgba32f<uint32_t>(dst, src, 0, 1, 2);    break;
-                case AMGL_INT:              convert_to_rgba32f<int32_t>(dst, src, 0, 1, 2);     break;
-                case AMGL_FLOAT:            convert_to_rgba32f<float>(dst, src, 0, 1, 2);       break;
-            }
-        }
-
-
-        static void rgba_type_to_rgba32f(void *dst, enum_t type, const void *src) noexcept
-        {
-            switch (type) {
-                case AMGL_UNSIGNED_BYTE:    convert_to_rgba32f<uint8_t>(dst, src, 0, 1, 2, 3);     break;
-                case AMGL_BYTE:             convert_to_rgba32f<int8_t>(dst, src, 0, 1, 2, 3);      break;
-                case AMGL_UNSIGNED_SHORT:   convert_to_rgba32f<uint16_t>(dst, src, 0, 1, 2, 3);    break;
-                case AMGL_SHORT:            convert_to_rgba32f<int16_t>(dst, src, 0, 1, 2, 3);     break;
-                case AMGL_UNSIGNED_INT:     convert_to_rgba32f<uint32_t>(dst, src, 0, 1, 2, 3);    break;
-                case AMGL_INT:              convert_to_rgba32f<int32_t>(dst, src, 0, 1, 2, 3);     break;
-                case AMGL_FLOAT:            convert_to_rgba32f<float>(dst, src, 0, 1, 2, 3);       break;
-            }
-        }
-
-
-        static void bgr_type_to_rgba32f(void *dst, enum_t type, const void *src) noexcept
-        {
-            switch (type) {
-                case AMGL_UNSIGNED_BYTE:    convert_to_rgba32f<uint8_t>(dst, src, 2, 1, 0);     break;
-                case AMGL_BYTE:             convert_to_rgba32f<int8_t>(dst, src, 2, 1, 0);      break;
-                case AMGL_UNSIGNED_SHORT:   convert_to_rgba32f<uint16_t>(dst, src, 2, 1, 0);    break;
-                case AMGL_SHORT:            convert_to_rgba32f<int16_t>(dst, src, 2, 1, 0);     break;
-                case AMGL_UNSIGNED_INT:     convert_to_rgba32f<uint32_t>(dst, src, 2, 1, 0);    break;
-                case AMGL_INT:              convert_to_rgba32f<int32_t>(dst, src, 2, 1, 0);     break;
-                case AMGL_FLOAT:            convert_to_rgba32f<float>(dst, src, 2, 1, 0);       break;
-            }
-        }
-
-
-        static void bgra_type_to_rgba32f(void *dst, enum_t type, const void *src) noexcept
-        {
-            switch (type) {
-                case AMGL_UNSIGNED_BYTE:    convert_to_rgba32f<uint8_t>(dst, src, 2, 1, 0, 3);     break;
-                case AMGL_BYTE:             convert_to_rgba32f<int8_t>(dst, src, 2, 1, 0, 3);      break;
-                case AMGL_UNSIGNED_SHORT:   convert_to_rgba32f<uint16_t>(dst, src, 2, 1, 0, 3);    break;
-                case AMGL_SHORT:            convert_to_rgba32f<int16_t>(dst, src, 2, 1, 0, 3);     break;
-                case AMGL_UNSIGNED_INT:     convert_to_rgba32f<uint32_t>(dst, src, 2, 1, 0, 3);    break;
-                case AMGL_INT:              convert_to_rgba32f<int32_t>(dst, src, 2, 1, 0, 3);     break;
-                case AMGL_FLOAT:            convert_to_rgba32f<float>(dst, src, 2, 1, 0, 3);       break;
+                case AMGL_UNSIGNED_BYTE:    convert_to_rgba32f<uint8_t>(dst, src, std::forward<shift_types>(shifts)...);    break;
+                case AMGL_BYTE:             convert_to_rgba32f<int8_t>(dst, src, std::forward<shift_types>(shifts)...);     break;
+                case AMGL_UNSIGNED_SHORT:   convert_to_rgba32f<uint16_t>(dst, src, std::forward<shift_types>(shifts)...);   break;
+                case AMGL_SHORT:            convert_to_rgba32f<int16_t>(dst, src, std::forward<shift_types>(shifts)...);    break;
+                case AMGL_UNSIGNED_INT:     convert_to_rgba32f<uint32_t>(dst, src, std::forward<shift_types>(shifts)...);   break;
+                case AMGL_INT:              convert_to_rgba32f<int32_t>(dst, src, std::forward<shift_types>(shifts)...);    break;
+                case AMGL_FLOAT:            convert_to_rgba32f<float>(dst, src, std::forward<shift_types>(shifts)...);      break;
             }
         }
 
@@ -202,22 +133,36 @@ namespace amgl
         {
             switch (format) {
                 case AMGL_RED:
-                case AMGL_RED_INTEGER:      red_type_to_rgba32f(dst, type, src); break;
+                case AMGL_RED_INTEGER:      type_to_rgba32f(dst, type, src, 0); break;
                 
                 case AMGL_RG:
-                case AMGL_RG_INTEGER:       rg_type_to_rgba32f(dst, type, src); break;
+                case AMGL_RG_INTEGER:       type_to_rgba32f(dst, type, src, 0, 1); break;
                
                 case AMGL_RGB:
-                case AMGL_RGB_INTEGER:      rgb_type_to_rgba32f(dst, type, src); break;
+                case AMGL_RGB_INTEGER:      type_to_rgba32f(dst, type, src, 0, 1, 2); break;
                 
                 case AMGL_RGBA:
-                case AMGL_RGBA_INTEGER:     rgba_type_to_rgba32f(dst, type, src); break;
+                case AMGL_RGBA_INTEGER:     type_to_rgba32f(dst, type, src, 0, 1, 2, 3); break;
 
                 case AMGL_BGR:
-                case AMGL_BGR_INTEGER:      bgr_type_to_rgba32f(dst, type, src); break;
+                case AMGL_BGR_INTEGER:      type_to_rgba32f(dst, type, src, 2, 1, 0); break;
                 
                 case AMGL_BGRA:
-                case AMGL_BGRA_INTEGER:     bgra_type_to_rgba32f(dst, type, src); break;
+                case AMGL_BGRA_INTEGER:     type_to_rgba32f(dst, type, src, 3, 2, 1, 0); break;
+
+                case AMGL_INT_2_10_10_10_REV:           AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_INT_10_10_10_2:      AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_INT_2_10_10_10_REV:  AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_BYTE_3_3_2:          AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_BYTE_2_3_3_REV:      AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_5_6_5:         AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_5_6_5_REV:     AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_4_4_4_4:       AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_4_4_4_4_REV:   AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_5_5_5_1:       AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_1_5_5_5_REV:   AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_INT_8_8_8_8:         AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_INT_8_8_8_8_REV:     AM_NOT_IMPLEMENTED;
             }
         }
     }
