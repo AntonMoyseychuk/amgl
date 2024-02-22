@@ -125,6 +125,19 @@ namespace amgl
                 case AMGL_UNSIGNED_INT:     convert_to_rgba32f<uint32_t>(dst, src, std::forward<shift_types>(shifts)...);   break;
                 case AMGL_INT:              convert_to_rgba32f<int32_t>(dst, src, std::forward<shift_types>(shifts)...);    break;
                 case AMGL_FLOAT:            convert_to_rgba32f<float>(dst, src, std::forward<shift_types>(shifts)...);      break;
+                case AMGL_INT_2_10_10_10_REV:           AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_INT_10_10_10_2:      AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_INT_2_10_10_10_REV:  AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_BYTE_3_3_2:          AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_BYTE_2_3_3_REV:      AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_5_6_5:         AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_5_6_5_REV:     AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_4_4_4_4:       AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_4_4_4_4_REV:   AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_5_5_5_1:       AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_SHORT_1_5_5_5_REV:   AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_INT_8_8_8_8:         AM_NOT_IMPLEMENTED;
+                case AMGL_UNSIGNED_INT_8_8_8_8_REV:     AM_NOT_IMPLEMENTED;
             }
         }
 
@@ -149,20 +162,6 @@ namespace amgl
                 
                 case AMGL_BGRA:
                 case AMGL_BGRA_INTEGER:     type_to_rgba32f(dst, type, src, 3, 2, 1, 0); break;
-
-                case AMGL_INT_2_10_10_10_REV:           AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_INT_10_10_10_2:      AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_INT_2_10_10_10_REV:  AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_BYTE_3_3_2:          AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_BYTE_2_3_3_REV:      AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_SHORT_5_6_5:         AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_SHORT_5_6_5_REV:     AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_SHORT_4_4_4_4:       AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_SHORT_4_4_4_4_REV:   AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_SHORT_5_5_5_1:       AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_SHORT_1_5_5_5_REV:   AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_INT_8_8_8_8:         AM_NOT_IMPLEMENTED;
-                case AMGL_UNSIGNED_INT_8_8_8_8_REV:     AM_NOT_IMPLEMENTED;
             }
         }
     }
