@@ -56,7 +56,7 @@ uint32_t ebo_data[] = {
 
 float ssbo_data[1024u];
 
-uint8_t texture_data[360 * 144 * 4];
+uint16_t texture_data[360 * 144 * 4];
 
 
 void test() noexcept
@@ -104,7 +104,7 @@ void test() noexcept
     uint32_t texture;
     amglGenTextures(1, &texture);
     amglBindTexture(AMGL_TEXTURE_1D, texture);
-    amglTexImage1D(AMGL_TEXTURE_1D, 0, AMGL_RGBA8, sizeof(texture_data) / (sizeof(texture_data[0]) * 4), 0, AMGL_RGBA, AMGL_UNSIGNED_BYTE, texture_data);
+    amglTexImage1D(AMGL_TEXTURE_1D, 0, AMGL_RGBA32F, sizeof(texture_data) / (sizeof(texture_data[0]) * 4), 0, AMGL_RGBA, AMGL_UNSIGNED_SHORT, texture_data);
     amglBindTexture(AMGL_TEXTURE_1D, 0);
 
     const bool is_texture = amglIsTexture(texture);
@@ -120,7 +120,7 @@ void test() noexcept
 int main(int argc, char* argv[]) 
 {
     std::iota(std::begin(ssbo_data), std::end(ssbo_data), 0.0f);
-    std::iota(std::begin(texture_data), std::end(texture_data), 0);
+    std::iota(std::begin(texture_data), std::end(texture_data), std::numeric_limits<uint16_t>::max() * 0.6f);
 
     constexpr size_t test_count = 10'000u;
 

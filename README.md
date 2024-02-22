@@ -265,7 +265,7 @@
 - [ ] amglTexBufferRange
   - [ ] *amglTexBufferRange*
   - [ ] *amglTextureBufferRange*
-- [ ] *amglTexImage1D*
+- [x] *amglTexImage1D* (For several formats)
 - [ ] *amglTexImage2D*
 - [ ] *amglTexImage2DMultisample*
 - [ ] *amglTexImage3D*

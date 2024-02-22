@@ -26,7 +26,7 @@ namespace amgl
     
     void textures::free_texture(uint32_t id) noexcept
     {
-        set(id, AMGL_NONE, 0u, 0u, 0u, AMGL_NONE);
+        set(id, AMGL_NONE, 0u, 0u, 0u, AMGL_NONE, AMGL_NONE);
         
         m_memory_blocks[id].resize(0);
         m_memory_blocks[id].shrink_to_fit();
@@ -41,12 +41,13 @@ namespace amgl
     }
 
     
-    void textures::set(uint32_t id, enum_t target, uint32_t width, uint32_t height, uint32_t depth, enum_t internal_format) noexcept
+    void textures::set(uint32_t id, enum_t target, uint32_t width, uint32_t height, uint32_t depth, enum_t internal_format, enum_t format) noexcept
     {
         m_widths[id]           = width;
         m_heights[id]          = height;
         m_depths[id]           = depth;
         m_internal_formats[id] = internal_format;
+        m_formats[id]          = format;
         m_targets[id]          = target;
     }
 
@@ -58,6 +59,7 @@ namespace amgl
         m_heights.resize(size, 0u);
         m_depths.resize(size, 0u);
         m_internal_formats.resize(size, AMGL_NONE);
+        m_formats.resize(size, AMGL_NONE);
         m_targets.resize(size, AMGL_NONE);
     }
 }

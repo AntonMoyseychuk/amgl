@@ -338,6 +338,8 @@ namespace amgl
 
     struct fmt_r16f_t
     {
+        using value_type = half_float::half;
+
         fmt_r16f_t()
             : r(half_float::half_cast<half_float::half>(0.0f)) {}
 
@@ -405,6 +407,8 @@ namespace amgl
 
     struct fmt_r32f_t
     {
+        using value_type = float;
+
         constexpr fmt_r32f_t() : r(0.0f) {}
         constexpr fmt_r32f_t(float r) : r(r) {}
 

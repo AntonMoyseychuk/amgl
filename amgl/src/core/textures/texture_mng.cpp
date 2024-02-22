@@ -203,7 +203,7 @@ namespace amgl
             const uint32_t tex_kernel = gs_context_mng.get_binded_texture(target);
             
             if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel)) {
-                m_textures.set(tex_kernel, target, width, 1u, 1u, internal_format);
+                m_textures.set(tex_kernel, target, width, 1u, 1u, internal_format, format);
 
                 initialize_memory(tex_kernel, internal_format, format, type, width, data);
             }
@@ -230,7 +230,7 @@ namespace amgl
 
         textures::memory_block& mem_block = m_textures.m_memory_blocks[texture];
         mem_block.resize(pixel_count * internal_pixel_size);
-
+        
         ubyte_t* mem_block_data_ptr = mem_block.data();
         for (size_t i = 0u; i < pixel_count; ++i) {
             const void* src = (void*)((uintptr_t)data + i * data_pixel_size);

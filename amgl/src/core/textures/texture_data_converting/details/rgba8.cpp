@@ -11,10 +11,10 @@ namespace amgl
 {
     namespace detail
     {
-        #define CONVERT_INTEGRAL(src_type, src, dst_type, dst)                                                      \
-        {                                                                                                           \
-            const float t = math::inverse_lerp<src_type>(MATH_TYPE_MIN(src_type), MATH_TYPE_MAX(src_type), src);    \
-            dst = math::lerp<dst_type>(0, 255, t);                                                                  \
+        #define CONVERT_INTEGRAL(src_type, src, dst_type, dst)                                                          \
+        {                                                                                                               \
+            const float t = math::inverse_lerp<src_type, float>(MATH_TYPE_MIN(src_type), MATH_TYPE_MAX(src_type), src); \
+            dst = math::lerp<dst_type>(0, 255, t);                                                                      \
         }
 
         #define CONVERT_FLOAT(src, dst_type, dst)                                                                   \
