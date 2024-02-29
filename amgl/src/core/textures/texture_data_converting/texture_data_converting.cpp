@@ -29,7 +29,7 @@ namespace amgl
             case AMGL_SRGB:                 AM_NOT_IMPLEMENTED; break;
             case AMGL_SRGB_ALPHA:           AM_NOT_IMPLEMENTED; break;
             case AMGL_DEPTH_COMPONENT16:    AM_NOT_IMPLEMENTED; break;
-            case AMGL_DEPTH_COMPONENT24:    AM_NOT_IMPLEMENTED; break;
+            // case AMGL_DEPTH_COMPONENT24:    AM_NOT_IMPLEMENTED; break;
             case AMGL_DEPTH_COMPONENT32:    AM_NOT_IMPLEMENTED; break;
             case AMGL_R8:                   AM_NOT_IMPLEMENTED; break;
             case AMGL_R8_SNORM:             AM_NOT_IMPLEMENTED; break;
@@ -48,8 +48,8 @@ namespace amgl
             case AMGL_RGBA2:                AM_NOT_IMPLEMENTED; break;
             case AMGL_RGBA4:                AM_NOT_IMPLEMENTED; break;
             case AMGL_RGB5_A1:              AM_NOT_IMPLEMENTED; break;
-            case AMGL_RGBA8:                detail::format_type_to_rgba8(dst, format, type, src); break;
-            case AMGL_RGBA8_SNORM:          detail::format_type_to_rgba8(dst, format, type, src); break;
+            case AMGL_RGBA8:                AM_NOT_IMPLEMENTED; break;
+            case AMGL_RGBA8_SNORM:          AM_NOT_IMPLEMENTED; break;
             case AMGL_RGB10_A2:             AM_NOT_IMPLEMENTED; break;
             case AMGL_RGB10_A2UI:           AM_NOT_IMPLEMENTED; break;
             case AMGL_RGBA12:               AM_NOT_IMPLEMENTED; break;
@@ -63,7 +63,7 @@ namespace amgl
             case AMGL_R32F:                 AM_NOT_IMPLEMENTED; break;
             case AMGL_RG32F:                AM_NOT_IMPLEMENTED; break;
             case AMGL_RGB32F:               AM_NOT_IMPLEMENTED; break;
-            case AMGL_RGBA32F:              detail::format_type_to_rgba32f(dst, format, type, src); break;
+            case AMGL_RGBA32F:              AM_NOT_IMPLEMENTED; break;
             case AMGL_R11F_G11F_B10F:       AM_NOT_IMPLEMENTED; break;
             case AMGL_R8I:                  AM_NOT_IMPLEMENTED; break;
             case AMGL_R8UI:                 AM_NOT_IMPLEMENTED; break;

@@ -121,7 +121,7 @@ enum AMGLConstant : enum_t
     AMGL_SRGB_ALPHA                         = 0x8C42,
 
     AMGL_DEPTH_COMPONENT16                  = 0x81A5,
-    AMGL_DEPTH_COMPONENT24                  = 0x81A6,
+    // AMGL_DEPTH_COMPONENT24                  = 0x81A6,
     AMGL_DEPTH_COMPONENT32                  = 0x81A7,
     // AMGL_STENCIL_INDEX1                     = 0x8D46,
     // AMGL_STENCIL_INDEX4                     = 0x8D47,

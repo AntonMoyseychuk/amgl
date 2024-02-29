@@ -4,17 +4,7 @@
 namespace amgl
 {
     namespace math
-    {
-        #define MATH_TYPE_MIN(type)                  std::numeric_limits<type>::lowest()
-        #define MATH_TYPE_MAX(type)                  std::numeric_limits<type>::max()
-
-        #define MATH_MAX_SIGNED_BIT_VALUE(bits)      (amgl::math::pow(2, bits - 1) - 1)
-        #define MATH_MIN_SIGNED_BIT_VALUE(bits)      -amgl::math::pow(2, bits - 1)
-
-        #define MATH_MAX_UNSIGNED_BIT_VALUE(bits)    (amgl::math::pow(2, bits) - 1)
-        #define MATH_MIN_UNSIGNED_BIT_VALUE(bits)    0u
-
-
+    {   
         #if defined(min) || defined(MIN)
             #undef min
             #undef MIN
@@ -39,26 +29,26 @@ namespace amgl
 
 
         template<typename type, typename return_type = double, typename = std::enable_if_t<std::is_floating_point_v<return_type>>>
-        constexpr inline return_type inverse_lerp(const type& left, const type& right, const type& value) noexcept
+        inline constexpr return_type inverse_lerp(const type& left, const type& right, const type& value) noexcept
         {   
             return static_cast<return_type>(value - left) / (right - left);
         }
 
         template<typename type>
-        constexpr inline type lerp(const type& left, const type& right, float t) noexcept
+        inline constexpr type lerp(const type& left, const type& right, float t) noexcept
         {   
             return left + t * (right - left);
         }
 
 
         template<typename type>
-        constexpr inline type clamp(const type& left, const type& right, const type& value) noexcept
+        inline constexpr type clamp(const type& left, const type& right, const type& value) noexcept
         {   
             return min(right, max(value, left));
         }
 
 
-        template <typename type, typename = std::enable_if_t<std::is_arithmetic_v<type>>>
+        template <typename type>
         inline constexpr type pow(type value, size_t power) noexcept
         {
             type result = static_cast<type>(1);
@@ -66,6 +56,27 @@ namespace amgl
                 result *= value;
             }
             return result;
+        }
+        
+
+        template <typename type>
+        inline constexpr type max_bit_value(size_t bits) noexcept
+        {
+            if constexpr (std::is_unsigned_v<type>) {
+                return pow<type>(2, bits) - 1;
+            } else {
+                return pow<type>(2, bits - 1) - 1;
+            }
+        }
+        
+        template <typename type>
+        inline constexpr type min_bit_value(size_t bits) noexcept
+        {
+            if constexpr (std::is_unsigned_v<type>) {
+                return static_cast<type>(0);
+            } else {
+                return -pow<type>(2, bits - 1);
+            }
         }
     }
 }

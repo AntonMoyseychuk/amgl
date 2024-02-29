@@ -2,7 +2,7 @@
 #include "amgl/amgl.hpp"
 
 #include "texture_formats.hpp"
-#include "texture_types.hpp"
+#include "texture_input_data_types.hpp"
 
 namespace amgl
 {

@@ -104,7 +104,7 @@ void test() noexcept
     uint32_t texture;
     amglGenTextures(1, &texture);
     amglBindTexture(AMGL_TEXTURE_1D, texture);
-    amglTexImage1D(AMGL_TEXTURE_1D, 0, AMGL_RGBA32F, sizeof(texture_data) / (sizeof(texture_data[0]) * 4), 0, AMGL_RGBA, AMGL_UNSIGNED_SHORT, texture_data);
+    amglTexImage1D(AMGL_TEXTURE_1D, 0, AMGL_RGBA8, sizeof(texture_data) / (sizeof(texture_data[0]) * 4), 0, AMGL_RGBA, AMGL_UNSIGNED_SHORT, texture_data);
     amglBindTexture(AMGL_TEXTURE_1D, 0);
 
     const bool is_texture = amglIsTexture(texture);
