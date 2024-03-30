@@ -41,16 +41,14 @@ namespace amgl
         texture_mng() = default;
         texture_mng(size_t preallocation_size);
 
-        /// @brief Allocates memory based on passed params
         /// @param texture Texture object in the kernel range [0, UINT32_MAX - 1]
         /// @param internal_format Format of internal texture storage
-        /// @param in_format Format of input data
-        /// @param in_type Type of input data
-        /// @param in_size Count of pixels
-        /// @param data Input buffer
-        /// @note Doesn't check 'texture', 'internal_format', 'in_format' and 'in_type' validity
-        /// @note Copy 'data' in allocted buffer if it is not nullptr
-        void initialize_memory(uint32_t texture, enum_t internal_format, enum_t in_format, enum_t in_type, size_t pixel_count, const void* data);
+        /// @param format Format of input data
+        /// @param type Type of input data
+        /// @param pixel_count Count of pixels
+        /// @param data Input data
+        /// @note Doesn't check 'texture', 'internal_format', 'format' and 'type' validity
+        void reallocate_tex_memory(uint32_t texture, enum_t internal_format, enum_t format, enum_t type, size_t pixel_count, const void* data);
 
         void resize(size_t size) noexcept;
 

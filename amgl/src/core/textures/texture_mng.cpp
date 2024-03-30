@@ -1,6 +1,10 @@
 #include "pch.hpp"
 #include "texture_mng.hpp"
-#include "texture_data_converting/texture_data_converting.hpp"
+
+#include "internal/formats.hpp"
+#include "internal/types.hpp"
+
+#include "internal/converter.hpp"
 
 #include "core/core.hpp"
 #include "core/utils/util_func.hpp"
@@ -10,7 +14,7 @@
 
 
 
-static_assert(AM_INIT_TEX_COUNT > 0, "AM_INIT_TEXTURE_COUNT must be greater than 0");
+AM_STATIC_ASSERT_MSG(AM_INIT_TEX_COUNT > 0, "AM_INIT_TEXTURE_COUNT must be greater than 0");
 
 
 namespace amgl
@@ -176,14 +180,14 @@ namespace amgl
             internal_format, 
             AMGL_DEPTH_COMPONENT,
             AMGL_DEPTH_COMPONENT16,
-            /*AMGL_DEPTH_COMPONENT24,*/
+            AMGL_DEPTH_COMPONENT24,
             AMGL_DEPTH_COMPONENT32), AMGL_INVALID_OPERATION , gs_context_mng);
 
         AM_SET_ERROR_FLAG_IF(detail::is_one_of(
             internal_format, 
             AMGL_DEPTH_COMPONENT,
             AMGL_DEPTH_COMPONENT16,
-            /*AMGL_DEPTH_COMPONENT24,*/
+            AMGL_DEPTH_COMPONENT24,
             AMGL_DEPTH_COMPONENT32) && format != AMGL_DEPTH_COMPONENT, AMGL_INVALID_OPERATION , gs_context_mng);
 
         
@@ -205,7 +209,7 @@ namespace amgl
             if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel)) {
                 m_textures.set(tex_kernel, target, width, 1u, 1u, internal_format, format);
 
-                initialize_memory(tex_kernel, internal_format, format, type, width, data);
+                reallocate_tex_memory(tex_kernel, internal_format, format, type, width, data); 
             }
         }
     }
@@ -216,30 +220,21 @@ namespace amgl
         resize(preallocation_size);
     }
 
-    
-    void texture_mng::initialize_memory(uint32_t texture, enum_t internal_format, 
-        enum_t in_format, enum_t in_type, size_t pixel_count, const void *data)
+
+    void texture_mng::reallocate_tex_memory(
+        uint32_t texture, enum_t internal_format, enum_t format, enum_t type, size_t pixel_count, const void *data)
     {
-        static const texture_data_converter converter;
+        const size_t internal_pixel_size  = get_internal_fmt_pixel_size(internal_format);
 
-        // const size_t type_size            = get_type_size(in_type);
-        // const size_t data_component_count = get_components_count(in_format);
-        // const size_t data_pixel_size      = type_size * (detail::is_one_of(in_type, TEXTURE_PACKED_TYPES) ? 1u : data_component_count);
-
-        // const size_t internal_pixel_size  = get_bytes_per_pixel(internal_format);
-
-        // textures::memory_block& mem_block = m_textures.m_memory_blocks[texture];
-        // mem_block.resize(pixel_count * internal_pixel_size);
+        textures::memory_block& mem_block = m_textures.m_memory_blocks[texture];
+        mem_block.resize(pixel_count * internal_pixel_size);
         
-        // ubyte_t* mem_block_data_ptr = mem_block.data();
-        // for (size_t i = 0u; i < pixel_count; ++i) {
-        //     const void* src = (void*)((uintptr_t)data + i * data_pixel_size);
-        //     void* dst = mem_block_data_ptr + i * internal_pixel_size;
-        //     converter(internal_format, dst, in_format, in_type, src);
-        // }
+        if (data) {
+            const texture_data_converter converter(internal_format, format, type);
+            converter(mem_block.data(), data, pixel_count);
+        }
     }
 
-    
     void texture_mng::resize(size_t size) noexcept
     {
         m_textures.resize(size);

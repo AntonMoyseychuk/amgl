@@ -41,18 +41,5 @@ namespace amgl
         {
             return value == arg0 && are_equal(value, std::forward<Args>(args)...);
         }
-
-
-        template<typename expected_type, typename type0>
-        inline constexpr bool is_expected_type() noexcept
-        {
-            return std::is_same_v<expected_type, type0>;
-        }
-
-        template<typename expected_type, typename type0, typename... Args>
-        inline constexpr bool is_expected_type() noexcept
-        {
-            return std::is_same_v<expected_type, type0> && is_expected_type<expected_type, Args...>();
-        }
     }
 }

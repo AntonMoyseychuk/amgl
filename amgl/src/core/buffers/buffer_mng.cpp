@@ -2,7 +2,7 @@
 #include "buffer_mng.hpp"
 
 
-static_assert(AM_INIT_BUFF_COUNT > 0, "AM_INIT_BUFF_COUNT must be greater than 0");
+AM_STATIC_ASSERT_MSG(AM_INIT_BUFF_COUNT > 0, "AM_INIT_BUFF_COUNT must be greater than 0");
 
 
 namespace amgl
@@ -320,7 +320,7 @@ namespace amgl
         AM_SET_ERROR_FLAG_IF(index >= context::MAX_VERTEX_ATTRIB_BINDINGS, AMGL_INVALID_VALUE, gs_context_mng);
 
         AM_ASSERT(kernel_id < m_vertex_arrays.m_attributes.size());
-        m_vertex_arrays.m_attributes[kernel_id].enable_flags.set(index, enabled);
+        m_vertex_arrays.m_attributes_enable_flags[kernel_id].set(index, enabled);
     }
 
     

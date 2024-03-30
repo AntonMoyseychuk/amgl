@@ -61,6 +61,8 @@ namespace amgl
     void vertex_arrays::resize(size_t size) noexcept
     {
         m_attributes.resize(size);
+        m_attributes_enable_flags.resize(size);
+        
         m_vbo_ids.resize(size, AM_DEFAULT_KERNEL_ID);
         m_ebo_ids.resize(size, AM_DEFAULT_KERNEL_ID);
         m_id_pool.reserve(size);

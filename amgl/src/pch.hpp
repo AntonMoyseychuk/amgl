@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <bitset>
 
-#include <type_traits>
+#include "core/utils/type_traits.hpp"
 
 #include "core/core.hpp"
 #include "half/half.hpp"

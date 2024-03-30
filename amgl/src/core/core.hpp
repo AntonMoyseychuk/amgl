@@ -79,3 +79,6 @@
     if (condition) {                    \
         continue;                       \
     }
+
+#define AM_STATIC_ASSERT_MSG(condition, msg) static_assert(condition, msg)
+#define AM_STATIC_ASSERT(condition) static_assert(condition, "!(" #condition ")")

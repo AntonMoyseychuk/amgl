@@ -51,6 +51,29 @@ enum AMGLConstant : enum_t
     AMGL_TRANSFORM_FEEDBACK_BUFFER          = 0x8C8E,
     AMGL_UNIFORM_BUFFER                     = 0x8A11,
 
+    /*------------------- Texture Targets -------------------*/
+
+    AMGL_TEXTURE_1D                         = 0x0DE0,
+    AMGL_PROXY_TEXTURE_1D                   = 0x8063,
+    AMGL_TEXTURE_2D                         = 0x0DE1,
+    AMGL_PROXY_TEXTURE_2D                   = 0x8064,
+    AMGL_TEXTURE_3D                         = 0x806F,
+    AMGL_PROXY_TEXTURE_3D                   = 0x8070,
+    AMGL_TEXTURE_1D_ARRAY                   = 0x8C18,
+    AMGL_PROXY_TEXTURE_1D_ARRAY             = 0x8C19,
+    AMGL_TEXTURE_2D_ARRAY                   = 0x8C1A,
+    AMGL_PROXY_TEXTURE_2D_ARRAY             = 0x8C1B,
+    AMGL_TEXTURE_RECTANGLE                  = 0x84F5,
+    AMGL_PROXY_TEXTURE_RECTANGLE            = 0x84F7,
+    AMGL_TEXTURE_CUBE_MAP                   = 0x8513,
+    AMGL_PROXY_TEXTURE_CUBE_MAP             = 0x851B,
+    AMGL_TEXTURE_CUBE_MAP_ARRAY             = 0x9009,
+    AMGL_PROXY_TEXTURE_CUBE_MAP_ARRAY       = 0x900B,
+    AMGL_TEXTURE_2D_MULTISAMPLE             = 0x9100,
+    AMGL_PROXY_TEXTURE_2D_MULTISAMPLE       = 0x9101,
+    AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY       = 0x9102,
+    AMGL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY = 0x9103,
+
     /*------------------- Types -------------------*/
 
     AMGL_BYTE                               = 0x1400,
@@ -76,29 +99,6 @@ enum AMGLConstant : enum_t
     AMGL_UNSIGNED_INT_8_8_8_8               = 0x8035,
     AMGL_UNSIGNED_INT_8_8_8_8_REV           = 0x8367,
 
-    /*------------------- Texture Targets -------------------*/
-
-    AMGL_TEXTURE_1D                         = 0x0DE0,
-    AMGL_PROXY_TEXTURE_1D                   = 0x8063,
-    AMGL_TEXTURE_2D                         = 0x0DE1,
-    AMGL_PROXY_TEXTURE_2D                   = 0x8064,
-    AMGL_TEXTURE_3D                         = 0x806F,
-    AMGL_PROXY_TEXTURE_3D                   = 0x8070,
-    AMGL_TEXTURE_1D_ARRAY                   = 0x8C18,
-    AMGL_PROXY_TEXTURE_1D_ARRAY             = 0x8C19,
-    AMGL_TEXTURE_2D_ARRAY                   = 0x8C1A,
-    AMGL_PROXY_TEXTURE_2D_ARRAY             = 0x8C1B,
-    AMGL_TEXTURE_RECTANGLE                  = 0x84F5,
-    AMGL_PROXY_TEXTURE_RECTANGLE            = 0x84F7,
-    AMGL_TEXTURE_CUBE_MAP                   = 0x8513,
-    AMGL_PROXY_TEXTURE_CUBE_MAP             = 0x851B,
-    AMGL_TEXTURE_CUBE_MAP_ARRAY             = 0x9009,
-    AMGL_PROXY_TEXTURE_CUBE_MAP_ARRAY       = 0x900B,
-    AMGL_TEXTURE_2D_MULTISAMPLE             = 0x9100,
-    AMGL_PROXY_TEXTURE_2D_MULTISAMPLE       = 0x9101,
-    AMGL_TEXTURE_2D_MULTISAMPLE_ARRAY       = 0x9102,
-    AMGL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY = 0x9103,
-
     /*------------------- Texture Formats (Internal too) -------------------*/
 
     AMGL_RED                                = 0x1903,
@@ -121,7 +121,7 @@ enum AMGLConstant : enum_t
     AMGL_SRGB_ALPHA                         = 0x8C42,
 
     AMGL_DEPTH_COMPONENT16                  = 0x81A5,
-    // AMGL_DEPTH_COMPONENT24                  = 0x81A6,
+    AMGL_DEPTH_COMPONENT24                  = 0x81A6,
     AMGL_DEPTH_COMPONENT32                  = 0x81A7,
     // AMGL_STENCIL_INDEX1                     = 0x8D46,
     // AMGL_STENCIL_INDEX4                     = 0x8D47,

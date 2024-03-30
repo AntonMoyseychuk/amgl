@@ -40,6 +40,9 @@ namespace amgl
         /// @note Doesn't check params validity
         void set(uint32_t id, enum_t target, uint32_t width, uint32_t height, uint32_t depth, enum_t internal_format, enum_t format) noexcept;
 
+        /// @param id Texture object in the kernel range [0, UINT32_MAX - 1]
+        size_t get_pixel_count(uint32_t id) const noexcept;
+
 
     private:
         void resize(size_t size) noexcept;

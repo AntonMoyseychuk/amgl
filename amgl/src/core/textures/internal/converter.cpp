@@ -1,14 +1,17 @@
 #include "pch.hpp"
-#include "texture_data_converting.hpp"
+#include "converter.hpp"
 
-#include "details/rgba8.hpp"
-#include "details/rgba32f.hpp"
+#include "formats.hpp"
+#include "types.hpp"
 
 #include "core/core.hpp"
 
+#include "converting/rgba8ui.hpp"
+
 namespace amgl
 {
-    void texture_data_converter::operator()(enum_t internal_format, void *dst, enum_t format, enum_t type, const void *src) const noexcept
+    texture_data_converter::converting_func_ptr texture_data_converter::get_converting_func(
+        enum_t internal_format, enum_t format, enum_t type) noexcept
     {
         switch(internal_format) {
             case AMGL_RED:                  AM_NOT_IMPLEMENTED; break;
@@ -29,7 +32,7 @@ namespace amgl
             case AMGL_SRGB:                 AM_NOT_IMPLEMENTED; break;
             case AMGL_SRGB_ALPHA:           AM_NOT_IMPLEMENTED; break;
             case AMGL_DEPTH_COMPONENT16:    AM_NOT_IMPLEMENTED; break;
-            // case AMGL_DEPTH_COMPONENT24:    AM_NOT_IMPLEMENTED; break;
+            case AMGL_DEPTH_COMPONENT24:    AM_NOT_IMPLEMENTED; break;
             case AMGL_DEPTH_COMPONENT32:    AM_NOT_IMPLEMENTED; break;
             case AMGL_R8:                   AM_NOT_IMPLEMENTED; break;
             case AMGL_R8_SNORM:             AM_NOT_IMPLEMENTED; break;
@@ -84,11 +87,27 @@ namespace amgl
             case AMGL_RGB32I:               AM_NOT_IMPLEMENTED; break;
             case AMGL_RGB32UI:              AM_NOT_IMPLEMENTED; break;
             case AMGL_RGBA8I:               AM_NOT_IMPLEMENTED; break;
-            case AMGL_RGBA8UI:              AM_NOT_IMPLEMENTED; break;
+            case AMGL_RGBA8UI:              return (converting_func_ptr)detail::get_rgba8ui_convert_function(format, type);
             case AMGL_RGBA16I:              AM_NOT_IMPLEMENTED; break;
             case AMGL_RGBA16UI:             AM_NOT_IMPLEMENTED; break;
             case AMGL_RGBA32I:              AM_NOT_IMPLEMENTED; break;
             case AMGL_RGBA32UI:             AM_NOT_IMPLEMENTED; break;
         }
+
+        return nullptr;
+    }
+
+    texture_data_converter::texture_data_converter(enum_t internal_format, enum_t format, enum_t type)
+        : convert(get_converting_func(internal_format, format, type))
+    {
+    }
+
+    void texture_data_converter::operator()(void *dst, const void *src, size_t pixel_count) const noexcept
+    {
+        AM_ASSERT(dst);
+        AM_ASSERT(src);
+        AM_ASSERT(is_valid());
+
+        convert(dst, src, pixel_count);
     }
 }

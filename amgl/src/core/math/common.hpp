@@ -1,5 +1,5 @@
 #pragma once
-#include <type_traits>
+#include "core/utils/type_traits.hpp"
 
 namespace amgl
 {
@@ -15,16 +15,24 @@ namespace amgl
             #undef MAX
         #endif
 
-        template <typename type>
-        inline constexpr const type& min(const type& a, const type& b) noexcept
+        template <typename type, typename... Args>
+        inline constexpr const type min(const type& a, const type& b, Args&&... args) noexcept
         {
-            return a < b ? a : b;
+            if constexpr (sizeof...(Args)) {
+                return min(a < b ? a : b, std::forward<Args>(args)...);
+            } else {
+                return a < b ? a : b;
+            }
         }
 
-        template <typename type>
-        inline constexpr const type& max(const type& a, const type& b) noexcept
+        template <typename type, typename... Args>
+        inline constexpr const type max(const type& a, const type& b, Args&&... args) noexcept
         {
-            return a > b ? a : b;
+            if constexpr (sizeof...(Args)) {
+                return max(a > b ? a : b, std::forward<Args>(args)...);
+            } else {
+                return a > b ? a : b;
+            }
         }
 
 
@@ -76,6 +84,16 @@ namespace amgl
                 return static_cast<type>(0);
             } else {
                 return -pow<type>(2, bits - 1);
+            }
+        }
+
+        template <typename type, typename... Args>
+        constexpr inline auto sum(type&& arg0, Args&&... args) noexcept
+        {
+            if constexpr (sizeof...(Args)) {
+                return arg0 + sum(std::forward<Args>(args)...);
+            } else {
+                return arg0;
             }
         }
     }

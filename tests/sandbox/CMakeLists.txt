@@ -10,7 +10,7 @@ else ()
     message(FATAL_ERROR "Unknown architecture")
 endif()
 
-message("\nTARGET_ARCHITECTURE = ${TARGET_ARCHITECTURE}\n")
+message(STATUS "Target architexture: ${TARGET_ARCHITECTURE}")
 
 
 file(GLOB_RECURSE SANDBOX_SRC CONFIGURE_DEPENDS 

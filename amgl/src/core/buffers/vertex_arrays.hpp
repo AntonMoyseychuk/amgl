@@ -8,23 +8,7 @@
 #include <bitset>
 
 namespace amgl
-{
-    struct attributes
-    {
-        struct layout_desc
-        {
-            uintptr_t pointer = 0u;
-            size_t stride     = 0u;
-            size_t size       = 4u;
-            enum_t type       = AMGL_FLOAT;
-            bool normalized   = false;
-        };
-
-        std::array<layout_desc, context::MAX_VERTEX_ATTRIB_BINDINGS> layout_descs;
-        std::bitset<context::MAX_VERTEX_ATTRIB_BINDINGS> enable_flags;
-    };
-    
-    
+{      
     class vertex_arrays
     {
         friend class buffer_mng;
@@ -67,7 +51,26 @@ namespace amgl
         void resize(size_t size) noexcept;
 
     private:
+        struct attributes
+        {
+            using enable_flags_storage = std::bitset<context::MAX_VERTEX_ATTRIB_BINDINGS>;
+
+            struct layout_desc
+            {
+                uintptr_t pointer = 0u;
+                size_t stride     = 0u;
+                size_t size       = 4u;
+                enum_t type       = AMGL_FLOAT;
+                bool normalized   = false;
+            };
+
+            std::array<layout_desc, context::MAX_VERTEX_ATTRIB_BINDINGS> layout_descs;
+        };
+
+    private:
         std::vector<attributes> m_attributes;
+        std::vector<attributes::enable_flags_storage> m_attributes_enable_flags;
+
         std::vector<uint32_t> m_vbo_ids;
         std::vector<uint32_t> m_ebo_ids;
 
