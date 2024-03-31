@@ -329,7 +329,7 @@ namespace amgl
     struct pixel_format<implicit_t, internal_t, bits0> : pixel_format_base<bit_val_wrapper<bits0>>
     {
         using base_type = pixel_format_base<bit_val_wrapper<bits0>>;
-        using base_type::TOTAL_BITS_COUNT;
+        using base_type::COMPONENTS_COUNT;
         
         using imlicit_type = implicit_t;
         using internal_type = internal_t;
@@ -373,7 +373,8 @@ namespace amgl
             internal_type r_rev : bits0;
         };
     };
- 
+    
+    /*------------------- Texture Internal Formats -------------------*/
     using fmt_red               = pixel_format<uint8_t, uint8_t, 8>;
     using fmt_red_integer       = pixel_format<uint8_t, uint8_t, 8>;
     using fmt_rg                = pixel_format<uint8_t, uint8_t, 8, 8>;
@@ -459,88 +460,179 @@ namespace amgl
     using fmt_rgba16ui          = pixel_format<uint16_t, uint16_t, 16, 16, 16, 16>;
     using fmt_rgba32i           = pixel_format<int32_t, uint32_t, 32, 32, 32, 32>;
     using fmt_rgba32ui          = pixel_format<uint32_t, uint32_t, 32, 32, 32, 32>;
+    
+    /*------------------- Input Formats -------------------*/
+    using in_fmt_r_ubyte    = pixel_format<uint8_t, uint8_t, 8>;
+    using in_fmt_r_byte     = pixel_format<int8_t, uint8_t, 8>;
+    using in_fmt_r_ushort   = pixel_format<uint16_t, uint16_t, 16>;
+    using in_fmt_r_short    = pixel_format<int16_t, uint16_t, 16>;
+    using in_fmt_r_uint     = pixel_format<uint32_t, uint32_t, 32>;
+    using in_fmt_r_int      = pixel_format<int32_t, uint32_t, 32>;
+    using in_fmt_r_float    = pixel_format<float, uint32_t, 32>;
+    
+    using in_fmt_rg_ubyte    = pixel_format<uint8_t, uint8_t, 8, 8>;
+    using in_fmt_rg_byte     = pixel_format<int8_t, uint8_t, 8, 8>;
+    using in_fmt_rg_ushort   = pixel_format<uint16_t, uint16_t, 16, 16>;
+    using in_fmt_rg_short    = pixel_format<int16_t, uint16_t, 16, 16>;
+    using in_fmt_rg_uint     = pixel_format<uint32_t, uint32_t, 32, 32>;
+    using in_fmt_rg_int      = pixel_format<int32_t, uint32_t, 32, 32>;
+    using in_fmt_rg_float    = pixel_format<float, uint32_t, 32, 32>;
 
-    AM_STATIC_ASSERT(sizeof(fmt_red)               == 1u);
-    AM_STATIC_ASSERT(sizeof(fmt_red_integer)       == 1u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg)                == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg_integer)        == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb)               == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb_integer)       == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba)              == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba_integer)      == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_bgr)               == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_bgr_integer)       == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_bgra)              == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_bgra_integer)      == 4u);
+    using in_fmt_rgb_ubyte    = pixel_format<uint8_t, uint8_t, 8, 8, 8>;
+    using in_fmt_rgb_byte     = pixel_format<int8_t, uint8_t, 8, 8, 8>;
+    using in_fmt_rgb_ushort   = pixel_format<uint16_t, uint16_t, 16, 16, 16>;
+    using in_fmt_rgb_short    = pixel_format<int16_t, uint16_t, 16, 16, 16>;
+    using in_fmt_rgb_uint     = pixel_format<uint32_t, uint32_t, 32, 32, 32>;
+    using in_fmt_rgb_int      = pixel_format<int32_t, uint32_t, 32, 32, 32>;
+    using in_fmt_rgb_float    = pixel_format<float, uint32_t, 32, 32, 32>;
 
-    AM_STATIC_ASSERT(sizeof(fmt_stencil_index)     == 1u);
-    AM_STATIC_ASSERT(sizeof(fmt_depth_component)   == 1u);
-    AM_STATIC_ASSERT(sizeof(fmt_depth_component16) == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_depth_component24) == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_depth_component32) == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_depth_stencil)     == 2u);
-  
-    AM_STATIC_ASSERT(sizeof(fmt_srgb)              == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_srgb_alpha)        == 4u);
+    using in_fmt_rgba_ubyte    = pixel_format<uint8_t, uint8_t, 8, 8, 8, 8>;
+    using in_fmt_rgba_byte     = pixel_format<int8_t, uint8_t, 8, 8, 8, 8>;
+    using in_fmt_rgba_ushort   = pixel_format<uint16_t, uint16_t, 16, 16, 16, 16>;
+    using in_fmt_rgba_short    = pixel_format<int16_t, uint16_t, 16, 16, 16, 16>;
+    using in_fmt_rgba_uint     = pixel_format<uint32_t, uint32_t, 32, 32, 32, 32>;
+    using in_fmt_rgba_int      = pixel_format<int32_t, uint32_t, 32, 32, 32, 32>;
+    using in_fmt_rgba_float    = pixel_format<float, uint32_t, 32, 32, 32, 32>;
 
-    AM_STATIC_ASSERT(sizeof(fmt_r3_g3_b2)          == 1u);
+    template <enum_t format, enum_t type>
+    struct fmt_from_enum
+    {
+        using fmt_type = void;
+    };
 
-    AM_STATIC_ASSERT(sizeof(fmt_r8)                == 1u);
-    AM_STATIC_ASSERT(sizeof(fmt_r8_snorm)          == 1u);
-    AM_STATIC_ASSERT(sizeof(fmt_r16)               == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_r16_snorm)         == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg8)               == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg16)              == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg16_snorm)        == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb8)              == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb8_snorm)        == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb10)             == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb16)             == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb16_snorm)       == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba2)             == 1u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba4)             == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb5_a1)           == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba8)             == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba8_snorm)       == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb10_a2)          == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb10_a2ui)        == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba12)            == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba16)            == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_srgb8)             == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_srgb8_alpha8)      == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_r16f)              == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg16f)             == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb16f)            == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba16f)           == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_r32f)              == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg32f)             == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb32f)            == 16u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba32f)           == 16u);
-    AM_STATIC_ASSERT(sizeof(fmt_r11f_g11f_b10f)    == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_r8i)               == 1u);
-    AM_STATIC_ASSERT(sizeof(fmt_r8ui)              == 1u);
-    AM_STATIC_ASSERT(sizeof(fmt_r16i)              == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_r16ui)             == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_r32i)              == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_r32ui)             == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg8i)              == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg8ui)             == 2u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg16i)             == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg16ui)            == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg32i)             == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rg32ui)            == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb8i)             == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb8ui)            == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb16i)            == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb16ui)           == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb32i)            == 16u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgb32ui)           == 16u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba8i)            == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba8ui)           == 4u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba16i)           == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba16ui)          == 8u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba32i)           == 16u);
-    AM_STATIC_ASSERT(sizeof(fmt_rgba32ui)          == 16u);
+    #define _DECLARE_FMT_FROM_ENUM_SPEC(format, type, out_type) \
+        template <>                                             \
+        struct fmt_from_enum<format, type>                      \
+        {                                                       \
+            using fmt_type = out_type;                          \
+        }
+    
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RED, AMGL_BYTE, in_fmt_r_byte);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RED, AMGL_UNSIGNED_BYTE, in_fmt_r_ubyte);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RED, AMGL_SHORT, in_fmt_r_short);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RED, AMGL_UNSIGNED_SHORT, in_fmt_r_ushort);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RED, AMGL_INT, in_fmt_r_int);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RED, AMGL_UNSIGNED_INT, in_fmt_r_uint);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RED, AMGL_FLOAT, in_fmt_r_float);
+
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RG, AMGL_BYTE, in_fmt_rg_byte);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RG, AMGL_UNSIGNED_BYTE, in_fmt_rg_ubyte);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RG, AMGL_SHORT, in_fmt_rg_short);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RG, AMGL_UNSIGNED_SHORT, in_fmt_rg_ushort);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RG, AMGL_INT, in_fmt_rg_int);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RG, AMGL_UNSIGNED_INT, in_fmt_rg_uint);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RG, AMGL_FLOAT, in_fmt_rg_float);
+
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGB, AMGL_BYTE, in_fmt_rgb_byte);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGB, AMGL_UNSIGNED_BYTE, in_fmt_rgb_ubyte);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGB, AMGL_SHORT, in_fmt_rgb_short);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGB, AMGL_UNSIGNED_SHORT, in_fmt_rgb_ushort);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGB, AMGL_INT, in_fmt_rgb_int);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGB, AMGL_UNSIGNED_INT, in_fmt_rgb_uint);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGB, AMGL_FLOAT, in_fmt_rgb_float);
+
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGBA, AMGL_BYTE, in_fmt_rgba_byte);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGBA, AMGL_UNSIGNED_BYTE, in_fmt_rgba_ubyte);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGBA, AMGL_SHORT, in_fmt_rgba_short);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGBA, AMGL_UNSIGNED_SHORT, in_fmt_rgba_ushort);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGBA, AMGL_INT, in_fmt_rgba_int);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGBA, AMGL_UNSIGNED_INT, in_fmt_rgba_uint);
+    _DECLARE_FMT_FROM_ENUM_SPEC(AMGL_RGBA, AMGL_FLOAT, in_fmt_rgba_float);
+
+    template<enum_t format, enum_t type>
+    using fmt_from_enum_t = typename fmt_from_enum<format, type>::fmt_type;
+
+
+    template <enum_t internal_format>
+    struct internal_fmt_from_enum
+    {
+        using fmt_type = void;
+    };
+
+    #define _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(internal_format, out_type) \
+        template <>                                                         \
+        struct internal_fmt_from_enum<internal_format>                      \
+        {                                                                   \
+            using fmt_type = out_type;                                      \
+        }
+
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RED, fmt_red);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG, fmt_rg);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB, fmt_rgb);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA, fmt_rgba);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RED_INTEGER, fmt_red_integer);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG_INTEGER, fmt_rg_integer);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB_INTEGER, fmt_rgb_integer);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA_INTEGER, fmt_rgba_integer);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_STENCIL_INDEX, fmt_stencil_index);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_DEPTH_COMPONENT, fmt_depth_component);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_DEPTH_STENCIL, fmt_depth_stencil);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_SRGB, fmt_srgb);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_SRGB_ALPHA, fmt_srgb_alpha);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_DEPTH_COMPONENT16, fmt_depth_component16);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_DEPTH_COMPONENT24, fmt_depth_component24);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_DEPTH_COMPONENT32, fmt_depth_component32);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R8, fmt_r8);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R8_SNORM, fmt_r8_snorm);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R16, fmt_r16);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R16_SNORM, fmt_r16_snorm);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG8, fmt_rg8);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG8_SNORM, fmt_rg8_snorm);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG16, fmt_rg16);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG16_SNORM, fmt_rg16_snorm);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R3_G3_B2, fmt_r3_g3_b2);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB8, fmt_rgb8);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB10, fmt_rgb10);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB8_SNORM, fmt_rgb8_snorm);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB16, fmt_rgb16);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB16_SNORM, fmt_rgb16_snorm);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA2, fmt_rgba2);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA4, fmt_rgba4);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB5_A1, fmt_rgb5_a1);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA8, fmt_rgba8);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA8_SNORM, fmt_rgba8_snorm);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB10_A2, fmt_rgb10_a2);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB10_A2UI, fmt_rgb10_a2ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA12, fmt_rgba12);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA16, fmt_rgba16);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_SRGB8, fmt_srgb8);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_SRGB8_ALPHA8, fmt_srgb8_alpha8);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R16F, fmt_r16f);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG16F, fmt_rg16f);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB16F, fmt_rgb16f);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA16F, fmt_rgba16f);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R32F, fmt_r32f);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG32F, fmt_rg32f);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB32F, fmt_rgb32f);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA32F, fmt_rgba32f);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R11F_G11F_B10F, fmt_r11f_g11f_b10f);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R8I, fmt_r8i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R8UI, fmt_r8ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R16I, fmt_r16i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R16UI, fmt_r16ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R32I, fmt_r32i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_R32UI, fmt_r32ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG8I, fmt_rg8i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG8UI, fmt_rg8ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG16I, fmt_rg16i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG16UI, fmt_rg16ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG32I, fmt_rg32i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RG32UI, fmt_rg32ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB8I, fmt_rgb8i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB8UI, fmt_rgb8ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB16I, fmt_rgb16i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB16UI, fmt_rgb16ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB32I, fmt_rgb32i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGB32UI, fmt_rgb32ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA8I, fmt_rgba8i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA8UI, fmt_rgba8ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA16I, fmt_rgba16i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA16UI, fmt_rgba16ui);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA32I, fmt_rgba32i);
+    _DECLARE_INTERNAL_FMT_FROM_ENUM_SPEC(AMGL_RGBA32UI, fmt_rgba32ui);
+
+    template<enum_t internal_format>
+    using internal_fmt_from_enum_t = typename internal_fmt_from_enum<internal_format>::fmt_type;
 
 
     /// @brief  
@@ -629,4 +721,119 @@ namespace amgl
 
         return 0u;
     }
+
+
+    AM_STATIC_ASSERT(sizeof(fmt_red)               == 1u);
+    AM_STATIC_ASSERT(sizeof(fmt_red_integer)       == 1u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg)                == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg_integer)        == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb)               == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb_integer)       == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba)              == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba_integer)      == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_bgr)               == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_bgr_integer)       == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_bgra)              == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_bgra_integer)      == 4u);
+
+    AM_STATIC_ASSERT(sizeof(fmt_stencil_index)     == 1u);
+    AM_STATIC_ASSERT(sizeof(fmt_depth_component)   == 1u);
+    AM_STATIC_ASSERT(sizeof(fmt_depth_component16) == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_depth_component24) == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_depth_component32) == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_depth_stencil)     == 2u);
+  
+    AM_STATIC_ASSERT(sizeof(fmt_srgb)              == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_srgb_alpha)        == 4u);
+
+    AM_STATIC_ASSERT(sizeof(fmt_r3_g3_b2)          == 1u);
+
+    AM_STATIC_ASSERT(sizeof(fmt_r8)                == 1u);
+    AM_STATIC_ASSERT(sizeof(fmt_r8_snorm)          == 1u);
+    AM_STATIC_ASSERT(sizeof(fmt_r16)               == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_r16_snorm)         == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg8)               == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg16)              == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg16_snorm)        == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb8)              == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb8_snorm)        == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb10)             == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb16)             == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb16_snorm)       == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba2)             == 1u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba4)             == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb5_a1)           == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba8)             == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba8_snorm)       == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb10_a2)          == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb10_a2ui)        == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba12)            == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba16)            == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_srgb8)             == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_srgb8_alpha8)      == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_r16f)              == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg16f)             == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb16f)            == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba16f)           == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_r32f)              == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg32f)             == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb32f)            == 16u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba32f)           == 16u);
+    AM_STATIC_ASSERT(sizeof(fmt_r11f_g11f_b10f)    == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_r8i)               == 1u);
+    AM_STATIC_ASSERT(sizeof(fmt_r8ui)              == 1u);
+    AM_STATIC_ASSERT(sizeof(fmt_r16i)              == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_r16ui)             == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_r32i)              == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_r32ui)             == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg8i)              == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg8ui)             == 2u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg16i)             == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg16ui)            == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg32i)             == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rg32ui)            == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb8i)             == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb8ui)            == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb16i)            == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb16ui)           == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb32i)            == 16u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgb32ui)           == 16u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba8i)            == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba8ui)           == 4u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba16i)           == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba16ui)          == 8u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba32i)           == 16u);
+    AM_STATIC_ASSERT(sizeof(fmt_rgba32ui)          == 16u);
+    
+    AM_STATIC_ASSERT(sizeof(in_fmt_r_ubyte)        == 1u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_r_byte)         == 1u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_r_ushort)       == 2u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_r_short)        == 2u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_r_uint)         == 4u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_r_int)          == 4u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_r_float)        == 4u);
+    
+    AM_STATIC_ASSERT(sizeof(in_fmt_rg_ubyte)        == 2u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rg_byte)         == 2u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rg_ushort)       == 4u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rg_short)        == 4u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rg_uint)         == 8u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rg_int)          == 8u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rg_float)        == 8u);
+
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgb_ubyte)        == 3u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgb_byte)         == 3u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgb_ushort)       == 6u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgb_short)        == 6u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgb_uint)         == 12u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgb_int)          == 12u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgb_float)        == 12u);
+
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgba_ubyte)        == 4u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgba_byte)         == 4u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgba_ushort)       == 8u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgba_short)        == 8u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgba_uint)         == 16u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgba_int)          == 16u);
+    AM_STATIC_ASSERT(sizeof(in_fmt_rgba_float)        == 16u);
 }

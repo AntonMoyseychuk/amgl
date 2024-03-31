@@ -99,7 +99,7 @@ enum AMGLConstant : enum_t
     AMGL_UNSIGNED_INT_8_8_8_8               = 0x8035,
     AMGL_UNSIGNED_INT_8_8_8_8_REV           = 0x8367,
 
-    /*------------------- Texture Formats (Internal too) -------------------*/
+    /*------------------- Texture Formats -------------------*/
 
     AMGL_RED                                = 0x1903,
     AMGL_RG                                 = 0x8227,
