@@ -7,6 +7,7 @@
 #include "core/core.hpp"
 
 #include "converting/rgba8ui.hpp"
+#include "converting/rgba32f.hpp"
 
 namespace amgl
 {
@@ -66,7 +67,7 @@ namespace amgl
             case AMGL_R32F:                 AM_NOT_IMPLEMENTED; break;
             case AMGL_RG32F:                AM_NOT_IMPLEMENTED; break;
             case AMGL_RGB32F:               AM_NOT_IMPLEMENTED; break;
-            case AMGL_RGBA32F:              AM_NOT_IMPLEMENTED; break;
+            case AMGL_RGBA32F:              return (converting_func_ptr)detail::get_rgba32f_convert_function(format, type);
             case AMGL_R11F_G11F_B10F:       AM_NOT_IMPLEMENTED; break;
             case AMGL_R8I:                  AM_NOT_IMPLEMENTED; break;
             case AMGL_R8UI:                 AM_NOT_IMPLEMENTED; break;

@@ -8,9 +8,6 @@ namespace amgl
 {
     namespace detail
     {
-        
-
-
         void* get_rgba8ui_convert_function(enum_t format, enum_t type) noexcept
         {
             if (format == AMGL_RGBA && type == AMGL_UNSIGNED_BYTE) {

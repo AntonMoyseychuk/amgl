@@ -10,7 +10,7 @@ namespace amgl
     {
         /// @brief
         /// @param value Floating point value in [0, 1] range
-        template <typename type, typename = std::enable_if_t<std::is_integral_v<type>>>
+        template <typename type>
         inline constexpr type float_to_integer(type min, type max, float value) noexcept
         {
             AM_ASSERT(min < max);
@@ -21,7 +21,7 @@ namespace amgl
 
         /// @brief Converts 'value' to [min(type), max(type)] range
         /// @param value Floating point value in [0, 1] range
-        template <typename type, typename = std::enable_if_t<std::is_integral_v<type>>>
+        template <typename type>
         inline constexpr type float_to_integer(float value) noexcept
         {
             return float_to_integer(std::numeric_limits<type>::lowest(), std::numeric_limits<type>::max(), value);
@@ -30,7 +30,7 @@ namespace amgl
 
         /// @brief
         /// @return Value in [0, 1] range 
-        template <typename type, typename = std::enable_if_t<std::is_integral_v<type>>>
+        template <typename type>
         inline constexpr float integer_to_float(type min, type max, type value) noexcept
         {
             AM_ASSERT(min < max);
@@ -40,7 +40,7 @@ namespace amgl
 
         /// @brief
         /// @return Value in [0, 1] range 
-        template <typename type, typename = std::enable_if_t<std::is_integral_v<type>>>
+        template <typename type>
         inline constexpr float integer_to_float(type value) noexcept
         {
             return math::inverse_lerp(std::numeric_limits<type>::lowest(), std::numeric_limits<type>::max(), value);
