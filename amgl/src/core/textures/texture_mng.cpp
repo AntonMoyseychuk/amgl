@@ -232,9 +232,6 @@ namespace amgl
         if (data) {
             const texture_data_converter converter(internal_format, format, type);
             converter(mem_block.data(), data, pixel_count);
-
-            uint8_t texture_data[360 * 144 * 4];
-            memcpy(texture_data, mem_block.data(), mem_block.size() * sizeof(mem_block[0]));
         }
     }
 

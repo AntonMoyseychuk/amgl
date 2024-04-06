@@ -53,5 +53,26 @@ namespace amgl
         {
             return math::lerp(out_min, out_max, math::inverse_lerp(in_min, in_max, value));
         }
+
+
+        // template <typename type>
+        // inline constexpr type max_bit_value(size_t bits) noexcept
+        // {
+        //     if constexpr (std::is_unsigned_v<type>) {
+        //         return pow<type>(2, bits) - 1;
+        //     } else {
+        //         return pow<type>(2, bits - 1) - 1;
+        //     }
+        // }
+        //
+        // template <typename type>
+        // inline constexpr type min_bit_value(size_t bits) noexcept
+        // {
+        //     if constexpr (std::is_unsigned_v<type>) {
+        //         return static_cast<type>(0);
+        //     } else {
+        //         return -pow<type>(2, bits - 1);
+        //     }
+        // }
     }
 }

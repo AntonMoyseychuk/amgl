@@ -2,7 +2,7 @@
 #include "amgl/amgl.hpp"
 #include "core/utils/type_traits.hpp"
 
-#include "core/math/common.hpp"
+#include "converting/integer_float_mapping.hpp"
 
 
 namespace amgl
@@ -126,56 +126,69 @@ namespace amgl
         static constexpr inline size_t BITS_PER_COMPONENT[COMPONENTS_COUNT] = { bits::value... };
     };
 
-    template <typename implicit_t, typename internal_t, size_t... bits>
+    template <enum_t format, typename implicit_t, typename internal_t, size_t... bits>
     struct pixel_format : pixel_format_base<bit_val_wrapper<bits>...>
     {
         AM_STATIC_ASSERT_MSG(sizeof...(bits) < 0u, "invalid pixel components count");
     };
 
-    template <typename implicit_t, typename internal_t, size_t bits0, size_t bits1, size_t bits2, size_t bits3>
-    struct pixel_format<implicit_t, internal_t, bits0, bits1, bits2, bits3> 
+    template <enum_t format, typename implicit_t, typename internal_t, size_t bits0, size_t bits1, size_t bits2, size_t bits3>
+    struct pixel_format<format, implicit_t, internal_t, bits0, bits1, bits2, bits3> 
         : pixel_format_base<bit_val_wrapper<bits0>, bit_val_wrapper<bits1>, bit_val_wrapper<bits2>, bit_val_wrapper<bits3>>
     {
         using base_type = pixel_format_base<bit_val_wrapper<bits0>, bit_val_wrapper<bits1>, bit_val_wrapper<bits2>, bit_val_wrapper<bits3>>;
         using base_type::COMPONENTS_COUNT;
         
-        using imlicit_type = implicit_t;
+        using implicit_type = implicit_t;
         using internal_type = internal_t;
 
-        constexpr pixel_format(internal_type r, internal_type g, internal_type b, internal_type a) : r(r), g(g), b(b), a(a) {}
-        constexpr pixel_format() : pixel_format(0, 0, 0, 0) {}
+        static constexpr enum_t AMGL_FORMAT = format;
 
-        void set(size_t index, internal_type value) noexcept
+        constexpr pixel_format(implicit_type r, implicit_type g, implicit_type b, implicit_type a) 
+            : r(*reinterpret_cast<internal_type*>(&r)), 
+            g(*reinterpret_cast<internal_type*>(&g)), 
+            b(*reinterpret_cast<internal_type*>(&b)), 
+            a(*reinterpret_cast<internal_type*>(&a)) 
+        {}
+        constexpr pixel_format(implicit_type val) 
+            : pixel_format(val, val, val, val) {}
+        constexpr pixel_format() 
+            : pixel_format(0, 0, 0, 0) {}
+
+        void set(size_t index, implicit_type value) noexcept
         {
             AM_ASSERT_MSG(index < COMPONENTS_COUNT, "index must be 0 <= index < %u", COMPONENTS_COUNT);
             
             switch (index) {
-                case 0: r = value; break;
-                case 1: g = value; break;
-                case 2: b = value; break;
-                case 3: a = value; break;
+                case 0: r = *reinterpret_cast<internal_type*>(&value); break;
+                case 1: g = *reinterpret_cast<internal_type*>(&value); break;
+                case 2: b = *reinterpret_cast<internal_type*>(&value); break;
+                case 3: a = *reinterpret_cast<internal_type*>(&value); break;
             };
         }
 
-        void set_rev(size_t index, internal_type value) noexcept
+        void set_rev(size_t index, implicit_type value) noexcept
         {
             set(COMPONENTS_COUNT - 1u - index, value);
         }
 
-        internal_type get(size_t index) const noexcept
+        implicit_type get(size_t index) const noexcept
         {
             AM_ASSERT_MSG(index < COMPONENTS_COUNT, "index must be 0 <= index < %u", COMPONENTS_COUNT);
             
+            internal_type result = 0; 
+
             switch (index) {
-                case 0: return r;
-                case 1: return g;
-                case 2: return b;
-                case 3: return a;
-                default: return (internal_type)0;
+                case 0: result = r; break;
+                case 1: result = g; break;
+                case 2: result = b; break;
+                case 3: result = a; break;
             };
+
+            return *reinterpret_cast<implicit_type*>(&result);
         }
 
-        internal_type get_rev(size_t index) const noexcept
+        implicit_type get_rev(size_t index) const noexcept
         {
             return get(COMPONENTS_COUNT - 1u - index);
         }
@@ -200,48 +213,60 @@ namespace amgl
         };
     };
 
-    template <typename implicit_t, typename internal_t, size_t bits0, size_t bits1, size_t bits2>
-    struct pixel_format<implicit_t, internal_t, bits0, bits1, bits2> 
+    template <enum_t format, typename implicit_t, typename internal_t, size_t bits0, size_t bits1, size_t bits2>
+    struct pixel_format<format, implicit_t, internal_t, bits0, bits1, bits2> 
         : pixel_format_base<bit_val_wrapper<bits0>, bit_val_wrapper<bits1>, bit_val_wrapper<bits2>>
     {
         using base_type = pixel_format_base<bit_val_wrapper<bits0>, bit_val_wrapper<bits1>, bit_val_wrapper<bits2>>;
         using base_type::COMPONENTS_COUNT;
         
-        using imlicit_type = implicit_t;
+        using implicit_type = implicit_t;
         using internal_type = internal_t;
 
-        constexpr pixel_format(internal_type r, internal_type g, internal_type b) : r(r), g(g), b(b) {}
-        constexpr pixel_format() : pixel_format(0, 0, 0) {}
+        static constexpr enum_t AMGL_FORMAT = format;
 
-        void set(size_t index, internal_type value) noexcept
+        constexpr pixel_format(implicit_type r, implicit_type g, implicit_type b) 
+            : r(*reinterpret_cast<internal_type*>(&r)), 
+            g(*reinterpret_cast<internal_type*>(&g)), 
+            b(*reinterpret_cast<internal_type*>(&b))
+        {}
+        constexpr pixel_format(implicit_type val) 
+            : pixel_format(val, val, val) {}
+        constexpr pixel_format() 
+            : pixel_format(0, 0, 0) {}
+
+        void set(size_t index, implicit_type value) noexcept
         {
             AM_ASSERT_MSG(index < COMPONENTS_COUNT, "index must be 0 <= index < %u", COMPONENTS_COUNT);
             
             switch (index) {
-                case 0: r = value; break;
-                case 1: g = value; break;
-                case 2: b = value; break;
+                case 0: r = *reinterpret_cast<internal_type*>(&value); break;
+                case 1: g = *reinterpret_cast<internal_type*>(&value); break;
+                case 2: b = *reinterpret_cast<internal_type*>(&value); break;
             };
         }
 
-        void set_rev(size_t index, internal_type value) noexcept
+        void set_rev(size_t index, implicit_type value) noexcept
         {
             set(COMPONENTS_COUNT - 1u - index, value);
         }
 
-        internal_type get(size_t index) const noexcept
+        implicit_type get(size_t index) const noexcept
         {
             AM_ASSERT_MSG(index < COMPONENTS_COUNT, "index must be 0 <= index < %u", COMPONENTS_COUNT);
             
+            internal_type result = 0; 
+
             switch (index) {
-                case 0: return r;
-                case 1: return g;
-                case 2: return b;
-                default: return (internal_type)0;
+                case 0: result = r; break;
+                case 1: result = g; break;
+                case 2: result = b; break;
             };
+
+            return *reinterpret_cast<implicit_type*>(&result);
         }
 
-        internal_type get_rev(size_t index) const noexcept
+        implicit_type get_rev(size_t index) const noexcept
         {
             return get(COMPONENTS_COUNT - 1u - index);
         }
@@ -264,45 +289,56 @@ namespace amgl
         };
     };
 
-    template <typename implicit_t, typename internal_t, size_t bits0, size_t bits1>
-    struct pixel_format<implicit_t, internal_t, bits0, bits1> : pixel_format_base<bit_val_wrapper<bits0>, bit_val_wrapper<bits1>>
+    template <enum_t format, typename implicit_t, typename internal_t, size_t bits0, size_t bits1>
+    struct pixel_format<format, implicit_t, internal_t, bits0, bits1> : pixel_format_base<bit_val_wrapper<bits0>, bit_val_wrapper<bits1>>
     {
         using base_type = pixel_format_base<bit_val_wrapper<bits0>, bit_val_wrapper<bits1>>;
         using base_type::COMPONENTS_COUNT;
         
-        using imlicit_type = implicit_t;
+        using implicit_type = implicit_t;
         using internal_type = internal_t;
 
-        constexpr pixel_format(internal_type r, internal_type g) : r(r), g(g) {}
-        constexpr pixel_format() : pixel_format(0, 0) {}
+        static constexpr enum_t AMGL_FORMAT = format;
 
-        void set(size_t index, internal_type value) noexcept
+        constexpr pixel_format(implicit_type r, implicit_type g) 
+            : r(*reinterpret_cast<internal_type*>(&r)), 
+            g(*reinterpret_cast<internal_type*>(&g))
+        {}
+        constexpr pixel_format(implicit_t val) 
+            : pixel_format(val, val) {}
+        constexpr pixel_format() 
+            : pixel_format(0, 0) {}
+
+        void set(size_t index, implicit_type value) noexcept
         {
             AM_ASSERT_MSG(index < COMPONENTS_COUNT, "index must be 0 <= index < %u", COMPONENTS_COUNT);
             
             switch (index) {
-                case 0: r = value; break;
-                case 1: g = value; break;
+                case 0: r = *reinterpret_cast<internal_type*>(&value); break;
+                case 1: g = *reinterpret_cast<internal_type*>(&value); break;
             };
         }
 
-        void set_rev(size_t index, internal_type value) noexcept
+        void set_rev(size_t index, implicit_type value) noexcept
         {
             set(COMPONENTS_COUNT - 1u - index, value);
         }
 
-        internal_type get(size_t index) const noexcept
+        implicit_type get(size_t index) const noexcept
         {
             AM_ASSERT_MSG(index < COMPONENTS_COUNT, "index must be 0 <= index < %u", COMPONENTS_COUNT);
             
+            internal_type result = 0; 
+
             switch (index) {
-                case 0: return r;
-                case 1: return g;
-                default: return (internal_type)0;
+                case 0: result = r; break;
+                case 1: result = g; break;
             };
+
+            return *reinterpret_cast<implicit_type*>(&result);
         }
 
-        internal_type get_rev(size_t index) const noexcept
+        implicit_type get_rev(size_t index) const noexcept
         {
             return get(COMPONENTS_COUNT - 1u - index);
         }
@@ -320,48 +356,54 @@ namespace amgl
                 internal_type g_rev : bits0;
                 internal_type r_rev : bits1;
             };
-
-            internal_type packed;
         };
     };
 
-    template <typename implicit_t, typename internal_t, size_t bits0>
-    struct pixel_format<implicit_t, internal_t, bits0> : pixel_format_base<bit_val_wrapper<bits0>>
+    template <enum_t format, typename implicit_t, typename internal_t, size_t bits0>
+    struct pixel_format<format, implicit_t, internal_t, bits0> : pixel_format_base<bit_val_wrapper<bits0>>
     {
         using base_type = pixel_format_base<bit_val_wrapper<bits0>>;
         using base_type::COMPONENTS_COUNT;
         
-        using imlicit_type = implicit_t;
+        using implicit_type = implicit_t;
         using internal_type = internal_t;
 
-        constexpr pixel_format(internal_type r) : r(r) {}
-        constexpr pixel_format() : pixel_format(0) {}
+        static constexpr enum_t AMGL_FORMAT = format;
 
-        void set(size_t index, internal_type value) noexcept
+        constexpr pixel_format(implicit_type r) 
+            : r(*reinterpret_cast<internal_type*>(&r))
+        {}
+        constexpr pixel_format() 
+            : pixel_format(0) {}
+
+        void set(size_t index, implicit_type value) noexcept
         {
             AM_ASSERT_MSG(index < COMPONENTS_COUNT, "index must be 0 <= index < %u", COMPONENTS_COUNT);
             
             switch (index) {
-                case 0: r = value; break;
+                case 0: r = *reinterpret_cast<internal_type*>(&value); break;
             };
         }
 
-        void set_rev(size_t index, internal_type value) noexcept
+        void set_rev(size_t index, implicit_type value) noexcept
         {
             set(COMPONENTS_COUNT - 1u - index, value);
         }
 
-        internal_type get(size_t index) const noexcept
+        implicit_type get(size_t index) const noexcept
         {
             AM_ASSERT_MSG(index < COMPONENTS_COUNT, "index must be 0 <= index < %u", COMPONENTS_COUNT);
             
+            internal_type result = 0; 
+
             switch (index) {
-                case 0: return r;
-                default: return (internal_type)0;
+                case 0: result = r; break;
             };
+
+            return *reinterpret_cast<implicit_type*>(&result);
         }
 
-        internal_type get_rev(size_t index) const noexcept
+        implicit_type get_rev(size_t index) const noexcept
         {
             return get(COMPONENTS_COUNT - 1u - index);
         }
@@ -375,124 +417,227 @@ namespace amgl
     };
     
     /*------------------- Texture Internal Formats -------------------*/
-    using fmt_red               = pixel_format<uint8_t, uint8_t, 8>;
-    using fmt_red_integer       = pixel_format<uint8_t, uint8_t, 8>;
-    using fmt_rg                = pixel_format<uint8_t, uint8_t, 8, 8>;
-    using fmt_rg_integer        = pixel_format<uint8_t, uint8_t, 8, 8>;
-    using fmt_rgb               = pixel_format<uint8_t, uint32_t, 8, 8, 8>;
-    using fmt_rgb_integer       = pixel_format<uint8_t, uint32_t, 8, 8, 8>;
-    using fmt_rgba              = pixel_format<uint8_t, uint8_t, 8, 8, 8, 8>;
-    using fmt_rgba_integer      = pixel_format<uint8_t, uint8_t, 8, 8, 8, 8>;
-    using fmt_bgr               = pixel_format<uint8_t, uint32_t, 8, 8, 8>;
-    using fmt_bgr_integer       = pixel_format<uint8_t, uint32_t, 8, 8, 8>;
-    using fmt_bgra              = pixel_format<uint8_t, uint8_t, 8, 8, 8, 8>;
-    using fmt_bgra_integer      = pixel_format<uint8_t, uint8_t, 8, 8, 8, 8>;
+    using fmt_red               = pixel_format<AMGL_RED, uint8_t, uint8_t, 8>;
+    using fmt_red_integer       = pixel_format<AMGL_RED_INTEGER, uint8_t, uint8_t, 8>;
+    using fmt_rg                = pixel_format<AMGL_RG, uint8_t, uint8_t, 8, 8>;
+    using fmt_rg_integer        = pixel_format<AMGL_RG_INTEGER, uint8_t, uint8_t, 8, 8>;
+    using fmt_rgb               = pixel_format<AMGL_RGB, uint8_t, uint32_t, 8, 8, 8>;
+    using fmt_rgb_integer       = pixel_format<AMGL_RGB_INTEGER, uint8_t, uint32_t, 8, 8, 8>;
+    using fmt_rgba              = pixel_format<AMGL_RGBA, uint8_t, uint8_t, 8, 8, 8, 8>;
+    using fmt_rgba_integer      = pixel_format<AMGL_RGBA_INTEGER, uint8_t, uint8_t, 8, 8, 8, 8>;
+    using fmt_bgr               = pixel_format<AMGL_BGR, uint8_t, uint32_t, 8, 8, 8>;
+    using fmt_bgr_integer       = pixel_format<AMGL_BGR_INTEGER, uint8_t, uint32_t, 8, 8, 8>;
+    using fmt_bgra              = pixel_format<AMGL_BGRA, uint8_t, uint8_t, 8, 8, 8, 8>;
+    using fmt_bgra_integer      = pixel_format<AMGL_BGRA_INTEGER, uint8_t, uint8_t, 8, 8, 8, 8>;
 
-    using fmt_stencil_index     = pixel_format<uint8_t, uint8_t, 8>;
+    using fmt_stencil_index     = pixel_format<AMGL_STENCIL_INDEX, uint8_t, uint8_t, 8>;
  
-    using fmt_depth_component   = pixel_format<uint8_t, uint8_t, 8>;
-    using fmt_depth_component16 = pixel_format<uint16_t, uint16_t, 16>;
-    using fmt_depth_component24 = pixel_format<uint32_t, uint32_t, 24>;
-    using fmt_depth_component32 = pixel_format<uint32_t, uint32_t, 32>;
+    using fmt_depth_component   = pixel_format<AMGL_DEPTH_COMPONENT, uint8_t, uint8_t, 8>;
+    using fmt_depth_component16 = pixel_format<AMGL_DEPTH_COMPONENT16, uint16_t, uint16_t, 16>;
+    using fmt_depth_component24 = pixel_format<AMGL_DEPTH_COMPONENT24, uint32_t, uint32_t, 24>;
+    using fmt_depth_component32 = pixel_format<AMGL_DEPTH_COMPONENT32, uint32_t, uint32_t, 32>;
  
-    using fmt_depth_stencil     = pixel_format<uint8_t, uint8_t, 8, 8>;
+    using fmt_depth_stencil     = pixel_format<AMGL_DEPTH_STENCIL, uint8_t, uint8_t, 8, 8>;
 
-    using fmt_srgb              = fmt_rgb;
-    using fmt_srgb_alpha        = fmt_rgba;
+    using fmt_srgb              = pixel_format<AMGL_SRGB, uint8_t, uint32_t, 8, 8, 8>;
+    using fmt_srgb_alpha        = pixel_format<AMGL_SRGB_ALPHA, uint8_t, uint8_t, 8, 8, 8, 8>;
 
-    using fmt_r3_g3_b2          = pixel_format<uint8_t, uint8_t, 3, 3, 2>;
+    using fmt_r3_g3_b2          = pixel_format<AMGL_R3_G3_B2, uint8_t, uint8_t, 3, 3, 2>;
  
-    using fmt_r8                = pixel_format<uint8_t, uint8_t, 8>;
-    using fmt_r8_snorm          = pixel_format<int8_t, uint8_t, 8>;
-    using fmt_r16               = pixel_format<uint16_t, uint16_t, 16>;
-    using fmt_r16_snorm         = pixel_format<int16_t, uint16_t, 16>;
-    using fmt_rg8               = pixel_format<uint8_t, uint8_t, 8, 8>;
-    using fmt_rg8_snorm         = pixel_format<int8_t, uint8_t, 8, 8>;
-    using fmt_rg16              = pixel_format<uint16_t, uint16_t, 16, 16>;
-    using fmt_rg16_snorm        = pixel_format<int16_t, uint16_t, 16, 16>;
-    using fmt_rgb8              = pixel_format<uint8_t, uint32_t, 8, 8, 8>;
-    using fmt_rgb8_snorm        = pixel_format<int8_t, uint32_t, 8, 8, 8>;
-    using fmt_rgb10             = pixel_format<uint16_t, uint32_t, 10, 10, 10>;
-    using fmt_rgb16             = pixel_format<uint16_t, uint32_t, 16, 16, 16>;
-    using fmt_rgb16_snorm       = pixel_format<int16_t, uint32_t, 16, 16, 16>;
-    using fmt_rgba2             = pixel_format<uint8_t, uint8_t, 2, 2, 2, 2>;
-    using fmt_rgba4             = pixel_format<uint8_t, uint8_t, 4, 4, 4, 4>;
-    using fmt_rgb5_a1           = pixel_format<uint8_t, uint16_t, 5, 5, 5, 1>;
-    using fmt_rgba8             = pixel_format<uint8_t, uint16_t, 8, 8, 8, 8>;
-    using fmt_rgba8_snorm       = pixel_format<int8_t, uint8_t, 8, 8, 8, 8>;
-    using fmt_rgb10_a2          = pixel_format<uint16_t, uint32_t, 10, 10, 10, 2>;
-    using fmt_rgb10_a2ui        = fmt_rgb10_a2;
-    using fmt_rgba12            = pixel_format<uint16_t, uint64_t, 12, 12, 12, 12>;
-    using fmt_rgba16            = pixel_format<uint16_t, uint16_t, 16, 16, 16, 16>;
-    using fmt_srgb8             = pixel_format<uint8_t, uint32_t, 8, 8, 8>;
-    using fmt_srgb8_alpha8      = pixel_format<uint8_t, uint8_t, 8, 8, 8, 8>;
+    using fmt_r8                = pixel_format<AMGL_R8, uint8_t, uint8_t, 8>;
+    using fmt_r8_snorm          = pixel_format<AMGL_R8_SNORM, int8_t, int8_t, 8>;
+    using fmt_r16               = pixel_format<AMGL_R16, uint16_t, uint16_t, 16>;
+    using fmt_r16_snorm         = pixel_format<AMGL_R16_SNORM, int16_t, int16_t, 16>;
+    using fmt_rg8               = pixel_format<AMGL_RG8, uint8_t, uint8_t, 8, 8>;
+    using fmt_rg8_snorm         = pixel_format<AMGL_RG8_SNORM, int8_t, int8_t, 8, 8>;
+    using fmt_rg16              = pixel_format<AMGL_RG16, uint16_t, uint16_t, 16, 16>;
+    using fmt_rg16_snorm        = pixel_format<AMGL_RG16_SNORM, int16_t, int16_t, 16, 16>;
+    using fmt_rgb8              = pixel_format<AMGL_RGB8, uint8_t, uint32_t, 8, 8, 8>;
+    using fmt_rgb8_snorm        = pixel_format<AMGL_RGB8_SNORM, int8_t, int32_t, 8, 8, 8>;
+    using fmt_rgb10             = pixel_format<AMGL_RGB10, uint16_t, uint32_t, 10, 10, 10>;
+    using fmt_rgb16             = pixel_format<AMGL_RGB16, uint16_t, uint32_t, 16, 16, 16>;
+    using fmt_rgb16_snorm       = pixel_format<AMGL_RGB16_SNORM, int16_t, int32_t, 16, 16, 16>;
+    using fmt_rgba2             = pixel_format<AMGL_RGBA2, uint8_t, uint8_t, 2, 2, 2, 2>;
+    using fmt_rgba4             = pixel_format<AMGL_RGBA4, uint8_t, uint8_t, 4, 4, 4, 4>;
+    using fmt_rgb5_a1           = pixel_format<AMGL_RGB5_A1, uint8_t, uint16_t, 5, 5, 5, 1>;
+    using fmt_rgba8             = pixel_format<AMGL_RGBA8, uint8_t, uint8_t, 8, 8, 8, 8>;
+    using fmt_rgba8_snorm       = pixel_format<AMGL_RGBA8_SNORM, int8_t, int8_t, 8, 8, 8, 8>;
+    using fmt_rgb10_a2          = pixel_format<AMGL_RGB10_A2, uint16_t, uint32_t, 10, 10, 10, 2>;
+    using fmt_rgb10_a2ui        = pixel_format<AMGL_RGB10_A2UI, uint16_t, uint32_t, 10, 10, 10, 2>;
+    using fmt_rgba12            = pixel_format<AMGL_RGBA12, uint16_t, uint64_t, 12, 12, 12, 12>;
+    using fmt_rgba16            = pixel_format<AMGL_RGBA16, uint16_t, uint16_t, 16, 16, 16, 16>;
+    using fmt_srgb8             = pixel_format<AMGL_SRGB8, uint8_t, uint32_t, 8, 8, 8>;
+    using fmt_srgb8_alpha8      = pixel_format<AMGL_SRGB8_ALPHA8, uint8_t, uint8_t, 8, 8, 8, 8>;
 
-    using fmt_r16f              = pixel_format<half_float::half, uint16_t, 16>;
-    using fmt_rg16f             = pixel_format<half_float::half, uint16_t, 16, 16>;
-    using fmt_rgb16f            = pixel_format<half_float::half, uint32_t, 16, 16, 16>;
-    using fmt_rgba16f           = pixel_format<half_float::half, uint16_t, 16, 16, 16, 16>;
-    using fmt_r32f              = pixel_format<float, uint32_t, 32>;
-    using fmt_rg32f             = pixel_format<float, uint32_t, 32, 32>;
-    using fmt_rgb32f            = pixel_format<float, uint64_t, 32, 32, 32>;
-    using fmt_rgba32f           = pixel_format<float, uint32_t, 32, 32, 32, 32>;
-    using fmt_r11f_g11f_b10f    = pixel_format<float, uint32_t, 11, 11, 10>;
-    using fmt_r8i               = pixel_format<int8_t, uint8_t, 8>;
-    using fmt_r8ui              = pixel_format<uint8_t, uint8_t, 8>;
-    using fmt_r16i              = pixel_format<int16_t, uint16_t, 16>;
-    using fmt_r16ui             = pixel_format<uint16_t, uint16_t, 16>;
-    using fmt_r32i              = pixel_format<int32_t, uint32_t, 32>;
-    using fmt_r32ui             = pixel_format<uint32_t, uint32_t, 32>;
-    using fmt_rg8i              = pixel_format<int8_t, uint8_t, 8, 8>;
-    using fmt_rg8ui             = pixel_format<uint8_t, uint8_t, 8, 8>;
-    using fmt_rg16i             = pixel_format<int16_t, uint16_t, 16, 16>;
-    using fmt_rg16ui            = pixel_format<uint16_t, uint16_t, 16, 16>;
-    using fmt_rg32i             = pixel_format<int32_t, uint32_t, 32, 32>;
-    using fmt_rg32ui            = pixel_format<uint32_t, uint32_t, 32, 32>;
-    using fmt_rgb8i             = pixel_format<int8_t, uint32_t, 8, 8, 8>;
-    using fmt_rgb8ui            = pixel_format<uint8_t, uint32_t, 8, 8, 8>;
-    using fmt_rgb16i            = pixel_format<int16_t, uint32_t, 16, 16, 16>;
-    using fmt_rgb16ui           = pixel_format<uint16_t, uint32_t, 16, 16, 16>;
-    using fmt_rgb32i            = pixel_format<int32_t, uint64_t, 32, 32, 32>;
-    using fmt_rgb32ui           = pixel_format<uint32_t, uint64_t, 32, 32, 32>;
-    using fmt_rgba8i            = pixel_format<int8_t, uint8_t, 8, 8, 8, 8>;
-    using fmt_rgba8ui           = pixel_format<uint8_t, uint8_t, 8, 8, 8, 8>;
-    using fmt_rgba16i           = pixel_format<int16_t, uint16_t, 16, 16, 16, 16>;
-    using fmt_rgba16ui          = pixel_format<uint16_t, uint16_t, 16, 16, 16, 16>;
-    using fmt_rgba32i           = pixel_format<int32_t, uint32_t, 32, 32, 32, 32>;
-    using fmt_rgba32ui          = pixel_format<uint32_t, uint32_t, 32, 32, 32, 32>;
+    using fmt_r16f              = pixel_format<AMGL_R16F, half_float::half, int16_t, 16>;
+    using fmt_rg16f             = pixel_format<AMGL_RG16F, half_float::half, int16_t, 16, 16>;
+    using fmt_rgb16f            = pixel_format<AMGL_RGB16F, half_float::half, int32_t, 16, 16, 16>;
+    using fmt_rgba16f           = pixel_format<AMGL_RGBA16F, half_float::half, int16_t, 16, 16, 16, 16>;
+    using fmt_r32f              = pixel_format<AMGL_R32F, float, int32_t, 32>;
+    using fmt_rg32f             = pixel_format<AMGL_RG32F, float, int32_t, 32, 32>;
+    using fmt_rgb32f            = pixel_format<AMGL_RGB32F, float, int64_t, 32, 32, 32>;
+    using fmt_rgba32f           = pixel_format<AMGL_RGBA32F, float, int32_t, 32, 32, 32, 32>;
+    using fmt_r11f_g11f_b10f    = pixel_format<AMGL_R11F_G11F_B10F, float, int32_t, 11, 11, 10>;
+    using fmt_r8i               = pixel_format<AMGL_R8I, int8_t, int8_t, 8>;
+    using fmt_r8ui              = pixel_format<AMGL_R8UI, uint8_t, uint8_t, 8>;
+    using fmt_r16i              = pixel_format<AMGL_R16I, int16_t, int16_t, 16>;
+    using fmt_r16ui             = pixel_format<AMGL_R16UI, uint16_t, uint16_t, 16>;
+    using fmt_r32i              = pixel_format<AMGL_R32I, int32_t, int32_t, 32>;
+    using fmt_r32ui             = pixel_format<AMGL_R32UI, uint32_t, uint32_t, 32>;
+    using fmt_rg8i              = pixel_format<AMGL_RG8I, int8_t, int8_t, 8, 8>;
+    using fmt_rg8ui             = pixel_format<AMGL_RG8UI, uint8_t, uint8_t, 8, 8>;
+    using fmt_rg16i             = pixel_format<AMGL_RG16I, int16_t, int16_t, 16, 16>;
+    using fmt_rg16ui            = pixel_format<AMGL_RG16UI, uint16_t, uint16_t, 16, 16>;
+    using fmt_rg32i             = pixel_format<AMGL_RG32I, int32_t, int32_t, 32, 32>;
+    using fmt_rg32ui            = pixel_format<AMGL_RG32UI, uint32_t, uint32_t, 32, 32>;
+    using fmt_rgb8i             = pixel_format<AMGL_RGB8I, int8_t, int32_t, 8, 8, 8>;
+    using fmt_rgb8ui            = pixel_format<AMGL_RGB8UI, uint8_t, uint32_t, 8, 8, 8>;
+    using fmt_rgb16i            = pixel_format<AMGL_RGB16I, int16_t, int32_t, 16, 16, 16>;
+    using fmt_rgb16ui           = pixel_format<AMGL_RGB16UI, uint16_t, uint32_t, 16, 16, 16>;
+    using fmt_rgb32i            = pixel_format<AMGL_RGB32I, int32_t, int64_t, 32, 32, 32>;
+    using fmt_rgb32ui           = pixel_format<AMGL_RGB32UI, uint32_t, uint64_t, 32, 32, 32>;
+    using fmt_rgba8i            = pixel_format<AMGL_RGBA8I, int8_t, int8_t, 8, 8, 8, 8>;
+    using fmt_rgba8ui           = pixel_format<AMGL_RGBA8UI, uint8_t, uint8_t, 8, 8, 8, 8>;
+    using fmt_rgba16i           = pixel_format<AMGL_RGBA16I, int16_t, int16_t, 16, 16, 16, 16>;
+    using fmt_rgba16ui          = pixel_format<AMGL_RGBA16UI, uint16_t, uint16_t, 16, 16, 16, 16>;
+    using fmt_rgba32i           = pixel_format<AMGL_RGBA32I, int32_t, int32_t, 32, 32, 32, 32>;
+    using fmt_rgba32ui          = pixel_format<AMGL_RGBA32UI, uint32_t, uint32_t, 32, 32, 32, 32>;
     
     /*------------------- Input Formats -------------------*/
-    using in_fmt_r_ubyte    = pixel_format<uint8_t, uint8_t, 8>;
-    using in_fmt_r_byte     = pixel_format<int8_t, uint8_t, 8>;
-    using in_fmt_r_ushort   = pixel_format<uint16_t, uint16_t, 16>;
-    using in_fmt_r_short    = pixel_format<int16_t, uint16_t, 16>;
-    using in_fmt_r_uint     = pixel_format<uint32_t, uint32_t, 32>;
-    using in_fmt_r_int      = pixel_format<int32_t, uint32_t, 32>;
-    using in_fmt_r_float    = pixel_format<float, uint32_t, 32>;
+    using in_fmt_r_ubyte    = fmt_r8ui;
+    using in_fmt_r_byte     = fmt_r8i;
+    using in_fmt_r_ushort   = fmt_r16ui;
+    using in_fmt_r_short    = fmt_r16i;
+    using in_fmt_r_uint     = fmt_r32ui;
+    using in_fmt_r_int      = fmt_r32i;
+    using in_fmt_r_float    = fmt_r32f;
     
-    using in_fmt_rg_ubyte    = pixel_format<uint8_t, uint8_t, 8, 8>;
-    using in_fmt_rg_byte     = pixel_format<int8_t, uint8_t, 8, 8>;
-    using in_fmt_rg_ushort   = pixel_format<uint16_t, uint16_t, 16, 16>;
-    using in_fmt_rg_short    = pixel_format<int16_t, uint16_t, 16, 16>;
-    using in_fmt_rg_uint     = pixel_format<uint32_t, uint32_t, 32, 32>;
-    using in_fmt_rg_int      = pixel_format<int32_t, uint32_t, 32, 32>;
-    using in_fmt_rg_float    = pixel_format<float, uint32_t, 32, 32>;
+    using in_fmt_rg_ubyte    = fmt_rg8ui;
+    using in_fmt_rg_byte     = fmt_rg8i;
+    using in_fmt_rg_ushort   = fmt_rg16ui;
+    using in_fmt_rg_short    = fmt_rg16i;
+    using in_fmt_rg_uint     = fmt_rg32ui;
+    using in_fmt_rg_int      = fmt_rg32i;
+    using in_fmt_rg_float    = fmt_rg32f;
 
-    using in_fmt_rgb_ubyte    = pixel_format<uint8_t, uint8_t, 8, 8, 8>;
-    using in_fmt_rgb_byte     = pixel_format<int8_t, uint8_t, 8, 8, 8>;
-    using in_fmt_rgb_ushort   = pixel_format<uint16_t, uint16_t, 16, 16, 16>;
-    using in_fmt_rgb_short    = pixel_format<int16_t, uint16_t, 16, 16, 16>;
-    using in_fmt_rgb_uint     = pixel_format<uint32_t, uint32_t, 32, 32, 32>;
-    using in_fmt_rgb_int      = pixel_format<int32_t, uint32_t, 32, 32, 32>;
-    using in_fmt_rgb_float    = pixel_format<float, uint32_t, 32, 32, 32>;
+    using in_fmt_rgb_ubyte    = pixel_format<AMGL_RGB8UI, uint8_t, uint8_t, 8, 8, 8>;
+    using in_fmt_rgb_byte     = pixel_format<AMGL_RGB8I, int8_t, int8_t, 8, 8, 8>;
+    using in_fmt_rgb_ushort   = pixel_format<AMGL_RGB16UI, uint16_t, uint16_t, 16, 16, 16>;
+    using in_fmt_rgb_short    = pixel_format<AMGL_RGB16I, int16_t, int16_t, 16, 16, 16>;
+    using in_fmt_rgb_uint     = pixel_format<AMGL_RGB32UI, uint32_t, uint32_t, 32, 32, 32>;
+    using in_fmt_rgb_int      = pixel_format<AMGL_RGB32I, int32_t, int32_t, 32, 32, 32>;
+    using in_fmt_rgb_float    = pixel_format<AMGL_RGB32F, float, int32_t, 32, 32, 32>;
 
-    using in_fmt_rgba_ubyte    = pixel_format<uint8_t, uint8_t, 8, 8, 8, 8>;
-    using in_fmt_rgba_byte     = pixel_format<int8_t, uint8_t, 8, 8, 8, 8>;
-    using in_fmt_rgba_ushort   = pixel_format<uint16_t, uint16_t, 16, 16, 16, 16>;
-    using in_fmt_rgba_short    = pixel_format<int16_t, uint16_t, 16, 16, 16, 16>;
-    using in_fmt_rgba_uint     = pixel_format<uint32_t, uint32_t, 32, 32, 32, 32>;
-    using in_fmt_rgba_int      = pixel_format<int32_t, uint32_t, 32, 32, 32, 32>;
-    using in_fmt_rgba_float    = pixel_format<float, uint32_t, 32, 32, 32, 32>;
+    using in_fmt_rgba_ubyte    = fmt_rgba8ui;
+    using in_fmt_rgba_byte     = fmt_rgba8i;
+    using in_fmt_rgba_ushort   = fmt_rgba16ui;
+    using in_fmt_rgba_short    = fmt_rgba16i;
+    using in_fmt_rgba_uint     = fmt_rgba32ui;
+    using in_fmt_rgba_int      = fmt_rgba32i;
+    using in_fmt_rgba_float    = fmt_rgba32f;
+
+
+    template <typename fmt>
+    struct fmt_min_max_default
+    {
+        AM_STATIC_ASSERT_MSG(sizeof(fmt) < 0, "Invalid fmt type");
+    };
+
+    #define _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt, min_val, max_val, default_val)  \
+        template <>                                                                 \
+        struct fmt_min_max_default<fmt> {                                           \
+            static inline const fmt min = min_val;                                  \
+            static inline const fmt max = max_val;                                  \
+            static inline const fmt def = default_val;                              \
+        }
+
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_red,               fmt_red(0),                 fmt_red(UINT8_MAX),                 fmt_red(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_red_integer,       fmt_red_integer(0),         fmt_red_integer(UINT8_MAX),         fmt_red_integer(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg,                fmt_rg(0),                  fmt_rg(UINT8_MAX),                  fmt_rg(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg_integer,        fmt_rg_integer(0),          fmt_rg_integer(UINT8_MAX),          fmt_rg_integer(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb,               fmt_rgb(0),                 fmt_rgb(UINT8_MAX),                 fmt_rgb(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb_integer,       fmt_rgb_integer(0),         fmt_rgb_integer(UINT8_MAX),         fmt_rgb_integer(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba,              fmt_rgba(0),                fmt_rgba(UINT8_MAX),                fmt_rgba(0, 0, 0, UINT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba_integer,      fmt_rgba_integer(0),        fmt_rgba_integer(UINT8_MAX),        fmt_rgba_integer(0, 0, 0, UINT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_bgr,               fmt_bgr(0),                 fmt_bgr(UINT8_MAX),                 fmt_bgr(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_bgr_integer,       fmt_bgr_integer(0),         fmt_bgr_integer(UINT8_MAX),         fmt_bgr_integer(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_bgra,              fmt_bgra(0),                fmt_bgra(UINT8_MAX),                fmt_bgra(0, 0, 0, UINT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_bgra_integer,      fmt_bgra_integer(0),        fmt_bgra_integer(UINT8_MAX),        fmt_bgra_integer(0, 0, 0, UINT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_stencil_index,     fmt_stencil_index(0),       fmt_stencil_index(UINT8_MAX),       fmt_stencil_index(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_depth_component,   fmt_depth_component(0),     fmt_depth_component(UINT8_MAX),     fmt_depth_component(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_depth_component16, fmt_depth_component16(0),   fmt_depth_component16(UINT16_MAX),  fmt_depth_component16(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_depth_component24, fmt_depth_component24(0),   fmt_depth_component24(0xffffffu),   fmt_depth_component24(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_depth_component32, fmt_depth_component32(0),   fmt_depth_component32(UINT32_MAX),  fmt_depth_component32(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_depth_stencil,     fmt_depth_stencil(0),       fmt_depth_stencil(UINT8_MAX),       fmt_depth_stencil(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_srgb,              fmt_srgb(0),                fmt_srgb(UINT8_MAX),                fmt_srgb(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_srgb_alpha,        fmt_srgb_alpha(0),          fmt_srgb_alpha(UINT8_MAX),          fmt_srgb_alpha(0, 0, 0, UINT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r3_g3_b2,          fmt_r3_g3_b2(0),            fmt_r3_g3_b2(7, 7, 3),              fmt_r3_g3_b2(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r8,                fmt_r8(0),                  fmt_r8(UINT8_MAX),                  fmt_r8(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r8_snorm,          fmt_r8_snorm(INT8_MIN),     fmt_r8_snorm(INT8_MAX),             fmt_r8_snorm(INT8_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r16,               fmt_r16(0),                 fmt_r16(UINT16_MAX),                fmt_r16(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r16_snorm,         fmt_r16_snorm(INT16_MIN),   fmt_r16_snorm(INT16_MAX),           fmt_r16_snorm(INT16_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg8,               fmt_rg8(0),                 fmt_rg8(UINT8_MAX),                 fmt_rg8(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg8_snorm,         fmt_rg8_snorm(INT8_MIN),    fmt_rg8_snorm(INT8_MAX),            fmt_rg8_snorm(INT8_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg16,              fmt_rg16(0),                fmt_rg16(UINT16_MAX),               fmt_rg16(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg16_snorm,        fmt_rg16_snorm(INT16_MIN),  fmt_rg16_snorm(INT16_MAX),          fmt_rg16_snorm(INT16_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb8,              fmt_rgb8(0),                fmt_rgb8(UINT8_MAX),                fmt_rgb8(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb8_snorm,        fmt_rgb8_snorm(INT8_MIN),   fmt_rgb8_snorm(INT8_MAX),           fmt_rgb8_snorm(INT8_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb10,             fmt_rgb10(0),               fmt_rgb10(1023),                    fmt_rgb10(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb16,             fmt_rgb16(0),               fmt_rgb16(UINT16_MAX),              fmt_rgb16(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb16_snorm,       fmt_rgb16_snorm(INT16_MIN), fmt_rgb16_snorm(INT16_MAX),         fmt_rgb16_snorm(INT16_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba2,             fmt_rgba2(0),               fmt_rgba2(3),                       fmt_rgba2(0, 0, 0, 3));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba4,             fmt_rgba4(0),               fmt_rgba4(15),                      fmt_rgba4(0, 0, 0, 15));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb5_a1,           fmt_rgb5_a1(0),             fmt_rgb5_a1(31, 31, 31, 1),         fmt_rgb5_a1(0, 0, 0, 1));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba8,             fmt_rgba8(0),               fmt_rgba8(UINT8_MAX),               fmt_rgba8(0, 0, 0, UINT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba8_snorm,       fmt_rgba8_snorm(INT8_MIN),  fmt_rgba8_snorm(INT8_MAX),          fmt_rgba8_snorm(INT8_MIN, INT8_MIN, INT8_MIN, INT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb10_a2,          fmt_rgb10_a2(0),            fmt_rgb10_a2(1023, 1023, 1023, 3),  fmt_rgb10_a2(0, 0, 0, 3));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb10_a2ui,        fmt_rgb10_a2ui(0),          fmt_rgb10_a2ui(1023, 1023, 1023, 3), fmt_rgb10_a2ui(0, 0, 0, 3));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba12,            fmt_rgba12(0),              fmt_rgba12(4095),                   fmt_rgba12(0, 0, 0, 4095));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba16,            fmt_rgba16(0),              fmt_rgba16(UINT16_MAX),             fmt_rgba16(0, 0, 0, UINT16_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_srgb8,             fmt_srgb8(0),               fmt_srgb8(UINT8_MAX),               fmt_srgb8(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_srgb8_alpha8,      fmt_srgb8_alpha8(0),        fmt_srgb8_alpha8(UINT8_MAX),        fmt_srgb8_alpha8(0, 0, 0, UINT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r16f,              fmt_r16f(half_float::half(0.0f)),       fmt_r16f(half_float::half(1.0f)),       fmt_r16f(half_float::half(1.0f)));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg16f,             fmt_rg16f(half_float::half(0.0f)),      fmt_rg16f(half_float::half(1.0f)),      fmt_rg16f(half_float::half(0.0f)));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb16f,            fmt_rgb16f(half_float::half(0.0f)),     fmt_rgb16f(half_float::half(1.0f)),     fmt_rgb16f(half_float::half(0.0f)));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba16f,           fmt_rgba16f(half_float::half(0.0f)),    fmt_rgba16f(half_float::half(1.0f)),    fmt_rgba16f(half_float::half(0.0f), half_float::half(0.0f), half_float::half(0.0f), half_float::half(1.0f)));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r32f,              fmt_r32f(0.0f),             fmt_r32f(1.0f),                     fmt_r32f(0.0f));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg32f,             fmt_rg32f(0.0f),            fmt_rg32f(1.0f),                    fmt_rg32f(0.0f));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb32f,            fmt_rgb32f(0.0f),           fmt_rgb32f(1.0f),                   fmt_rgb32f(0.0f));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba32f,           fmt_rgba32f(0.0f),          fmt_rgba32f(1.0f),                  fmt_rgba32f(0.0f, 0.0f, 0.0f, 1.0f));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r11f_g11f_b10f,    fmt_r11f_g11f_b10f(0.0f),   fmt_r11f_g11f_b10f(1.0f),           fmt_r11f_g11f_b10f(0.0f));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r8i,               fmt_r8i(INT8_MIN),          fmt_r8i(INT8_MAX),                  fmt_r8i(INT8_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r8ui,              fmt_r8ui(0),                fmt_r8ui(UINT8_MAX),                fmt_r8ui(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r16i,              fmt_r16i(INT16_MIN),        fmt_r16i(INT16_MAX),                fmt_r16i(INT16_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r16ui,             fmt_r16ui(0),               fmt_r16ui(UINT16_MAX),              fmt_r16ui(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r32i,              fmt_r32i(INT32_MIN),        fmt_r32i(INT32_MAX),                fmt_r32i(INT32_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_r32ui,             fmt_r32ui(0),               fmt_r32ui(UINT32_MAX),              fmt_r32ui(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg8i,              fmt_rg8i(INT8_MIN),         fmt_rg8i(INT8_MAX),                 fmt_rg8i(INT8_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg8ui,             fmt_rg8ui(0),               fmt_rg8ui(UINT8_MAX),               fmt_rg8ui(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg16i,             fmt_rg16i(INT16_MIN),       fmt_rg16i(INT16_MAX),               fmt_rg16i(INT16_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg16ui,            fmt_rg16ui(0),              fmt_rg16ui(UINT16_MAX),             fmt_rg16ui(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg32i,             fmt_rg32i(INT32_MIN),       fmt_rg32i(INT32_MAX),               fmt_rg32i(INT32_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rg32ui,            fmt_rg32ui(0),              fmt_rg32ui(UINT32_MAX),             fmt_rg32ui(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb8i,             fmt_rgb8i(INT8_MIN),        fmt_rgb8i(INT8_MAX),                fmt_rgb8i(INT8_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb8ui,            fmt_rgb8ui(0),              fmt_rgb8ui(UINT8_MAX),              fmt_rgb8ui(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb16i,            fmt_rgb16i(INT16_MIN),      fmt_rgb16i(INT16_MAX),              fmt_rgb16i(INT16_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb16ui,           fmt_rgb16ui(0),             fmt_rgb16ui(UINT16_MAX),            fmt_rgb16ui(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb32i,            fmt_rgb32i(INT32_MIN),      fmt_rgb32i(INT32_MAX),              fmt_rgb32i(INT32_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgb32ui,           fmt_rgb32ui(0),             fmt_rgb32ui(UINT32_MAX),            fmt_rgb32ui(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba8i,            fmt_rgba8i(INT8_MIN),       fmt_rgba8i(INT8_MAX),               fmt_rgba8i(INT8_MIN, INT8_MIN, INT8_MIN, INT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba8ui,           fmt_rgba8ui(0),             fmt_rgba8ui(UINT8_MAX),             fmt_rgba8ui(0, 0, 0, UINT8_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba16i,           fmt_rgba16i(INT16_MIN),     fmt_rgba16i(INT16_MAX),             fmt_rgba16i(INT16_MIN, INT16_MIN, INT16_MIN, INT16_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba16ui,          fmt_rgba16ui(0),            fmt_rgba16ui(UINT16_MAX),           fmt_rgba16ui(0, 0, 0, UINT16_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba32i,           fmt_rgba32i(INT32_MIN),     fmt_rgba32i(INT32_MAX),             fmt_rgba32i(INT32_MIN, INT32_MIN, INT32_MIN, INT32_MAX));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(fmt_rgba32ui,          fmt_rgba32ui(0),            fmt_rgba32ui(UINT32_MAX),           fmt_rgba32ui(0, 0, 0, UINT32_MAX));
+    
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(in_fmt_rgb_ubyte,      in_fmt_rgb_ubyte(0),        in_fmt_rgb_ubyte(UINT8_MAX),        in_fmt_rgb_ubyte(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(in_fmt_rgb_byte,       in_fmt_rgb_byte(INT8_MIN),  in_fmt_rgb_byte(INT8_MAX),          in_fmt_rgb_byte(INT8_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(in_fmt_rgb_ushort,     in_fmt_rgb_ushort(0),       in_fmt_rgb_ushort(UINT16_MAX),      in_fmt_rgb_ushort(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(in_fmt_rgb_short,      in_fmt_rgb_short(INT16_MIN),in_fmt_rgb_short(INT16_MAX),        in_fmt_rgb_short(INT16_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(in_fmt_rgb_uint,       in_fmt_rgb_uint(0),         in_fmt_rgb_uint(UINT32_MAX),        in_fmt_rgb_uint(0));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(in_fmt_rgb_int,        in_fmt_rgb_int(INT32_MIN),  in_fmt_rgb_int(INT32_MAX),          in_fmt_rgb_int(INT32_MIN));
+    _DECLARE_FMT_MIN_MAX_DEFAULT_VALUE(in_fmt_rgb_float,      in_fmt_rgb_float(0.0f),     in_fmt_rgb_float(1.0f),             in_fmt_rgb_float(0.0f));
+
 
     template <enum_t format, enum_t type>
     struct fmt_from_enum
