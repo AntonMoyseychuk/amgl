@@ -8,7 +8,7 @@
 namespace amgl
 {
     class buffer_mng
-    {
+    {    
     public:
         static buffer_mng& instance() noexcept
         {
@@ -29,6 +29,10 @@ namespace amgl
         /// @note Doesn't check buffer validity
         inline size_t get_buffer_size(uint32_t buffer) const noexcept { return m_buffers.m_memory_blocks[CONV_USER_TO_KERNEL_SPACE(buffer)].size(); }
 
+        /// @brief 
+        /// @param buffer Buffer object in the user range [1, UINT32_MAX]
+        /// @note Doesn't check buffer validity
+        inline const void* get_buffer(uint32_t buffer) const noexcept { return m_buffers.m_memory_blocks[CONV_USER_TO_KERNEL_SPACE(buffer)].data(); }
 
         void gen_buffers(uint32_t n, uint32_t* buffers) noexcept;
         
