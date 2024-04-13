@@ -50,7 +50,7 @@ namespace amgl
     private:
         void resize(size_t size) noexcept;
 
-    private:
+    public:
         struct attributes
         {
             using enable_flags_storage = std::bitset<context::MAX_VERTEX_ATTRIB_BINDINGS>;
@@ -67,7 +67,6 @@ namespace amgl
             std::array<layout_desc, context::MAX_VERTEX_ATTRIB_BINDINGS> layout_descs;
         };
 
-    private:
         std::vector<attributes> m_attributes;
         std::vector<attributes::enable_flags_storage> m_attributes_enable_flags;
 

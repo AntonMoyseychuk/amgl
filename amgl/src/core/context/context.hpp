@@ -43,7 +43,6 @@ namespace amgl
 
         static constexpr size_t MAX_TEXTURE_SIZE                            = SIZE_MAX;
 
-    private:
         // struct depth_range_t
         // {
         //     float near  = 0.0f;
@@ -126,7 +125,6 @@ namespace amgl
             uint32_t proxy_texture_2d_multisample_array = AM_DEFAULT_KERNEL_ID;
         };
 
-    public:
         buffer_bindings buf_bindings;
         texture_bindings tex_bindings;
         

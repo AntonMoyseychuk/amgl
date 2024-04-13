@@ -197,7 +197,7 @@ namespace amgl
             m_vertex_arrays.set_attribute_desc(vao_kernel_id, index, size, type, normalized, stride, pointer);
         }
 
-    private:
+    public:
         buffers m_buffers;
         vertex_arrays m_vertex_arrays;
     };

@@ -87,7 +87,7 @@ namespace amgl
     private:
         context_mng() = default;
 
-    private:
+    public:
         context m_context;
     };
 }

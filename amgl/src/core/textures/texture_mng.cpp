@@ -93,6 +93,8 @@ namespace amgl
 
     static bool check_common_tex_params(enum_t internal_format, uint32_t border, enum_t format, enum_t type) noexcept
     {
+        using namespace detail;
+
         CHECK_TEXTURE_FORMAT_VALIDITY(format, AMGL_INVALID_ENUM, false);
         
         CHECK_TEXTURE_TYPE_VALIDITY(type, AMGL_INVALID_ENUM, false);
@@ -101,14 +103,14 @@ namespace amgl
         
         AM_SET_ERROR_FLAG_IF(border != 0, AMGL_INVALID_VALUE, gs_context_mng, false);
 
-        AM_SET_ERROR_FLAG_IF(detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(is_one_of(
             type, 
             AMGL_UNSIGNED_BYTE_3_3_2, 
             AMGL_UNSIGNED_BYTE_2_3_3_REV, 
             AMGL_UNSIGNED_SHORT_5_6_5, 
             AMGL_UNSIGNED_SHORT_5_6_5_REV) && format != AMGL_RGB, AMGL_INVALID_OPERATION, gs_context_mng, false);
 
-        AM_SET_ERROR_FLAG_IF(detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(is_one_of(
             type, 
             AMGL_UNSIGNED_SHORT_4_4_4_4_REV,
             AMGL_UNSIGNED_SHORT_1_5_5_5_REV,
@@ -117,16 +119,16 @@ namespace amgl
             AMGL_UNSIGNED_SHORT_4_4_4_4,
             AMGL_UNSIGNED_SHORT_5_5_5_1,
             AMGL_UNSIGNED_INT_8_8_8_8,
-            AMGL_UNSIGNED_INT_10_10_10_2) && !detail::is_one_of(format, AMGL_RGBA, AMGL_BGRA), AMGL_INVALID_OPERATION, gs_context_mng, false);
+            AMGL_UNSIGNED_INT_10_10_10_2) && !is_one_of(format, AMGL_RGBA, AMGL_BGRA), AMGL_INVALID_OPERATION, gs_context_mng, false);
 
-        AM_SET_ERROR_FLAG_IF(format == AMGL_DEPTH_COMPONENT && !detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(format == AMGL_DEPTH_COMPONENT && !is_one_of(
             internal_format, 
             AMGL_DEPTH_COMPONENT,
             AMGL_DEPTH_COMPONENT16,
             AMGL_DEPTH_COMPONENT24,
             AMGL_DEPTH_COMPONENT32), AMGL_INVALID_OPERATION , gs_context_mng, false);
 
-        AM_SET_ERROR_FLAG_IF(detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(is_one_of(
             internal_format, 
             AMGL_DEPTH_COMPONENT,
             AMGL_DEPTH_COMPONENT16,
@@ -176,6 +178,63 @@ namespace amgl
     }
 
     
+    void texture_mng::get_texture_sub_image(uint32_t texture, uint32_t level, size_t xoffset, size_t yoffset, size_t zoffset, 
+        size_t width, size_t height, size_t depth, enum_t format, enum_t type, size_t buf_size, void *pixels) noexcept
+    {
+        AM_NOT_IMPLEMENTED;
+        
+        // using namespace detail;
+        // static context& contxt = gs_context_mng.get_context();
+
+        // const uint32_t tex_kernel = CONV_USER_TO_KERNEL_SPACE(texture);
+        // AM_SET_ERROR_FLAG_IF(!is_one_of(
+        //     tex_kernel, 
+        //     contxt.tex_bindings.texture1d,
+        //     contxt.tex_bindings.texture1d_array,
+        //     contxt.tex_bindings.texture2d,
+        //     contxt.tex_bindings.texture2d_array,
+        //     contxt.tex_bindings.texture3d,
+        //     contxt.tex_bindings.texture_cubemap,
+        //     contxt.tex_bindings.texture_cubemap_array,
+        //     contxt.tex_bindings.texture_rect), AMGL_INVALID_VALUE, gs_context_mng);
+
+        // AM_SET_ERROR_FLAG_IF(is_one_of(
+        //     tex_kernel, 
+        //     contxt.tex_bindings.texture_2d_multisample,
+        //     contxt.tex_bindings.texture_2d_multisample_array,
+        //     contxt.tex_bindings.proxy_texture_2d_multisample,
+        //     contxt.tex_bindings.proxy_texture_2d_multisample_array,
+        //     contxt.buf_bindings.vbo,
+        //     contxt.buf_bindings.ebo,
+        //     contxt.buf_bindings.ubo,
+        //     contxt.buf_bindings.ssbo,
+        //     contxt.buf_bindings.tbo,
+        //     contxt.buf_bindings.crbo,
+        //     contxt.buf_bindings.cwbo,
+        //     contxt.buf_bindings.dibo,
+        //     contxt.buf_bindings.dribo,
+        //     contxt.buf_bindings.ppbo,
+        //     contxt.buf_bindings.pubo,
+        //     contxt.buf_bindings.qbo,
+        //     contxt.buf_bindings.tfbo,
+        //     contxt.buf_bindings.acbo), AMGL_INVALID_VALUE, gs_context_mng);
+
+        // AM_SET_ERROR_FLAG_IF(xoffset + width > m_images.m_widths[tex_kernel] || yoffset + height > m_images.m_heights[tex_kernel]
+        //     || zoffset + depth > m_images.m_depths[tex_kernel], AMGL_INVALID_VALUE, gs_context_mng);
+
+        // AM_SET_ERROR_FLAG_IF(tex_kernel == contxt.tex_bindings.texture1d && (yoffset != 0u || height != 1u), AMGL_INVALID_VALUE, gs_context_mng);
+        
+        // AM_SET_ERROR_FLAG_IF(is_one_of(
+        //     tex_kernel, 
+        //     contxt.tex_bindings.texture1d, 
+        //     contxt.tex_bindings.texture1d_array, 
+        //     contxt.tex_bindings.texture2d,
+        //     contxt.tex_bindings.texture_rect) && (zoffset != 0u || depth != 1u), AMGL_INVALID_VALUE, gs_context_mng);
+
+        // AM_SET_ERROR_FLAG_IF(m_images.m_memory_blocks[tex_kernel].size() > buf_size, AMGL_INVALID_OPERATION, gs_context_mng);
+    }
+
+    
     bool texture_mng::is_texture(uint32_t texture) noexcept
     {
         AM_RETURN_IF(AM_IS_DEFAULT_ID_USER_SPACE(texture), false);
@@ -187,11 +246,12 @@ namespace amgl
     void texture_mng::tex_image_1d(enum_t target, uint32_t level, enum_t internal_format, size_t width, 
         uint32_t border, enum_t format, enum_t type, const void *data) noexcept
     {
+        using namespace detail;
         static context& contxt = gs_context_mng.get_context();
 
         AM_RETURN_IF(!check_common_tex_params(internal_format, border, format, type));
 
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(target, AMGL_TEXTURE_1D, AMGL_PROXY_TEXTURE_1D), AMGL_INVALID_ENUM, gs_context_mng);
+        AM_SET_ERROR_FLAG_IF(!is_one_of(target, AMGL_TEXTURE_1D, AMGL_PROXY_TEXTURE_1D), AMGL_INVALID_ENUM, gs_context_mng);
 
         const uint32_t tex_kernel = gs_context_mng.get_binded_texture(target);
         const void* _data = data;
@@ -223,11 +283,12 @@ namespace amgl
     void texture_mng::tex_image_2d(enum_t target, uint32_t level, enum_t internal_format, size_t width, size_t height, 
         uint32_t border, enum_t format, enum_t type, const void *data) noexcept
     {
+        using namespace detail;
         static context& contxt = gs_context_mng.get_context();
 
         AM_RETURN_IF(!check_common_tex_params(internal_format, border, format, type));
 
-        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(!is_one_of(
             target, 
             AMGL_TEXTURE_2D, 
             AMGL_PROXY_TEXTURE_2D, 
@@ -243,7 +304,7 @@ namespace amgl
             AMGL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
             AMGL_PROXY_TEXTURE_CUBE_MAP), AMGL_INVALID_ENUM, gs_context_mng);
 
-        AM_SET_ERROR_FLAG_IF(detail::is_one_of(
+        AM_SET_ERROR_FLAG_IF(is_one_of(
             target, 
             AMGL_TEXTURE_CUBE_MAP_POSITIVE_X, 
             AMGL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
@@ -253,11 +314,11 @@ namespace amgl
             AMGL_TEXTURE_CUBE_MAP_NEGATIVE_Z) && width != height, AMGL_INVALID_ENUM, gs_context_mng);
 
         AM_SET_ERROR_FLAG_IF(
-            !detail::is_one_of(target, AMGL_TEXTURE_2D, AMGL_PROXY_TEXTURE_2D, AMGL_TEXTURE_RECTANGLE, AMGL_PROXY_TEXTURE_RECTANGLE) 
-                && detail::is_one_of(internal_format, AMGL_DEPTH_COMPONENT, AMGL_DEPTH_COMPONENT16, AMGL_DEPTH_COMPONENT24, AMGL_DEPTH_COMPONENT32), 
+            !is_one_of(target, AMGL_TEXTURE_2D, AMGL_PROXY_TEXTURE_2D, AMGL_TEXTURE_RECTANGLE, AMGL_PROXY_TEXTURE_RECTANGLE) 
+                && is_one_of(internal_format, AMGL_DEPTH_COMPONENT, AMGL_DEPTH_COMPONENT16, AMGL_DEPTH_COMPONENT24, AMGL_DEPTH_COMPONENT32), 
                 AMGL_INVALID_OPERATION , gs_context_mng);
 
-        AM_SET_ERROR_FLAG_IF(detail::is_one_of(target, AMGL_TEXTURE_RECTANGLE, AMGL_PROXY_TEXTURE_RECTANGLE) 
+        AM_SET_ERROR_FLAG_IF(is_one_of(target, AMGL_TEXTURE_RECTANGLE, AMGL_PROXY_TEXTURE_RECTANGLE) 
             && level != 0, AMGL_INVALID_OPERATION , gs_context_mng);
 
         const uint32_t tex_kernel = gs_context_mng.get_binded_texture(target);

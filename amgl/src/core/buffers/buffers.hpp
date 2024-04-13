@@ -67,7 +67,7 @@ namespace amgl
     private:
         void resize(size_t size) noexcept;
 
-    private:
+    public:
         std::vector<memory_block> m_memory_blocks;
         std::vector<bool> m_map_states;
         
