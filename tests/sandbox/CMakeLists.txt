@@ -25,9 +25,11 @@ set(SDL2_PATH ${CMAKE_CURRENT_LIST_DIR}/thirdparty/SDL2/2.28.5)
 
 find_package(SDL2 REQUIRED)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIR} PUBLIC ${PROJECT_SOURCE_DIR}/thirdparty)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARY})
 target_link_libraries(${PROJECT_NAME} PUBLIC amgl)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE SANDBOX_ASSET_DIR="${PROJECT_SOURCE_DIR}/assets/")
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_if_different

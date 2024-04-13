@@ -1,11 +1,22 @@
-#include "SDL.h"
+#include "window/window.hpp"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
+
 #include "amgl/amgl.hpp"
 
 #include "benchmark.hpp"
 
+#include <filesystem>
 #include <algorithm>
 #include <numeric>
 #include <stdio.h>
+
+#if !defined(NDEBUG) || defined(_DEBUG) || defined(DEBUG)
+    static const char* build_type = "debug";
+#else
+    static const char* build_type = "release";
+#endif
 
 struct vec2
 {
@@ -54,9 +65,17 @@ uint32_t ebo_data[] = {
     0, 2, 1, 0, 3, 2
 };
 
-float ssbo_data[1024u];
+static float ssbo_data[1024u];
 
-uint16_t texture_data[360 * 144 * 4];
+struct texture_t
+{
+    uint8_t* data;
+    uint32_t width;
+    uint32_t height;
+    uint32_t channels;
+};
+
+static texture_t tex_obj;
 
 
 void test() noexcept
@@ -103,9 +122,9 @@ void test() noexcept
 
     uint32_t texture;
     amglGenTextures(1, &texture);
-    amglBindTexture(AMGL_TEXTURE_1D, texture);
-    amglTexImage1D(AMGL_TEXTURE_1D, 0, AMGL_RGBA8UI, sizeof(texture_data) / (4 * sizeof(texture_data[0])), 0, AMGL_RGBA, AMGL_UNSIGNED_SHORT, texture_data);
-    amglBindTexture(AMGL_TEXTURE_1D, 0);
+    amglBindTexture(AMGL_TEXTURE_2D, texture);
+    amglTexImage2D(AMGL_TEXTURE_2D, 0, AMGL_RGBA8UI, tex_obj.width, tex_obj.height, 0, AMGL_RGB, AMGL_UNSIGNED_BYTE, tex_obj.data);
+    amglBindTexture(AMGL_TEXTURE_2D, 0);
 
     const bool is_texture = amglIsTexture(texture);
 
@@ -119,16 +138,17 @@ void test() noexcept
 
 int main(int argc, char* argv[]) 
 {
+    // constexpr size_t test_count = 10'000u;
+    constexpr size_t test_count = 1u;
+    
     std::iota(std::begin(ssbo_data), std::end(ssbo_data), 0.0f);
-    std::iota(std::begin(texture_data), std::end(texture_data), 0);
 
-    constexpr size_t test_count = 10'000u;
-
-    #if !defined(NDEBUG) || defined(_DEBUG) || defined(DEBUG)
-        const char* build_type = "debug";
-    #else
-        const char* build_type = "release";
-    #endif
+    const char* texture_data_path = SANDBOX_ASSET_DIR "textures/debug_texture.jpg";
+    tex_obj.data = stbi_load(texture_data_path, (int*)&tex_obj.width, (int*)&tex_obj.height, (int*)&tex_obj.channels, 0);
+    if (tex_obj.data == nullptr) {
+        printf_s("Failed to load texture: %s\n", texture_data_path);
+        return -1;
+    }
 
     puts("Benchmarking...\n");
     const float average_time = benchmark(test_count, test);
@@ -136,31 +156,29 @@ int main(int argc, char* argv[])
         "Total test count: %u\n"
         "Average time (%s): %f ms\n", test_count, build_type, average_time);
 
-    // if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-    //     puts(SDL_GetError());
-    //     return -1;
-    // }
-    //
-    // SDL_Window* window = SDL_CreateWindow("AMGL Sandbox", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
-    // if (window == nullptr) {
-    //     puts(SDL_GetError());
-    //     return -1;
-    // }
-    //
-    // bool running = true;
-    // while (running) {
-    //     SDL_Event event;
-    //     while (SDL_PollEvent(&event)) {
-    //         switch (event.type)  {
-    //         case SDL_QUIT:
-    //             running = false;
-    //             break;
-    //         }
-    //     }
-    // }
-    //
-    // SDL_DestroyWindow(window);
-    // SDL_Quit();
+    win_framewrk::Window* window = win_framewrk::Window::Get();
+    window->Init("Sandbox", tex_obj.width, tex_obj.height);
+
+    const size_t width = std::min(tex_obj.width, window->GetWidth());
+    const size_t height = std::min(tex_obj.width, window->GetHeight());
+
+    const uint8_t* data = tex_obj.data;
+
+    while (window->IsOpen()) {
+        window->PollEvent();
+
+        for (size_t y = 0; y < height; ++y) {
+            for (size_t x = 0; x < width; ++x) {
+                const uint8_t* pixel = data + (y * tex_obj.width + x) * 3u;
+                window->SetPixelColor(x, y, *(pixel + 0), *(pixel + 1), *(pixel + 2), 255);
+            }
+        }
+
+        window->PresentPixelBuffer();
+        window->FillPixelBuffer(255, 255, 255, 255);
+    }
+
+    stbi_image_free(tex_obj.data);
 
     return 0;
 }

@@ -35,15 +35,23 @@ namespace amgl
                 std::fill_n(_dst, pixel_count, internal_def);
             }
 
-            for (size_t pixel = 0; pixel < pixel_count; ++pixel) {
-                for (size_t component = 0; component < components; ++component) {
-                    const IN_T in_min = external_min.get(component);
-                    const IN_T in_max = external_max.get(component);
-                    const OUT_T out_min = internal_min.get(component);
-                    const OUT_T out_max = internal_max.get(component);
+            if (std::is_same_v<IN_T, OUT_T>) {
+                for (size_t pixel = 0; pixel < pixel_count; ++pixel) {
+                    for (size_t component = 0; component < components; ++component) {
+                        (_dst + pixel)->set(component, (_src + pixel)->get(component));
+                    } 
+                }
+            } else {
+                for (size_t pixel = 0; pixel < pixel_count; ++pixel) {
+                    for (size_t component = 0; component < components; ++component) {
+                        const IN_T in_min = external_min.get(component);
+                        const IN_T in_max = external_max.get(component);
+                        const OUT_T out_min = internal_min.get(component);
+                        const OUT_T out_max = internal_max.get(component);
 
-                    (_dst + pixel)->set(component, map<IN_T, OUT_T>(out_min, out_max, in_min, in_max, (_src + pixel)->get(component)));
-                } 
+                        (_dst + pixel)->set(component, map<IN_T, OUT_T>(out_min, out_max, in_min, in_max, (_src + pixel)->get(component)));
+                    } 
+                }
             }
         }
 
@@ -82,6 +90,7 @@ namespace amgl
         {
             switch(type) {
                 case AMGL_BYTE:             return (void*)(convert_integer<internal_fmt, fmt_from_enum_t<format, AMGL_BYTE>>);
+                case AMGL_UNSIGNED_BYTE:    return (void*)(convert_integer<internal_fmt, fmt_from_enum_t<format, AMGL_UNSIGNED_BYTE>>);
                 case AMGL_SHORT:            return (void*)(convert_integer<internal_fmt, fmt_from_enum_t<format, AMGL_SHORT>>);
                 case AMGL_UNSIGNED_SHORT:   return (void*)(convert_integer<internal_fmt, fmt_from_enum_t<format, AMGL_UNSIGNED_SHORT>>);
                 case AMGL_INT:              return (void*)(convert_integer<internal_fmt, fmt_from_enum_t<format, AMGL_INT>>);
