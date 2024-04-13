@@ -182,7 +182,7 @@ namespace amgl
         size_t width, size_t height, size_t depth, enum_t format, enum_t type, size_t buf_size, void *pixels) noexcept
     {
         AM_NOT_IMPLEMENTED;
-        
+
         // using namespace detail;
         // static context& contxt = gs_context_mng.get_context();
 

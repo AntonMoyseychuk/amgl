@@ -320,7 +320,7 @@ namespace amgl
         AM_SET_ERROR_FLAG_IF(index >= context::MAX_VERTEX_ATTRIB_BINDINGS, AMGL_INVALID_VALUE, gs_context_mng);
 
         AM_ASSERT(kernel_id < m_vertex_arrays.m_attributes.size());
-        m_vertex_arrays.m_attributes_enable_flags[kernel_id].set(index, enabled);
+        m_vertex_arrays.set_attribute_state(kernel_id, index, enabled);
     }
 
     

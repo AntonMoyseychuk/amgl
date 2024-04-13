@@ -47,6 +47,25 @@ namespace amgl
         void set_attribute_desc(uint32_t vertex_array, uint32_t index, size_t size, enum_t type, 
             bool normalized, size_t stride, const void* pointer) noexcept;
 
+        /// @brief 
+        /// @param vertex_array Vertex array object in the kernel range [0, UINT32_MAX - 1]
+        /// @param index Attribute index
+        /// @param enable Enable or disable attribute
+        /// @note Doesn't check 'vertex_array' or 'index' validity
+        void set_attribute_state(uint32_t vertex_array, size_t index, bool enable) noexcept
+        {
+            m_attributes_enable_flags[vertex_array].set(index, enable);
+        }
+        
+        /// @brief 
+        /// @param vertex_array Vertex array object in the kernel range [0, UINT32_MAX - 1]
+        /// @param index Attribute index
+        /// @note Doesn't check 'vertex_array' or 'index' validity
+        bool is_attribute_enabled(uint32_t vertex_array, size_t index) const noexcept
+        {
+            return m_attributes_enable_flags[vertex_array].test(index);
+        }
+
     private:
         void resize(size_t size) noexcept;
 

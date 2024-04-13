@@ -52,12 +52,6 @@ namespace amgl
     }
 
     
-    size_t images::get_pixel_count(uint32_t id) const noexcept
-    {
-        return m_widths[id] * m_heights[id] * m_depths[id];
-    }
-
-    
     void images::resize(size_t size) noexcept
     {
         m_memory_blocks.resize(size);
