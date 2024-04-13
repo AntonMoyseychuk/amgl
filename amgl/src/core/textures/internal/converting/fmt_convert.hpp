@@ -6,14 +6,14 @@ namespace amgl
     namespace detail
     {
         template <typename fmt>
-        static void fmt_bit_copy(void* dst, const void* src, size_t pixel_count) noexcept
+        inline void fmt_bit_copy(void* dst, const void* src, size_t pixel_count) noexcept
         {
             const size_t size = pixel_count * sizeof(fmt);
             memcpy_s(dst, size, src, size);
         }
 
         template <typename internal_fmt, typename external_fmt>
-        static void convert_integer(void* dst, const void* src, size_t pixel_count) noexcept
+        inline void convert_integer(void* dst, const void* src, size_t pixel_count) noexcept
         {
             using namespace detail;
             using IN_T = typename external_fmt::implicit_type;
@@ -48,7 +48,7 @@ namespace amgl
         }
 
         template <typename internal_fmt, typename external_fmt>
-        static void convert_real(void* dst, const void* src, size_t pixel_count) noexcept
+        inline void convert_real(void* dst, const void* src, size_t pixel_count) noexcept
         {
             using namespace detail;
 
@@ -78,7 +78,7 @@ namespace amgl
 
 
         template <typename internal_fmt, enum_t format>
-        void* get_format_convert_function(enum_t type) noexcept
+        inline void* get_format_convert_function(enum_t type) noexcept
         {
             switch(type) {
                 case AMGL_BYTE:             return (void*)(convert_integer<internal_fmt, fmt_from_enum_t<format, AMGL_BYTE>>);

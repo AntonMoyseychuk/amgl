@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
     std::iota(std::begin(ssbo_data), std::end(ssbo_data), 0.0f);
     std::iota(std::begin(texture_data), std::end(texture_data), 0);
 
-    constexpr size_t test_count = 1'000'000u;
+    constexpr size_t test_count = 10'000u;
 
     #if !defined(NDEBUG) || defined(_DEBUG) || defined(DEBUG)
         const char* build_type = "debug";

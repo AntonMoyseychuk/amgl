@@ -7,7 +7,7 @@
 
 namespace amgl
 {
-    class textures
+    class images
     {
         friend class texture_mng;
 
@@ -15,32 +15,32 @@ namespace amgl
         using memory_block = std::vector<uint8_t>;
 
     public:
-        textures() = default;
-        textures(size_t size);
+        images() = default;
+        images(size_t size);
 
         /// @brief 
-        /// @return Texture object in the kernel range [0, UINT32_MAX - 1]
-        uint32_t create_texture() noexcept;
+        /// @return Image object in the kernel range [0, UINT32_MAX - 1]
+        uint32_t create_image() noexcept;
 
         /// @brief 
-        /// @param id Texture object in the kernel range [0, UINT32_MAX - 1]
-        void free_texture(uint32_t id) noexcept;
+        /// @param id Image object in the kernel range [0, UINT32_MAX - 1]
+        void free_image(uint32_t id) noexcept;
         
         /// @brief 
-        /// @param id Texture object in the kernel range [0, UINT32_MAX - 1]
-        bool is_texture_exist(uint32_t id) const noexcept;
+        /// @param id Image object in the kernel range [0, UINT32_MAX - 1]
+        bool is_image_exist(uint32_t id) const noexcept;
 
-        /// @param id Texture object in the kernel range [0, UINT32_MAX - 1]
-        /// @param target Texture object target
-        /// @param width Texture width
-        /// @param height Texture height
-        /// @param depth Texture depth
-        /// @param internal_format Texture object internal format
+        /// @param id Image object in the kernel range [0, UINT32_MAX - 1]
+        /// @param target Image object target
+        /// @param width Image width
+        /// @param height Image height
+        /// @param depth Image depth
+        /// @param internal_format Image object internal format
         /// @param format input data format
         /// @note Doesn't check params validity
         void set(uint32_t id, enum_t target, uint32_t width, uint32_t height, uint32_t depth, enum_t internal_format, enum_t format) noexcept;
 
-        /// @param id Texture object in the kernel range [0, UINT32_MAX - 1]
+        /// @param id Image object in the kernel range [0, UINT32_MAX - 1]
         size_t get_pixel_count(uint32_t id) const noexcept;
 
 
@@ -54,10 +54,10 @@ namespace amgl
         std::vector<uint32_t> m_depths;
         std::vector<enum_t> m_internal_formats;
         
-        // Needed for determine if we want to get texture data as integers
+        // Needed for determine if we want to get image data as integers
         std::vector<enum_t> m_formats;
         
-        // Textures cannot be attached to another target if they have already been attached before. 
+        // Images cannot be attached to another target if they have already been attached before. 
         // Therefore, we need to keep their original targets
         std::vector<enum_t> m_targets;
 
