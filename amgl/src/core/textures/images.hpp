@@ -19,6 +19,7 @@ namespace amgl
         void set(uint32_t image, uint32_t width, uint32_t height, uint32_t depth) noexcept;
 
         void free_all() noexcept;
+        void shrink_to_fit() noexcept;
 
         /// @brief 
         /// @note Doesn't check 'image' validity

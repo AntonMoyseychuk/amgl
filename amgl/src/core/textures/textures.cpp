@@ -35,8 +35,8 @@ namespace amgl
     {
         m_images.resize(size);
     }
-    
-    
+
+
     textures::textures(size_t size)
     {
         resize(size);
@@ -58,7 +58,8 @@ namespace amgl
     
     void textures::free_texture(uint32_t texture) noexcept
     {
-        m_LOD_roots.at(texture).m_images.free_all();
+        m_LOD_roots.at(texture).m_images.resize(1);
+        m_LOD_roots.at(texture).m_images.shrink_to_fit();
         m_tex_descs.set(texture, AMGL_NONE, AMGL_NONE, false);
 
         m_id_pool.free_id(texture);
