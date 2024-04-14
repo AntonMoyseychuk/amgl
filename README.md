@@ -217,7 +217,7 @@
 - [ ] *amglActiveTexture*
 - [ ] *amglBindImageTexture*
 - [ ] *amglBindImageTextures*
-- [ ] *amglBindTexture*
+- [x] *amglBindTexture*
 - [ ] *amglBindTextures*
 - [ ] *amglClearTexImage*
 - [ ] *amglClearTexSubImage*
@@ -258,7 +258,7 @@
 - [ ] *amglGetTextureSubImage*
 - [ ] *amglInvalidateTexImage*
 - [ ] *amglInvalidateTexSubImage*
-- [ ] *amglIsTexture*
+- [x] *amglIsTexture*
 - [ ] amglTexBuffer
   - [ ] *amglTexBuffer*
   - [ ] *amglTextureBuffer*

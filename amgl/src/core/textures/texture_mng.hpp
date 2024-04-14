@@ -58,6 +58,7 @@ namespace amgl
         const void* get_pubo_for_unpack(uint32_t texture, enum_t internal_format, enum_t format, enum_t type, size_t pixels_count) noexcept;
 
     public:
+        image_descs m_image_descs;
         images m_images;
     };
 }

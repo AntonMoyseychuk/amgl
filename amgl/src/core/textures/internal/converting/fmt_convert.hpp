@@ -23,16 +23,9 @@ namespace amgl
 
             internal_fmt* _dst = static_cast<internal_fmt*>(dst);
             const external_fmt* _src = static_cast<const external_fmt*>(src);
-
-            const internal_fmt& internal_min = fmt_min_max_default<internal_fmt>::min;
-            const internal_fmt& internal_max = fmt_min_max_default<internal_fmt>::max;
-            const internal_fmt& internal_def = fmt_min_max_default<internal_fmt>::def;
-
-            const external_fmt& external_min = fmt_min_max_default<external_fmt>::min;
-            const external_fmt& external_max = fmt_min_max_default<external_fmt>::max;
             
             if (internal_fmt::COMPONENTS_COUNT != external_fmt::COMPONENTS_COUNT) {
-                std::fill_n(_dst, pixel_count, internal_def);
+                std::fill_n(_dst, pixel_count, fmt_min_max_default<internal_fmt>::def);
             }
 
             if (std::is_same_v<IN_T, OUT_T>) {
@@ -42,6 +35,12 @@ namespace amgl
                     } 
                 }
             } else {
+                const internal_fmt& internal_min = fmt_min_max_default<internal_fmt>::min;
+                const internal_fmt& internal_max = fmt_min_max_default<internal_fmt>::max;
+
+                const external_fmt& external_min = fmt_min_max_default<external_fmt>::min;
+                const external_fmt& external_max = fmt_min_max_default<external_fmt>::max;
+
                 for (size_t pixel = 0; pixel < pixel_count; ++pixel) {
                     for (size_t component = 0; component < components; ++component) {
                         const IN_T in_min = external_min.get(component);
