@@ -42,3 +42,8 @@ void amglTexImage2D(enum_t target, uint32_t level, enum_t internal_format, size_
 {
     gs_texture_mng.tex_image_2d(target, level, internal_format, width, height, border, format, type, data);
 }
+
+const void* dbgGetTexData(uint32_t texture, uint32_t level) noexcept
+{
+    return gs_texture_mng.m_textures.m_LOD_roots[texture - 1].m_images.m_memory_blocks[level].data();
+}

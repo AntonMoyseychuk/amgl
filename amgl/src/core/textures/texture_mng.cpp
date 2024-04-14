@@ -75,13 +75,13 @@ namespace amgl
     // Doesn't check 'target' validity
     #define CHECK_TARGET_COMPATIBILITY(target, texture, error_flag, ...)                                                    \
     {                                                                                                                       \
-        const enum_t curr_target = m_texture_descs.m_targets[texture];                                                        \
+        const enum_t curr_target = m_textures.m_tex_descs.m_targets[texture];                                                        \
         AM_SET_ERROR_FLAG_IF(curr_target != AMGL_NONE && curr_target != target, error_flag, gs_context_mng, __VA_ARGS__);   \
     }
 
     // Takes 'texture' in the kernel range [0, UINT32_MAX - 1]
     #define CHECK_TEXTURE_VALIDITY(texture, error_flag, ...) \
-        AM_SET_ERROR_FLAG_IF(!m_images.is_image_exist(texture), error_flag, gs_context_mng, __VA_ARGS__)
+        AM_SET_ERROR_FLAG_IF(!m_textures.is_texture_exist(texture), error_flag, gs_context_mng, __VA_ARGS__)
 
     // Takes 'texture' in the kernel range [0, UINT32_MAX - 1]
     #define CHECK_TEXTURE_NOT_DEFAULT(texture, error_flag, ...) \
@@ -147,7 +147,7 @@ namespace amgl
         AM_RETURN_IF(!textures);
 
         for (uint32_t i = 0u; i < n; ++i) {
-            textures[i] = CONV_KERNEL_TO_USER_SPACE(m_images.create_image());
+            textures[i] = CONV_KERNEL_TO_USER_SPACE(m_textures.create_texture());
         }
     }
 
@@ -158,9 +158,9 @@ namespace amgl
 
         for (uint32_t i = 0u; i < n; ++i) {
             const uint32_t kernel_id = CONV_USER_TO_KERNEL_SPACE(textures[i]);
-            AM_CONTINUE_IF(AM_IS_DEFAULT_ID_KERNEL_SPACE(kernel_id) || !m_images.is_image_exist(kernel_id));
+            AM_CONTINUE_IF(AM_IS_DEFAULT_ID_KERNEL_SPACE(kernel_id) || !m_textures.is_texture_exist(kernel_id));
             
-            m_images.free_image(kernel_id);
+            m_textures.free_texture(kernel_id);
         }
     }
 
@@ -174,7 +174,7 @@ namespace amgl
 
         if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(kernel_tex_id)) {
             CHECK_TARGET_COMPATIBILITY(target, kernel_tex_id, AMGL_INVALID_OPERATION);
-            m_texture_descs.m_targets[kernel_tex_id] = target;
+            m_textures.set_target(kernel_tex_id, target);
         }
 
         gs_context_mng.bind_target_texture(target, kernel_tex_id);
@@ -185,7 +185,7 @@ namespace amgl
     {
         AM_RETURN_IF(AM_IS_DEFAULT_ID_USER_SPACE(texture), false);
 
-        return m_images.is_image_exist(CONV_USER_TO_KERNEL_SPACE(texture));
+        return m_textures.is_texture_exist(CONV_USER_TO_KERNEL_SPACE(texture));
     }
 
     
@@ -200,15 +200,21 @@ namespace amgl
         AM_SET_ERROR_FLAG_IF(!is_one_of(target, AMGL_TEXTURE_1D, AMGL_PROXY_TEXTURE_1D), AMGL_INVALID_ENUM, gs_context_mng);
 
         const uint32_t tex_kernel = gs_context_mng.get_binded_texture(target);
-        const void* pubo_data = get_pubo_for_unpack(tex_kernel, internal_format, format, type, width);
+
+        LOD_root& lod_root = m_textures.get_LOD_root(tex_kernel);
+        if (level >= lod_root.get_lods_count()) {
+            return;
+        }
+
+        const void* pubo_data = get_pubo_for_unpack(tex_kernel, level, internal_format, format, type, width);
 
         const void* _data = pubo_data ? pubo_data : data;
 
         if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel)) {
-            m_texture_descs.set(tex_kernel, target, internal_format, IS_INTEGER_FORMAT(format));
-            m_images.set(tex_kernel, width, 1u, 1u);
+            m_textures.set_desc(tex_kernel, target, internal_format, IS_INTEGER_FORMAT(format));
+            lod_root.m_images.set(level, width, 1u, 1u);
 
-            reallocate_tex_memory(tex_kernel, internal_format, format, type, width, _data); 
+            reallocate_tex_memory(tex_kernel, level, internal_format, format, type, width, _data); 
         }
     }
 
@@ -255,15 +261,21 @@ namespace amgl
             && level != 0, AMGL_INVALID_OPERATION , gs_context_mng);
 
         const uint32_t tex_kernel = gs_context_mng.get_binded_texture(target);
-        const void* pubo_data = get_pubo_for_unpack(tex_kernel, internal_format, format, type, width * height);
+
+        LOD_root& lod_root = m_textures.get_LOD_root(tex_kernel);
+        if (level >= lod_root.get_lods_count()) {
+            return;
+        }
+
+        const void* pubo_data = get_pubo_for_unpack(tex_kernel, level, internal_format, format, type, width * height);
 
         const void* _data = pubo_data ? pubo_data : data;
 
         if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel)) {
-            m_texture_descs.set(tex_kernel, target, internal_format, IS_INTEGER_FORMAT(format));
-            m_images.set(tex_kernel, width, height, 1u);
+            m_textures.set_desc(tex_kernel, target, internal_format, IS_INTEGER_FORMAT(format));
+            lod_root.m_images.set(level, width, height, 1u);
 
-            reallocate_tex_memory(tex_kernel, internal_format, format, type, width * height, _data); 
+            reallocate_tex_memory(tex_kernel, level, internal_format, format, type, width * height, _data); 
         }
     }
 
@@ -275,11 +287,11 @@ namespace amgl
 
 
     void texture_mng::reallocate_tex_memory(
-        uint32_t texture, enum_t internal_format, enum_t format, enum_t type, size_t pixel_count, const void *data)
+        uint32_t texture, uint32_t level, enum_t internal_format, enum_t format, enum_t type, size_t pixel_count, const void *data)
     {
         const size_t internal_pixel_size  = get_internal_fmt_pixel_size(internal_format);
 
-        images::memory_block& mem_block = m_images.m_memory_blocks[texture];
+        images::memory_block& mem_block = m_textures.get_LOD_root(texture).m_images.m_memory_blocks[level];
         mem_block.resize(pixel_count * internal_pixel_size);
         
         if (data) {
@@ -290,12 +302,11 @@ namespace amgl
 
     void texture_mng::resize(size_t size) noexcept
     {
-        m_texture_descs.resize(size);
-        m_images.resize(size);
+        m_textures.resize(size);
     }
     
     
-    const void *texture_mng::get_pubo_for_unpack(uint32_t texture, enum_t internal_format, enum_t format, enum_t type, size_t pixels_count) noexcept
+    const void *texture_mng::get_pubo_for_unpack(uint32_t texture, uint32_t level, enum_t internal_format, enum_t format, enum_t type, size_t pixels_count) noexcept
     {
         using namespace detail;
         static context& contxt = gs_context_mng.get_context();
@@ -306,8 +317,8 @@ namespace amgl
             
             const size_t pubo_size = gs_buffer_mng.get_buffer_size(binded_pubo_user_range);
 
-            reallocate_tex_memory(texture, internal_format, format, type, pixels_count, nullptr);
-            const size_t texture_buffer_size = m_images.m_memory_blocks[texture].size();
+            reallocate_tex_memory(texture, level, internal_format, format, type, pixels_count, nullptr);
+            const size_t texture_buffer_size = m_textures.get_LOD_root(texture).m_images.get_image_size(level);
             AM_SET_ERROR_FLAG_IF(pubo_size > texture_buffer_size, AMGL_INVALID_OPERATION, gs_context_mng, nullptr);
             
             const uint32_t type_size_in_bytes = get_type_size(type);

@@ -135,10 +135,11 @@ void test() noexcept
     amglDeleteVertexArrays(1, &vao);
 }
 
+extern const void* dbgGetTexData(uint32_t texture, uint32_t level) noexcept;
 
 int main(int argc, char* argv[]) 
 {
-    // constexpr size_t test_count = 10'000u;
+    // constexpr size_t test_count = 100'000u;
     constexpr size_t test_count = 1u;
     
     std::iota(std::begin(ssbo_data), std::end(ssbo_data), 0.0f);
@@ -156,27 +157,27 @@ int main(int argc, char* argv[])
         "Total test count: %u\n"
         "Average time (%s): %f ms\n", test_count, build_type, average_time);
 
-    win_framewrk::Window* window = win_framewrk::Window::Get();
-    window->Init("Sandbox", tex_obj.width, tex_obj.height);
-
-    const size_t width = std::min(tex_obj.width, window->GetWidth());
-    const size_t height = std::min(tex_obj.width, window->GetHeight());
-
-    const uint8_t* data = tex_obj.data;
-
-    while (window->IsOpen()) {
-        window->PollEvent();
-
-        for (size_t y = 0; y < height; ++y) {
-            for (size_t x = 0; x < width; ++x) {
-                const uint8_t* pixel = data + (y * tex_obj.width + x) * 3u;
-                window->SetPixelColor(x, y, *(pixel + 0), *(pixel + 1), *(pixel + 2), 255);
-            }
-        }
-
-        window->PresentPixelBuffer();
-        window->FillPixelBuffer(255, 255, 255, 255);
-    }
+    // win_framewrk::Window* window = win_framewrk::Window::Get();
+    // window->Init("Sandbox", tex_obj.width, tex_obj.height);
+    //
+    // const size_t width = std::min(tex_obj.width, window->GetWidth());
+    // const size_t height = std::min(tex_obj.width, window->GetHeight());
+    //
+    // const uint8_t* data = (const uint8_t*)dbgGetTexData(1, 0);
+    //
+    // while (window->IsOpen()) {
+    //     window->PollEvent();
+    //
+    //     for (size_t y = 0; y < height; ++y) {
+    //         for (size_t x = 0; x < width; ++x) {
+    //             const uint8_t* pixel = data + (y * tex_obj.width + x) * 4u;
+    //             window->SetPixelColor(x, y, *(pixel + 0), *(pixel + 1), *(pixel + 2), 255);
+    //         }
+    //     }
+    //
+    //     window->PresentPixelBuffer();
+    //     window->FillPixelBuffer(255, 255, 255, 255);
+    // }
 
     stbi_image_free(tex_obj.data);
 
