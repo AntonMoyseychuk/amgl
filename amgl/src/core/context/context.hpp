@@ -18,9 +18,8 @@ namespace amgl
     };
 
 
-    class context
+    struct context
     {
-    public:
         static constexpr size_t MAX_VERTEX_ATTRIB_BINDINGS                  = 16u;
         
         static constexpr size_t MAX_VERTEX_BUFFER_BINDINGS                  = 1u;

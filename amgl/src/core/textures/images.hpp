@@ -35,9 +35,9 @@ namespace amgl
         /// @param height Image height
         /// @param depth Image depth
         /// @param internal_format Image object internal format
-        /// @param format input data format
+        /// @param represent_as_int Interpret data as integer or float when sampling
         /// @note Doesn't check params validity
-        void set(uint32_t id, enum_t target, uint32_t width, uint32_t height, uint32_t depth, enum_t internal_format, enum_t format) noexcept;
+        void set(uint32_t id, enum_t target, uint32_t width, uint32_t height, uint32_t depth, enum_t internal_format, bool represent_as_int) noexcept;
 
 
     private:
@@ -50,12 +50,11 @@ namespace amgl
         std::vector<uint32_t> m_depths;
         std::vector<enum_t> m_internal_formats;
         
-        // Needed for determine if we want to get image data as integers
-        std::vector<enum_t> m_formats;
-        
         // Images cannot be attached to another target if they have already been attached before. 
         // Therefore, we need to keep their original targets
         std::vector<enum_t> m_targets;
+
+        std::vector<bool> m_are_integers;
 
         id_pool m_id_pool;
     };

@@ -24,13 +24,6 @@ void amglGenTextures(size_t n, uint32_t* textures)
 }
 
 
-void amglGetTextureSubImage(uint32_t texture, uint32_t level, size_t xoffset, size_t yoffset, size_t zoffset, 
-    size_t width, size_t height, size_t depth, enum_t format, enum_t type, size_t buf_size, void* pixels)
-{
-    gs_texture_mng.get_texture_sub_image(texture, level, xoffset, yoffset, zoffset, width, height, depth, format, type, buf_size, pixels);
-}
-
-
 bool amglIsTexture(uint32_t texture)
 {
     return gs_texture_mng.is_texture(texture);

@@ -41,13 +41,13 @@ namespace amgl
     }
 
     
-    void images::set(uint32_t id, enum_t target, uint32_t width, uint32_t height, uint32_t depth, enum_t internal_format, enum_t format) noexcept
+    void images::set(uint32_t id, enum_t target, uint32_t width, uint32_t height, uint32_t depth, enum_t internal_format, bool represent_as_int) noexcept
     {
         m_widths[id]           = width;
         m_heights[id]          = height;
         m_depths[id]           = depth;
         m_internal_formats[id] = internal_format;
-        m_formats[id]          = format;
+        m_are_integers[id]     = represent_as_int;
         m_targets[id]          = target;
     }
 
@@ -59,7 +59,7 @@ namespace amgl
         m_heights.resize(size, 0u);
         m_depths.resize(size, 0u);
         m_internal_formats.resize(size, AMGL_NONE);
-        m_formats.resize(size, AMGL_NONE);
         m_targets.resize(size, AMGL_NONE);
+        m_are_integers.resize(size, false);
     }
 }

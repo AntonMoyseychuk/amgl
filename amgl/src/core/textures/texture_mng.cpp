@@ -89,6 +89,9 @@ namespace amgl
 
     #define CHECK_TEXTURE_LOD_VALIDITY(level, max_level, error_flag, ...) \
         AM_SET_ERROR_FLAG_IF(level > max_level, error_flag, gs_context_mng, __VA_ARGS__)
+    
+    #define IS_INTEGER_FORMAT(format) \
+        detail::is_one_of(format, AMGL_RED_INTEGER, AMGL_RG_INTEGER, AMGL_RGB_INTEGER, AMGL_BGR_INTEGER, AMGL_RGBA_INTEGER, AMGL_BGRA_INTEGER)
 
 
     static bool check_common_tex_params(enum_t internal_format, uint32_t border, enum_t format, enum_t type) noexcept
@@ -178,63 +181,6 @@ namespace amgl
     }
 
     
-    void texture_mng::get_texture_sub_image(uint32_t texture, uint32_t level, size_t xoffset, size_t yoffset, size_t zoffset, 
-        size_t width, size_t height, size_t depth, enum_t format, enum_t type, size_t buf_size, void *pixels) noexcept
-    {
-        AM_NOT_IMPLEMENTED;
-
-        // using namespace detail;
-        // static context& contxt = gs_context_mng.get_context();
-
-        // const uint32_t tex_kernel = CONV_USER_TO_KERNEL_SPACE(texture);
-        // AM_SET_ERROR_FLAG_IF(!is_one_of(
-        //     tex_kernel, 
-        //     contxt.tex_bindings.texture1d,
-        //     contxt.tex_bindings.texture1d_array,
-        //     contxt.tex_bindings.texture2d,
-        //     contxt.tex_bindings.texture2d_array,
-        //     contxt.tex_bindings.texture3d,
-        //     contxt.tex_bindings.texture_cubemap,
-        //     contxt.tex_bindings.texture_cubemap_array,
-        //     contxt.tex_bindings.texture_rect), AMGL_INVALID_VALUE, gs_context_mng);
-
-        // AM_SET_ERROR_FLAG_IF(is_one_of(
-        //     tex_kernel, 
-        //     contxt.tex_bindings.texture_2d_multisample,
-        //     contxt.tex_bindings.texture_2d_multisample_array,
-        //     contxt.tex_bindings.proxy_texture_2d_multisample,
-        //     contxt.tex_bindings.proxy_texture_2d_multisample_array,
-        //     contxt.buf_bindings.vbo,
-        //     contxt.buf_bindings.ebo,
-        //     contxt.buf_bindings.ubo,
-        //     contxt.buf_bindings.ssbo,
-        //     contxt.buf_bindings.tbo,
-        //     contxt.buf_bindings.crbo,
-        //     contxt.buf_bindings.cwbo,
-        //     contxt.buf_bindings.dibo,
-        //     contxt.buf_bindings.dribo,
-        //     contxt.buf_bindings.ppbo,
-        //     contxt.buf_bindings.pubo,
-        //     contxt.buf_bindings.qbo,
-        //     contxt.buf_bindings.tfbo,
-        //     contxt.buf_bindings.acbo), AMGL_INVALID_VALUE, gs_context_mng);
-
-        // AM_SET_ERROR_FLAG_IF(xoffset + width > m_images.m_widths[tex_kernel] || yoffset + height > m_images.m_heights[tex_kernel]
-        //     || zoffset + depth > m_images.m_depths[tex_kernel], AMGL_INVALID_VALUE, gs_context_mng);
-
-        // AM_SET_ERROR_FLAG_IF(tex_kernel == contxt.tex_bindings.texture1d && (yoffset != 0u || height != 1u), AMGL_INVALID_VALUE, gs_context_mng);
-        
-        // AM_SET_ERROR_FLAG_IF(is_one_of(
-        //     tex_kernel, 
-        //     contxt.tex_bindings.texture1d, 
-        //     contxt.tex_bindings.texture1d_array, 
-        //     contxt.tex_bindings.texture2d,
-        //     contxt.tex_bindings.texture_rect) && (zoffset != 0u || depth != 1u), AMGL_INVALID_VALUE, gs_context_mng);
-
-        // AM_SET_ERROR_FLAG_IF(m_images.m_memory_blocks[tex_kernel].size() > buf_size, AMGL_INVALID_OPERATION, gs_context_mng);
-    }
-
-    
     bool texture_mng::is_texture(uint32_t texture) noexcept
     {
         AM_RETURN_IF(AM_IS_DEFAULT_ID_USER_SPACE(texture), false);
@@ -254,26 +200,12 @@ namespace amgl
         AM_SET_ERROR_FLAG_IF(!is_one_of(target, AMGL_TEXTURE_1D, AMGL_PROXY_TEXTURE_1D), AMGL_INVALID_ENUM, gs_context_mng);
 
         const uint32_t tex_kernel = gs_context_mng.get_binded_texture(target);
-        const void* _data = data;
+        const void* pubo_data = get_pubo_for_unpack(tex_kernel, internal_format, format, type, width);
 
-        const uint32_t binded_pubo_user_range = CONV_KERNEL_TO_USER_SPACE(contxt.buf_bindings.pubo[0].buffer);
-        if (!AM_IS_DEFAULT_ID_USER_SPACE(binded_pubo_user_range)) {
-            AM_SET_ERROR_FLAG_IF(gs_buffer_mng.is_buffer_mapped(binded_pubo_user_range), AMGL_INVALID_OPERATION , gs_context_mng);
-            
-            const size_t pubo_size = gs_buffer_mng.get_buffer_size(binded_pubo_user_range);
-
-            reallocate_tex_memory(tex_kernel, internal_format, format, type, width, nullptr);
-            const size_t texture_buffer_size = m_images.m_memory_blocks[tex_kernel].size();
-            AM_SET_ERROR_FLAG_IF(pubo_size > texture_buffer_size, AMGL_INVALID_OPERATION, gs_context_mng);
-            
-            const uint32_t type_size_in_bytes = get_type_size(type);
-            AM_SET_ERROR_FLAG_IF(pubo_size % type_size_in_bytes != 0, AMGL_INVALID_OPERATION, gs_context_mng);
-
-            _data = gs_buffer_mng.get_buffer(binded_pubo_user_range);
-        }
+        const void* _data = pubo_data ? pubo_data : data;
 
         if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel)) {
-            m_images.set(tex_kernel, target, width, 1u, 1u, internal_format, format);
+            m_images.set(tex_kernel, target, width, 1u, 1u, internal_format, IS_INTEGER_FORMAT(format));
 
             reallocate_tex_memory(tex_kernel, internal_format, format, type, width, _data); 
         }
@@ -322,26 +254,12 @@ namespace amgl
             && level != 0, AMGL_INVALID_OPERATION , gs_context_mng);
 
         const uint32_t tex_kernel = gs_context_mng.get_binded_texture(target);
-        const void* _data = data;
+        const void* pubo_data = get_pubo_for_unpack(tex_kernel, internal_format, format, type, width * height);
 
-        const uint32_t binded_pubo_user_range = CONV_KERNEL_TO_USER_SPACE(contxt.buf_bindings.pubo[0].buffer);
-        if (!AM_IS_DEFAULT_ID_USER_SPACE(binded_pubo_user_range)) {
-            AM_SET_ERROR_FLAG_IF(gs_buffer_mng.is_buffer_mapped(binded_pubo_user_range), AMGL_INVALID_OPERATION , gs_context_mng);
-            
-            const size_t pubo_size = gs_buffer_mng.get_buffer_size(binded_pubo_user_range);
-
-            reallocate_tex_memory(tex_kernel, internal_format, format, type, width * height, nullptr);
-            const size_t texture_buffer_size = m_images.m_memory_blocks[tex_kernel].size();
-            AM_SET_ERROR_FLAG_IF(pubo_size > texture_buffer_size, AMGL_INVALID_OPERATION, gs_context_mng);
-            
-            const uint32_t type_size_in_bytes = get_type_size(type);
-            AM_SET_ERROR_FLAG_IF(pubo_size % type_size_in_bytes != 0, AMGL_INVALID_OPERATION, gs_context_mng);
-
-            _data = gs_buffer_mng.get_buffer(binded_pubo_user_range);
-        }
+        const void* _data = pubo_data ? pubo_data : data;
 
         if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel)) {
-            m_images.set(tex_kernel, target, width, height, 1u, internal_format, format);
+            m_images.set(tex_kernel, target, width, height, 1u, internal_format, IS_INTEGER_FORMAT(format));
 
             reallocate_tex_memory(tex_kernel, internal_format, format, type, width * height, _data); 
         }
@@ -371,5 +289,30 @@ namespace amgl
     void texture_mng::resize(size_t size) noexcept
     {
         m_images.resize(size);
+    }
+    
+    
+    const void *texture_mng::get_pubo_for_unpack(uint32_t texture, enum_t internal_format, enum_t format, enum_t type, size_t pixels_count) noexcept
+    {
+        using namespace detail;
+        static context& contxt = gs_context_mng.get_context();
+
+        const uint32_t binded_pubo_user_range = CONV_KERNEL_TO_USER_SPACE(contxt.buf_bindings.pubo[0].buffer);
+        if (!AM_IS_DEFAULT_ID_USER_SPACE(binded_pubo_user_range)) {
+            AM_SET_ERROR_FLAG_IF(gs_buffer_mng.is_buffer_mapped(binded_pubo_user_range), AMGL_INVALID_OPERATION , gs_context_mng, nullptr);
+            
+            const size_t pubo_size = gs_buffer_mng.get_buffer_size(binded_pubo_user_range);
+
+            reallocate_tex_memory(texture, internal_format, format, type, pixels_count, nullptr);
+            const size_t texture_buffer_size = m_images.m_memory_blocks[texture].size();
+            AM_SET_ERROR_FLAG_IF(pubo_size > texture_buffer_size, AMGL_INVALID_OPERATION, gs_context_mng, nullptr);
+            
+            const uint32_t type_size_in_bytes = get_type_size(type);
+            AM_SET_ERROR_FLAG_IF(pubo_size % type_size_in_bytes != 0, AMGL_INVALID_OPERATION, gs_context_mng, nullptr);
+
+            return gs_buffer_mng.get_buffer(binded_pubo_user_range);
+        }
+
+        return nullptr;
     }
 }
