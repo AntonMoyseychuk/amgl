@@ -139,8 +139,7 @@ extern const void* dbgGetTexData(uint32_t texture, uint32_t level) noexcept;
 
 int main(int argc, char* argv[]) 
 {
-    // constexpr size_t test_count = 100'000u;
-    constexpr size_t test_count = 1u;
+    constexpr size_t test_count = 1'000'000u;
     
     std::iota(std::begin(ssbo_data), std::end(ssbo_data), 0.0f);
 
