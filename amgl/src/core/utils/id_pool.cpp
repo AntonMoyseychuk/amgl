@@ -46,4 +46,10 @@ namespace amgl
     {
         return m_max_provided_id == UINT32_MAX && m_freed_ids.empty();
     }
+    
+    
+    size_t id_pool::get_busy_count() const noexcept
+    {
+        return m_max_provided_id - m_freed_ids.size();
+    }
 }

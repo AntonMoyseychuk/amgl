@@ -7,12 +7,12 @@
 
 namespace amgl
 {
-    class image_descs
+    class texture_descs
     {
         friend class texture_mng;
     public:
-        image_descs() = default;
-        image_descs(size_t size);
+        texture_descs() = default;
+        texture_descs(size_t size);
 
         /// @param image Image object in the kernel range [0, UINT32_MAX - 1]
         /// @param target Image object target

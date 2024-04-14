@@ -18,6 +18,8 @@ namespace amgl
         bool is_busy(uint32_t id) const noexcept;
         bool is_full() const noexcept;
 
+        size_t get_busy_count() const noexcept;
+
     private:
         std::unordered_set<uint32_t> m_freed_ids;
         uint32_t m_max_provided_id = 0u;

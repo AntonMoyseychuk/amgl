@@ -55,10 +55,14 @@ namespace amgl
 
         void resize(size_t size) noexcept;
 
+        /// @brief Allocates texture memory that fits to PUBO
+        /// @param texture Texture object in the kernel range [0, UINT32_MAX - 1]
+        /// @return Pointer to Pixel Unpack Buffer Object if it binds or nullptr
+        /// @note Doesn't check params validity
         const void* get_pubo_for_unpack(uint32_t texture, enum_t internal_format, enum_t format, enum_t type, size_t pixels_count) noexcept;
 
     public:
-        image_descs m_image_descs;
+        texture_descs m_texture_descs;
         images m_images;
     };
 }

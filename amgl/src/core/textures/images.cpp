@@ -59,13 +59,13 @@ namespace amgl
     }
     
     
-    image_descs::image_descs(size_t size)
+    texture_descs::texture_descs(size_t size)
     {
         resize(size);
     }
     
     
-    void image_descs::set(uint32_t image, enum_t target, enum_t internal_format, bool interpret_as_integer) noexcept
+    void texture_descs::set(uint32_t image, enum_t target, enum_t internal_format, bool interpret_as_integer) noexcept
     {
         m_internal_formats[image] = internal_format;
         m_targets[image]          = target;
@@ -73,7 +73,7 @@ namespace amgl
     }
     
     
-    void image_descs::resize(size_t size) noexcept
+    void texture_descs::resize(size_t size) noexcept
     {
         m_internal_formats.resize(size, AMGL_NONE);
         m_targets.resize(size, AMGL_NONE);

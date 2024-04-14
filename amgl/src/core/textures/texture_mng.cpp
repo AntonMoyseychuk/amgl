@@ -75,7 +75,7 @@ namespace amgl
     // Doesn't check 'target' validity
     #define CHECK_TARGET_COMPATIBILITY(target, texture, error_flag, ...)                                                    \
     {                                                                                                                       \
-        const enum_t curr_target = m_image_descs.m_targets[texture];                                                        \
+        const enum_t curr_target = m_texture_descs.m_targets[texture];                                                        \
         AM_SET_ERROR_FLAG_IF(curr_target != AMGL_NONE && curr_target != target, error_flag, gs_context_mng, __VA_ARGS__);   \
     }
 
@@ -174,7 +174,7 @@ namespace amgl
 
         if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(kernel_tex_id)) {
             CHECK_TARGET_COMPATIBILITY(target, kernel_tex_id, AMGL_INVALID_OPERATION);
-            m_image_descs.m_targets[kernel_tex_id] = target;
+            m_texture_descs.m_targets[kernel_tex_id] = target;
         }
 
         gs_context_mng.bind_target_texture(target, kernel_tex_id);
@@ -205,7 +205,7 @@ namespace amgl
         const void* _data = pubo_data ? pubo_data : data;
 
         if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel)) {
-            m_image_descs.set(tex_kernel, target, internal_format, IS_INTEGER_FORMAT(format));
+            m_texture_descs.set(tex_kernel, target, internal_format, IS_INTEGER_FORMAT(format));
             m_images.set(tex_kernel, width, 1u, 1u);
 
             reallocate_tex_memory(tex_kernel, internal_format, format, type, width, _data); 
@@ -260,7 +260,7 @@ namespace amgl
         const void* _data = pubo_data ? pubo_data : data;
 
         if (!AM_IS_DEFAULT_ID_KERNEL_SPACE(tex_kernel)) {
-            m_image_descs.set(tex_kernel, target, internal_format, IS_INTEGER_FORMAT(format));
+            m_texture_descs.set(tex_kernel, target, internal_format, IS_INTEGER_FORMAT(format));
             m_images.set(tex_kernel, width, height, 1u);
 
             reallocate_tex_memory(tex_kernel, internal_format, format, type, width * height, _data); 
@@ -290,7 +290,7 @@ namespace amgl
 
     void texture_mng::resize(size_t size) noexcept
     {
-        m_image_descs.resize(size);
+        m_texture_descs.resize(size);
         m_images.resize(size);
     }
     
