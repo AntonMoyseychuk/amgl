@@ -17,7 +17,7 @@ namespace amgl
         m_depths[image]  = depth;
     }
 
-    
+
     void images::free_all() noexcept
     {
         m_memory_blocks.resize(0u);

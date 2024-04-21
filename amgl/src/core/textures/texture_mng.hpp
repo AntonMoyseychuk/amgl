@@ -39,6 +39,10 @@ namespace amgl
         void tex_image_2d(enum_t target, uint32_t level, enum_t internal_format, size_t width, size_t height, uint32_t border, 
             enum_t format, enum_t type, const void* data) noexcept;
         
+        void generate_mipmap(enum_t target) noexcept;
+        /// @brief 
+        /// @param texture Texture object in the user range [1, UINT32_MAX]
+        void generate_texture_mipmap(uint32_t texture) noexcept;
 
     private:
         texture_mng() = default;

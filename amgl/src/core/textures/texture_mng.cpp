@@ -280,6 +280,88 @@ namespace amgl
     }
 
     
+    void texture_mng::generate_mipmap(enum_t target) noexcept
+    {
+        AM_SET_ERROR_FLAG_IF(!detail::is_one_of(
+            target, 
+            AMGL_TEXTURE_1D, 
+            AMGL_TEXTURE_2D, 
+            AMGL_TEXTURE_3D, 
+            AMGL_TEXTURE_1D_ARRAY, 
+            AMGL_TEXTURE_2D_ARRAY, 
+            AMGL_TEXTURE_CUBE_MAP, 
+            AMGL_TEXTURE_CUBE_MAP_ARRAY), AMGL_INVALID_ENUM, gs_context_mng);
+        
+        // AM_SET_ERROR_FLAG_IF(!detail::is_one_of(
+        //     target, 
+        //     AMGL_TEXTURE_CUBE_MAP,
+        //     AMGL_TEXTURE_CUBE_MAP_ARRAY) && texture != complete cubemap or cubemap array, AMGL_INVALID_OPERATION, gs_context_mng);
+
+        const uint32_t kernel_tex_id = gs_context_mng.get_binded_texture(target);
+        AM_RETURN_IF(AM_IS_DEFAULT_ID_KERNEL_SPACE(kernel_tex_id));
+
+        generate_texture_mipmap(CONV_KERNEL_TO_USER_SPACE(kernel_tex_id));
+    }
+
+    
+    void texture_mng::generate_texture_mipmap(uint32_t texture) noexcept
+    {
+        AM_NOT_IMPLEMENTED;
+
+        // AM_RETURN_IF(!is_texture(texture));
+        //
+        // const uint32_t kernel_tex_id = CONV_USER_TO_KERNEL_SPACE(texture);
+        // LOD_root& root = m_textures.get_LOD_root(kernel_tex_id);
+        //
+        // const uint32_t lod0_w = root.m_images.get_image_width(0);
+        // const uint32_t lod0_h = root.m_images.get_image_height(0);
+        //
+        // const size_t max_lod = log2(math::max(lod0_w, lod0_h)) + 1u;
+        //
+        // root.resize(max_lod);
+        //
+        // const uint8_t* lod0_data = root.m_images.get_image_data(0);
+        // AM_RETURN_IF(lod0_data == nullptr);
+        //
+        // const size_t pixel_size = get_internal_fmt_pixel_size(m_textures.m_tex_descs.get_internal_format(kernel_tex_id));
+        //
+        // uint32_t cur_lod_w = lod0_w, cur_lod_h = lod0_h;
+        // for (size_t lod = 1u; lod < max_lod; ++lod) {
+        //     cur_lod_w = math::max(cur_lod_w / 2u, 1u);
+        //     cur_lod_h = math::max(cur_lod_h / 2u, 1u);
+        //
+        //     root.m_images.set(lod, cur_lod_w, cur_lod_h, 1u /* for now */);
+        //     root.m_images.m_memory_blocks[lod].resize(cur_lod_w * cur_lod_h * 1u * pixel_size);
+        //
+        //     for (uint32_t y = 0; y < cur_lod_h; ++y) {
+        //         for (uint32_t x = 0; x < cur_lod_w; ++x) {
+        //             uint32_t r = 0u, g = 0u, b = 0u, a = 0u;
+        //          
+        //             for (uint32_t i = 0u; i < 2u; ++i) {
+        //                 for (uint32_t j = 0u; j < 2u; ++j) {
+        //                     const uint32_t old_x = x * 2u + i;
+        //                     const uint32_t old_y = y * 2u + j;
+        //          
+        //                     const uint32_t old_pixel = (old_y * lod0_w + old_x) * pixel_size;
+        //
+        //                     r += lod0_data[old_pixel + 0u];
+        //                     g += lod0_data[old_pixel + 1u];
+        //                     b += lod0_data[old_pixel + 2u];
+        //                     a += lod0_data[old_pixel + 3u];
+        //                 }
+        //             }
+        //          
+        //             const uint32_t cur_pixel = (y * cur_lod_w + x) * pixel_size;
+        //             root.m_images.m_memory_blocks[lod][cur_pixel + 0u] = r / 4u;                    
+        //             root.m_images.m_memory_blocks[lod][cur_pixel + 1u] = g / 4u;                    
+        //             root.m_images.m_memory_blocks[lod][cur_pixel + 2u] = b / 4u;                    
+        //             root.m_images.m_memory_blocks[lod][cur_pixel + 3u] = a / 4u;                    
+        //         }
+        //     }
+        // } 
+    }
+
+    
     texture_mng::texture_mng(size_t preallocation_size)
     {
         resize(preallocation_size);
@@ -306,7 +388,8 @@ namespace amgl
     }
     
     
-    const void *texture_mng::get_pubo_for_unpack(uint32_t texture, uint32_t level, enum_t internal_format, enum_t format, enum_t type, size_t pixels_count) noexcept
+    const void *texture_mng::get_pubo_for_unpack(uint32_t texture, uint32_t level, enum_t internal_format, 
+        enum_t format, enum_t type, size_t pixels_count) noexcept
     {
         using namespace detail;
         static context& contxt = gs_context_mng.get_context();

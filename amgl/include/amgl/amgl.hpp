@@ -268,6 +268,7 @@ void amglBindImageTexture(uint32_t unit, uint32_t texture, uint32_t level, bool 
 void amglBindImageTextures(uint32_t first, size_t count, const uint32_t* textures);
 void amglBindTexture(enum_t target, uint32_t texture);
 void amglBindTextures(uint32_t first, size_t count, const uint32_t* textures);
+void amglBindTextureUnit(uint32_t unit, uint32_t texture);
 void amglClearTexImage(uint32_t texture, uint32_t level, enum_t format, enum_t type, const void* data);
 void amglClearTexSubImage(uint32_t texture, uint32_t level, size_t xoffset, size_t yoffset, size_t zoffset, 
     size_t width, size_t height, size_t depth, enum_t format, enum_t type, const void* data);
